@@ -1,0 +1,73 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-cinzel: 'Cinzel', serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-arabic: 'Amiri', serif;
+
+  --color-brand-dark: #020d1a;
+  --color-brand-navy: #031327;
+  --color-brand-mint: #b5e8c5;
+  --color-brand-mint-light: #dcfbe6;
+  --color-brand-mint-muted: #86aa95;
+}
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #031327;
+    color: #e4f4ea;
+    overflow-x: hidden;
+  }
+}
+
+/* Background Atmosphere */
+.ambient-glow {
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(181, 232, 197, 0.08) 0%,
+    rgba(3, 19, 39, 0.4) 45%,
+    rgba(2, 13, 26, 0.95) 85%
+  );
+}
+
+.subtle-grid {
+  background-image: radial-gradient(rgba(181, 232, 197, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Luxury Glass & Borders */
+.glass-dock {
+  background: rgba(4, 23, 44, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(181, 232, 197, 0.12);
+}
+
+.glass-dock:hover {
+  border-color: rgba(181, 232, 197, 0.25);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.5), 0 0 25px rgba(181, 232, 197, 0.05);
+}
+
+/* Micro Animations */
+@keyframes softBreath {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.animate-soft-breath {
+  animation: softBreath 7s ease-in-out infinite;
+}
