@@ -38,7 +38,7 @@ export default function Navbar({ onOpenOrderModal }) {
             <img
               src="/zafaf-logo.png"
               alt="Zafaf Atelier"
-              className="h-20 w-auto object-contain rounded-2xl py-1"
+              className="h-18 w-auto object-contain rounded-2xl py-1"
             />
           </a>
 
@@ -70,9 +70,9 @@ export default function Navbar({ onOpenOrderModal }) {
 
             <button
               onClick={onOpenOrderModal}
-              className="btn-mint text-[11px] px-5 py-2.5 hidden sm:inline-flex"
+              className="btn-mint text-[11px] px-4 py-1.5 hidden sm:inline-flex"
             >
-              Order Invitation
+             Grap Yours
             </button>
 
             {/* Mobile toggle */}

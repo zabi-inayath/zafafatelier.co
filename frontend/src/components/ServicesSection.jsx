@@ -11,10 +11,10 @@ const SERVICE_ICONS = {
 export default function ServicesSection({ onSelectService, onOpenInteractiveDemo }) {
   return (
     <section id="services" className="relative py-24 sm:py-32 border-t border-[#b5e8c5]/08">
-      <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
+      <div className="max-w-screen-xl mx-auto px-5 sm:px-8 lg:px-10">
 
         {/* ── HEADER row ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 sm:mb-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 sm:mb-16">
           <div>
             <p className="label-caps mb-3">Our Services</p>
             <h2 className="display-lg text-white">
@@ -53,7 +53,7 @@ export default function ServicesSection({ onSelectService, onOpenInteractiveDemo
                 </div>
 
                 {/* Content side */}
-                <div className={`flex flex-col justify-between p-8 lg:p-12 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
+                <div className={`flex flex-col justify-between p-6 sm:p-8 lg:p-12 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
                   <div>
                     <h3 className="display-md text-white mb-3">
                       {service.title}
