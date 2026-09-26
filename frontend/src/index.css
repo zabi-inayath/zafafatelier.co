@@ -1,0 +1,184 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-arabic: 'Amiri', serif;
+
+  --color-ink: #020b17;
+  --color-navy: #031327;
+  --color-navy-mid: #051d36;
+  --color-mint: #b5e8c5;
+  --color-mint-dim: #7dbf93;
+  --color-cream: #f0f4f1;
+  --color-gold: #c9a84c;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body, #root { min-height: 100%; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #020b17;
+    color: #e8f4ec;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* ─── DESIGN TOKENS ─────────────────────────────────────────────── */
+
+/* Subtle dot-pattern backdrop */
+.dot-field {
+  background-image: radial-gradient(rgba(181,232,197,0.07) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+}
+
+/* Thin horizontal rule with gradient fade */
+.rule-fade {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(181,232,197,0.3) 30%, rgba(181,232,197,0.3) 70%, transparent);
+}
+
+/* ─── EDITORIAL TEXT STYLES ─────────────────────────────────────── */
+
+.display-xl {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.display-lg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.display-md {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.label-caps {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(181,232,197,0.7);
+}
+
+/* ─── GLASS / PANELS ─────────────────────────────────────────────── */
+
+.glass {
+  background: rgba(3, 19, 39, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.glass-border {
+  border: 1px solid rgba(181,232,197,0.14);
+}
+
+.panel {
+  background: rgba(5,29,54,0.6);
+  border: 1px solid rgba(181,232,197,0.12);
+  border-radius: 1.25rem;
+}
+
+.panel-hover {
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.panel-hover:hover {
+  border-color: rgba(181,232,197,0.32);
+  transform: translateY(-3px);
+  box-shadow: 0 24px 60px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(181,232,197,0.08);
+}
+
+/* ─── MINT BUTTON ─────────────────────────────────────────────────── */
+.btn-mint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9999px;
+  background: #b5e8c5;
+  color: #020b17;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
+  cursor: pointer;
+  border: none;
+}
+.btn-mint:hover {
+  background: #cdf0d8;
+  box-shadow: 0 0 40px rgba(181,232,197,0.35);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9999px;
+  background: transparent;
+  color: #b5e8c5;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1.5px solid rgba(181,232,197,0.4);
+  transition: border-color 0.25s, background 0.25s, transform 0.25s;
+  cursor: pointer;
+}
+.btn-outline:hover {
+  border-color: #b5e8c5;
+  background: rgba(181,232,197,0.07);
+  transform: translateY(-1px);
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────────────── */
+
+@keyframes breath {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.anim-breath { animation: breath 7s ease-in-out infinite; }
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.anim-spin-slow { animation: spin-slow 20s linear infinite; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-fade-up { animation: fade-up 0.7s ease both; }
+
+/* ─── ORNAMENT SVG ────────────────────────────────────────────────── */
+.ornament-ring {
+  position: absolute;
+  border: 1px solid rgba(181,232,197,0.08);
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+/* ─── SCROLLBAR ───────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #020b17; }
+::-webkit-scrollbar-thumb { background: rgba(181,232,197,0.25); border-radius: 9999px; }
