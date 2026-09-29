@@ -1,0 +1,166 @@
+.aesthetic-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.aesthetic-grid {
+  display: grid;
+
+  /* More breathing room */
+  grid-template-columns: repeat(5, 13px);
+  grid-template-rows: repeat(5, 13px);
+
+  column-gap: 9px;
+  row-gap: 9px;
+
+  width: max-content;
+  height: max-content;
+}
+
+.aesthetic-dot {
+  width: 13px;
+  height: 13px;
+
+  grid-column: calc(var(--col) + 1);
+  grid-row: calc(var(--row) + 1);
+
+  border-radius: 50%;
+
+  background: #777;
+
+  transform: scale(0.72);
+
+  animation: aestheticGate 1.7s
+    cubic-bezier(0.65, 0, 0.35, 1)
+    infinite;
+
+  animation-delay: var(--delay);
+}
+
+@keyframes aestheticGate {
+  0% {
+    opacity: 0.25;
+    transform: scale(0.68);
+    background: #555;
+  }
+
+  18% {
+    opacity: 0.5;
+    transform: scale(0.78);
+    background: #777;
+  }
+
+  35% {
+    opacity: 1;
+    transform: scale(1);
+    background: #eeeeee;
+  }
+
+  50% {
+    opacity: 0.55;
+    transform: scale(0.82);
+    background: #999;
+  }
+
+  70% {
+    opacity: 0.3;
+    transform: scale(0.7);
+    background: #666;
+  }
+
+  100% {
+    opacity: 0.25;
+    transform: scale(0.68);
+    background: #555;
+  }
+}
+
+.aesthetic-loader-text {
+  margin-top: 26px;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+
+  color: rgba(181, 232, 197, 0.65);
+
+  animation: textFade 1.7s ease-in-out infinite;
+}
+
+@keyframes textFade {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aesthetic-dot,
+  .aesthetic-loader-text {
+    animation: none;
+  }
+
+  .aesthetic-dot {
+    opacity: 0.7;
+    transform: scale(0.8);
+  }
+
+  .aesthetic-loader-text {
+    opacity: 0.7;
+  }
+}
+
+/* Light Theme support for DotMatrixLoader */
+[data-theme='light'] .aesthetic-dot {
+  background: #cbdcd1;
+}
+
+[data-theme='light'] .aesthetic-loader-text {
+  color: #3c614b;
+}
+
+@keyframes aestheticGateLight {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.68);
+    background: #d4e4da;
+  }
+  18% {
+    opacity: 0.55;
+    transform: scale(0.78);
+    background: #a9c7b4;
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1);
+    background: #0a2e1d;
+    box-shadow: 0 0 10px rgba(10, 46, 29, 0.4);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.82);
+    background: #255d3d;
+  }
+  70% {
+    opacity: 0.35;
+    transform: scale(0.7);
+    background: #90b49e;
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(0.68);
+    background: #d4e4da;
+  }
+}
+
+[data-theme='light'] .aesthetic-dot {
+  animation-name: aestheticGateLight;
+}

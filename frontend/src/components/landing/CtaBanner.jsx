@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaWhatsapp } from 'react-icons/fa6';
 import { RiArrowRightLine } from 'react-icons/ri';
-import { BRAND } from '../constants';
+import { BRAND } from '../../constants';
 
 export default function CtaBanner({ onOpenOrderModal, onOpenInteractiveDemo }) {
   return (

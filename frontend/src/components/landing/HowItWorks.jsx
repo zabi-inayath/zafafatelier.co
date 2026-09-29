@@ -1,5 +1,5 @@
 import React from 'react';
-import { PROCESS_STEPS } from '../constants';
+import { PROCESS_STEPS } from '../../constants';
 import { RiMessage3Line, RiFileTextLine, RiPaletteLine, RiSendPlaneLine, RiArrowRightLine } from 'react-icons/ri';
 
 const STEP_ICONS = [

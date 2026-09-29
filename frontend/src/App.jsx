@@ -1,119 +1,71 @@
-import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import TrustBar from './components/TrustBar';
-import ServicesSection from './components/ServicesSection';
-import TemplateGallery from './components/TemplateGallery';
-import HowItWorks from './components/HowItWorks';
-import OccasionsGrid from './components/OccasionsGrid';
-import IslamicValuesBanner from './components/IslamicValuesBanner';
-import Testimonials from './components/Testimonials';
-import FaqSection from './components/FaqSection';
-import CtaBanner from './components/CtaBanner';
-import Footer from './components/Footer';
-import InteractiveDemoModal from './components/InteractiveDemoModal';
-import OrderModal from './components/OrderModal';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import OrdersPage from './pages/OrdersPage';
+import AccountPage from './pages/AccountPage';
+import OrderPage from './pages/OrderPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import ScrollToTop from './components/common/ScrollToTop';
+import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { Toaster } from 'react-hot-toast';
 
 export default function App() {
-  const [orderModalOpen, setOrderModalOpen] = useState(false);
-  const [orderModalData, setOrderModalData] = useState({});
-  const [interactiveDemoOpen, setInteractiveDemoOpen] = useState(false);
-
-  const handleOpenOrderModal = (initial = {}) => {
-    setOrderModalData(initial);
-    setOrderModalOpen(true);
-  };
-
-  const handleCloseOrderModal = () => {
-    setOrderModalOpen(false);
-    setOrderModalData({});
-  };
-
-  const handleSelectService = (serviceId) => {
-    handleOpenOrderModal({ serviceId });
-  };
-
-  const handleOrderTemplate = (template) => {
-    handleOpenOrderModal({ templateTitle: template.title, serviceId: template.type.includes('Web') ? 'web-invitations' : 'e-invites' });
-  };
-
-  const handleSelectOccasion = (occasionTitle) => {
-    handleOpenOrderModal({ occasionTitle });
-  };
-
   return (
-    <div className="min-h-screen bg-[#031327] text-[#e4f4ea] relative overflow-x-hidden selection:bg-[#b5e8c5]/30 selection:text-[#b5e8c5]">
-      
-      {/* Global Background Glow Layers */}
-      <div className="fixed inset-0 ambient-glow pointer-events-none" />
-      <div className="fixed inset-0 subtle-grid opacity-25 pointer-events-none" />
+    <ThemeProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <AuthProvider>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/order" element={<OrderPage />} />
 
-      {/* Luxury Sticky Navbar */}
-      <Navbar onOpenOrderModal={() => handleOpenOrderModal()} />
+            {/* Protected Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <OrdersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <AccountPage />
+                </ProtectedRoute>
+              }
+            />
 
-      {/* Main Content Sections */}
-      <main className="relative z-10">
-        
-        {/* Hero Section */}
-        <Hero
-          onOpenOrderModal={() => handleOpenOrderModal()}
-          onOpenInteractiveDemo={() => setInteractiveDemoOpen(true)}
-        />
+            {/* 404 Route */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
 
-        {/* 4 Pillars Trust Bar */}
-        <TrustBar />
-
-        {/* Our Services: Web, E-Invites, Video */}
-        <ServicesSection
-          onSelectService={handleSelectService}
-          onOpenInteractiveDemo={() => setInteractiveDemoOpen(true)}
-        />
-
-        {/* Templates Portfolio Gallery */}
-        <TemplateGallery onOrderTemplate={handleOrderTemplate} />
-
-        {/* How It Works (4 Simple Steps) */}
-        <HowItWorks onOpenOrderModal={() => handleOpenOrderModal()} />
-
-        {/* Occasions We Create For */}
-        <OccasionsGrid onSelectOccasion={handleSelectOccasion} />
-
-        {/* Islamic Values & Sacred Commitment */}
-        <IslamicValuesBanner />
-
-        {/* Client Love Testimonials */}
-        <Testimonials onOpenOrderModal={() => handleOpenOrderModal()} />
-
-        {/* FAQ Accordion */}
-        <FaqSection />
-
-        {/* Pre-Footer Call to Action Banner */}
-        <CtaBanner
-          onOpenOrderModal={() => handleOpenOrderModal()}
-          onOpenInteractiveDemo={() => setInteractiveDemoOpen(true)}
-        />
-
-      </main>
-
-      {/* Studio Footer */}
-      <Footer onOpenOrderModal={() => handleOpenOrderModal()} />
-
-      {/* Modals */}
-      <InteractiveDemoModal
-        isOpen={interactiveDemoOpen}
-        onClose={() => setInteractiveDemoOpen(false)}
-        onOrderThis={() => {
-          setInteractiveDemoOpen(false);
-          handleOpenOrderModal({ serviceId: 'web-invitations' });
-        }}
-      />
-
-      <OrderModal
-        isOpen={orderModalOpen}
-        onClose={handleCloseOrderModal}
-        initialData={orderModalData}
-      />
-
-    </div>
+          {/* Global Luxury Toasts */}
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                background: '#031221',
+                color: '#e4f4ea',
+                border: '1px solid rgba(181, 232, 197, 0.25)',
+                borderRadius: '16px',
+                padding: '12px 18px',
+                fontSize: '13px',
+                fontFamily: 'Outfit, sans-serif',
+                boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)',
+              },
+            }}
+          />
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }

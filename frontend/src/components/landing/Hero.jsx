@@ -1,12 +1,12 @@
 import React from 'react';
 import { FaWhatsapp } from 'react-icons/fa6';
 import { RiVolumeMuteLine, RiSafeLine, RiLeafLine, RiArrowRightLine } from 'react-icons/ri';
-import { BRAND } from '../constants';
+import { BRAND } from '../../constants';
 
 const VALUES = [
-  { icon: <RiVolumeMuteLine size={22} />, label: 'No Music',       sub: 'Halal audio only'     },
-  { icon: <RiSafeLine       size={22} />, label: 'No Haram',       sub: 'Modest & appropriate' },
-  { icon: <RiLeafLine       size={22} />, label: '100% Halal',     sub: 'Sunnah aligned'       },
+  { icon: <RiVolumeMuteLine size={22} />, label: 'No Music', sub: 'Halal audio only' },
+  { icon: <RiSafeLine size={22} />, label: 'No Haram', sub: 'Modest & appropriate' },
+  { icon: <RiLeafLine size={22} />, label: '100% Halal', sub: 'Sunnah aligned' },
 ];
 
 export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
@@ -113,22 +113,22 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
               >
                 <defs>
                   <linearGradient id="titanium" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%"   stopColor="#3a3d42" />
-                    <stop offset="25%"  stopColor="#5c6068" />
-                    <stop offset="50%"  stopColor="#2e3035" />
-                    <stop offset="75%"  stopColor="#48494e" />
+                    <stop offset="0%" stopColor="#3a3d42" />
+                    <stop offset="25%" stopColor="#5c6068" />
+                    <stop offset="50%" stopColor="#2e3035" />
+                    <stop offset="75%" stopColor="#48494e" />
                     <stop offset="100%" stopColor="#2a2b2f" />
                   </linearGradient>
                   <linearGradient id="innerBezel" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%"   stopColor="#1a1b1e" />
+                    <stop offset="0%" stopColor="#1a1b1e" />
                     <stop offset="100%" stopColor="#111215" />
                   </linearGradient>
                   <clipPath id="screenClip">
                     <rect x="13" y="18" width="264" height="572" rx="44" ry="44" />
                   </clipPath>
                   <linearGradient id="sheen" x1="0" y1="0" x2="0.4" y2="1">
-                    <stop offset="0%"   stopColor="white" stopOpacity="0.06" />
-                    <stop offset="40%"  stopColor="white" stopOpacity="0.01" />
+                    <stop offset="0%" stopColor="white" stopOpacity="0.06" />
+                    <stop offset="40%" stopColor="white" stopOpacity="0.01" />
                     <stop offset="100%" stopColor="white" stopOpacity="0" />
                   </linearGradient>
                   <filter id="diBlur">
@@ -148,11 +148,11 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
 
                 {/* Video */}
                 <foreignObject x="13" y="18" width="264" height="572" clipPath="url(#screenClip)">
-                  <div xmlns="http://www.w3.org/1999/xhtml" style={{ width:'100%', height:'100%', overflow:'hidden', borderRadius:'44px', background:'#020b17' }}>
+                  <div xmlns="http://www.w3.org/1999/xhtml" style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '44px', background: '#020b17' }}>
                     <video
                       id="hero-invitation-video"
                       autoPlay loop muted playsInline
-                      style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     >
                       <source src="/videos/hero-invite.mp4" type="video/mp4" />
                     </video>
@@ -162,7 +162,7 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
                 {/* Dynamic Island */}
                 <rect x="101" y="28" width="88" height="28" rx="14" ry="14" fill="#090a0d" filter="url(#diBlur)" />
                 <rect x="102" y="29" width="86" height="26" rx="13" ry="13" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-                <circle cx="172" cy="42" r="5"   fill="#0d0e10" />
+                <circle cx="172" cy="42" r="5" fill="#0d0e10" />
                 <circle cx="172" cy="42" r="2.5" fill="#1a1c22" />
                 <circle cx="173.5" cy="40.5" r="0.8" fill="rgba(255,255,255,0.15)" />
 

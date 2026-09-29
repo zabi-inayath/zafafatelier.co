@@ -1,5 +1,5 @@
 import React from 'react';
-import { OCCASIONS } from '../constants';
+import { OCCASIONS } from '../../constants';
 import { RiHeartLine, RiBuilding2Line, RiUserAddLine, RiGiftLine, RiBookOpenLine, RiCalendarScheduleLine, RiArrowRightLine } from 'react-icons/ri';
 
 const ICONS = {

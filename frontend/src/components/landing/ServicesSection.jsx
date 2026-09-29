@@ -1,5 +1,5 @@
 import React from 'react';
-import { SERVICES } from '../constants';
+import { SERVICES } from '../../constants';
 import { RiCheckLine, RiArrowRightLine, RiGlobalLine, RiImageLine, RiFilmLine } from 'react-icons/ri';
 
 const SERVICE_ICONS = {

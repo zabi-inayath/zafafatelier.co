@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TEMPLATES } from '../constants';
+import { TEMPLATES } from '../../constants';
 import { RiArrowRightLine, RiCloseLine } from 'react-icons/ri';
 
 const CATS = ['All', 'Nikah', 'Walima', 'Aqiqah', 'Video Invites', 'Websites'];
@@ -31,11 +31,10 @@ export default function TemplateGallery({ onOrderTemplate }) {
                 <button
                   key={c}
                   onClick={() => setCat(c)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all cursor-pointer ${
-                    cat === c
+                  className={`px-4 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all cursor-pointer ${cat === c
                       ? 'bg-[#b5e8c5] text-[#020b17] font-semibold'
                       : 'border border-[#b5e8c5]/18 text-[#8aaa97] hover:text-[#b5e8c5] hover:border-[#b5e8c5]/35'
-                  }`}
+                    }`}
                 >
                   {c}
                 </button>
@@ -50,9 +49,8 @@ export default function TemplateGallery({ onOrderTemplate }) {
             <div
               key={t.id}
               onClick={() => setPreview(t)}
-              className={`group relative cursor-pointer rounded-2xl overflow-hidden border border-[#b5e8c5]/10 hover:border-[#b5e8c5]/35 transition-all duration-400 hover:-translate-y-1 ${
-                i === 0 ? 'sm:col-span-2 lg:col-span-1' : ''
-              }`}
+              className={`group relative cursor-pointer rounded-2xl overflow-hidden border border-[#b5e8c5]/10 hover:border-[#b5e8c5]/35 transition-all duration-400 hover:-translate-y-1 ${i === 0 ? 'sm:col-span-2 lg:col-span-1' : ''
+                }`}
             >
               {/* Image — taller on first card */}
               <div className={`relative overflow-hidden bg-[#020b17] ${i === 0 ? 'aspect-[3/4]' : 'aspect-[3/4]'}`}>

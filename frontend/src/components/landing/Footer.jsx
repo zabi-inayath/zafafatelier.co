@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaWhatsapp, FaInstagram, FaEnvelope } from 'react-icons/fa6';
-import { BRAND } from '../constants';
+import { BRAND } from '../../constants';
 
 const COL_LINKS = [
   { label: 'Home', href: '#top' },

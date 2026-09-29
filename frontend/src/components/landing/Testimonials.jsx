@@ -1,5 +1,5 @@
 import React from 'react';
-import { TESTIMONIALS } from '../constants';
+import { TESTIMONIALS } from '../../constants';
 import { RiStarFill, RiDoubleQuotesR, RiArrowRightLine } from 'react-icons/ri';
 
 export default function Testimonials({ onOpenOrderModal }) {

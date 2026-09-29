@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FAQS } from '../constants';
+import { FAQS } from '../../constants';
 import { RiAddLine, RiSubtractLine } from 'react-icons/ri';
 
 export default function FaqSection() {
@@ -33,11 +33,10 @@ export default function FaqSection() {
                     style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                     {f.q}
                   </span>
-                  <span className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-200 mt-0.5 ${
-                    isOpen
+                  <span className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-200 mt-0.5 ${isOpen
                       ? 'bg-[#b5e8c5] border-[#b5e8c5] text-[#020b17]'
                       : 'border-[#b5e8c5]/25 text-[#b5e8c5]/60 group-hover:border-[#b5e8c5]/50'
-                  }`}>
+                    }`}>
                     {isOpen ? <RiSubtractLine size={16} /> : <RiAddLine size={16} />}
                   </span>
                 </button>
