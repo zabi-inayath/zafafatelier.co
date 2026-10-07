@@ -12,7 +12,10 @@ import {
   RiFilter3Line,
   RiSparklingLine,
   RiCheckLine,
-  RiTimeLine
+  RiTimeLine,
+  RiArrowRightLine,
+  RiEyeLine,
+  RiCompass3Line
 } from 'react-icons/ri';
 import { BRAND } from '../constants';
 
@@ -261,6 +264,124 @@ export default function OrdersPage() {
             ))}
           </div>
         )}
+      
+        {/* Atelier Invitation Templates Showcase Section */}
+        <div className="mt-14 pt-10 border-t border-[#b5e8c5]/15 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-[#d4af37] font-bold mb-1">
+                <RiSparklingLine size={13} />
+                <span>Featured Invitation Suite</span>
+              </div>
+              <h2
+                className="text-2xl sm:text-3xl text-white font-light"
+                style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              >
+                Atelier Wedding Invitation Templates
+              </h2>
+              <p className="text-xs text-[#8ab89c] mt-1 font-light">
+                Explore our signature live interactive digital invitation portals crafted for sacred Islamic unions.
+              </p>
+            </div>
+
+            <Link
+              to="/templates"
+              className="inline-flex items-center gap-1.5 text-xs text-[#b5e8c5] hover:underline font-semibold self-start sm:self-auto"
+            >
+              <span>Explore All Suites</span>
+              <RiArrowRightLine size={13} />
+            </Link>
+          </div>
+
+          {/* Mizaan Royal Card */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-[#031424] border border-[#b5e8c5]/25 shadow-2xl relative overflow-hidden group hover:border-[#b5e8c5]/40 transition-all">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#b5e8c5]/10 via-[#d4af37]/05 to-transparent rounded-full blur-2xl pointer-events-none" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div className="lg:col-span-8 space-y-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider bg-[#b5e8c5]/15 text-[#b5e8c5] border border-[#b5e8c5]/30">
+                    Live Demo Ready
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30">
+                    Nikah &amp; Walima
+                  </span>
+                  <span className="text-xs text-[#8ab89c] font-light">
+                    Royal Emerald, Gold &amp; Cream
+                  </span>
+                </div>
+
+                <div>
+                  <h3
+                    className="text-2xl sm:text-3xl text-white font-light tracking-wide"
+                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
+                  >
+                    Mizaan Royal Web Suite
+                  </h3>
+                  <p
+                    className="text-lg text-[#d4af37] font-light mt-0.5"
+                    style={{ fontFamily: 'Amiri, serif' }}
+                  >
+                    الميزان الملكي
+                  </p>
+                  <p className="text-xs text-[#8ab89c] font-light leading-relaxed mt-2 max-w-xl">
+                    Our flagship bespoke Islamic web invitation. Features majestic Thuluth Bismillah calligraphy, sacred Surah Ar-Rum verses, live countdown timer, dual ceremony itinerary (Nikah &amp; Walima), Google Maps navigation, and instant WhatsApp RSVP.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2 text-[11px] text-[#c8e2d2]">
+                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">✨ Live Countdown</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">💬 WhatsApp RSVP</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">📍 Google Maps Directions</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">🎵 100% Music-Free</span>
+                </div>
+
+                <div className="pt-2 flex flex-wrap items-center gap-3">
+                  <Link
+                    to="/mizaan-royal"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#b5e8c5] hover:bg-[#cbf4d8] text-[#020b17] font-bold text-xs uppercase tracking-wider transition-all shadow-md shadow-[#b5e8c5]/15 cursor-pointer"
+                  >
+                    <RiEyeLine size={15} />
+                    <span>View Live Template</span>
+                  </Link>
+
+                  <Link
+                    to="/templates/mizaan-royal"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-[#b5e8c5]/25 text-[#b5e8c5] text-xs font-semibold transition-all cursor-pointer"
+                  >
+                    <RiCompass3Line size={15} />
+                    <span>Template Preview Mode</span>
+                  </Link>
+
+                  <Link
+                    to="/order?template=mizaan-royal&type=Web+Invitation"
+                    className="inline-flex items-center gap-1.5 px-3 py-2.5 text-xs text-[#8ab89c] hover:text-white transition-colors"
+                  >
+                    <span>Order for Your Wedding</span>
+                    <RiArrowRightLine size={13} />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Sample Card */}
+              <div className="lg:col-span-4 p-5 rounded-2xl bg-[#020b17]/90 border border-[#d4af37]/30 text-center space-y-3 shadow-xl">
+                <div className="w-10 h-10 rounded-full bg-[#d4af37]/15 border border-[#d4af37]/30 flex items-center justify-center mx-auto text-[#d4af37]">
+                  <RiSparklingLine size={18} />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#d4af37]">Sample Couple</span>
+                  <h4 className="text-xl text-white font-serif mt-0.5">Zayd &amp; Maryam</h4>
+                  <p className="text-[11px] text-[#8ab89c] mt-1">Saturday, 28th November 2026</p>
+                </div>
+                <div className="pt-2 border-t border-white/10">
+                  <span className="text-[10px] text-[#8ab89c] block">Dedicated Route</span>
+                  <span className="font-mono text-xs text-[#b5e8c5] font-semibold">/mizaan-royal</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </main>
 
           </div>

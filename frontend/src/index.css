@@ -12,6 +12,24 @@
   --color-mint-dim: #7dbf93;
   --color-cream: #f0f4f1;
   --color-gold: #c9a84c;
+
+  /* Hero animations */
+  --animate-hero-spin:    hero-spin 30s linear infinite;
+  --animate-hero-breathe: hero-breathe 6s ease-in-out infinite;
+  --animate-hero-ping:    hero-ping 1s cubic-bezier(0,0,0.2,1) infinite;
+}
+
+@keyframes hero-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes hero-breathe {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes hero-ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
 }
 
 @layer base {
@@ -659,4 +677,128 @@ html.light, [data-theme='light'] {
 
 [data-theme='light'] .country-dropdown-popover button:hover {
   background-color: #f1f7f3 !important;
+}
+
+@font-face {
+  font-family: 'Hagrid';
+  src: url('/fonts/Hagrid-Regular-trial.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* poppins font*/
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LeagueSpartan';
+  src: url('/fonts/LeagueSpartan-Bold.otf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DXRigraf-SemiBold';
+  src: url('/fonts/DXRigraf-SemiBold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DXRigraf-Light';
+  src: url('/fonts/DXRigraf-Light.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DXRigraf-Thin';
+  src: url('/fonts/DXRigraf-Thin.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SpaceGrotesk-SemiBold';
+  src: url('/fonts/SpaceGrotesk-SemiBold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Ligema-DEMO';
+  src: url('/fonts/Ligema-DEMO.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MiguErsans-Regular';
+  src: url('/fonts/miguersansregular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+/* Enhanced smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+.scriptregular {
+  font-family: "Style Script";
+  font-weight: 400;
+  font-style: normal;
+}
+
+.hagrid {
+  font-family: 'Hagrid', sans-serif;
+}
+
+.poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+.dm-sans {
+  font-family: 'DM Sans', sans-serif;
+}
+
+.league-spartan {
+  font-family: 'LeagueSpartan', sans-serif;
+}
+
+.MiguErsansRegular {
+  font-family: 'MiguErsans-Regular', sans-serif;
+}
+
+.Ligema {
+  font-family: 'Ligema-DEMO', sans-serif;
+}
+
+.SpaceGrotesk {
+  font-family: 'SpaceGrotesk-SemiBold', sans-serif;
+}
+
+.DXRigraf {
+  font-family: 'DXRigraf-SemiBold', sans-serif;
+}
+
+.DXRigraf-light {
+  font-family: 'DXRigraf-Light', sans-serif;
+}
+
+.DXRigraf-Thin {
+  font-family: 'DXRigraf-Thin', sans-serif;
 }

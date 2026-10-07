@@ -6,7 +6,7 @@ export const BRAND = {
   whatsappNumber: "+91 744 855 2778",
   whatsappRaw: "917448552778",
   whatsappUrl: "https://wa.me/917448552778?text=" + encodeURIComponent("Assalamu Alaikum! I would like to inquire about bespoke Islamic digital invitations from Zafaf Atelier."),
-  email: "zafaf.atelier@mizaantech.co.in",
+  email: "salam@mizaantech.co.in",
   instagramHandle: "@zafafatelier.co",
   instagramUrl: "https://instagram.com/zafafatelier.co",
   website: "zafaf.mizaantech.co.in",

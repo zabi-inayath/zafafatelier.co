@@ -7,10 +7,9 @@ import { useAuth } from '../../context/AuthContext';
 
 const NAV_LINKS = [
   { label: 'Services', href: '/#services' },
-  { label: 'Work', href: '/#templates' },
-  { label: 'Process', href: '/#process' },
+  { label: 'Templates', href: '/#templates' },
   { label: 'Occasions', href: '/#occasions' },
-  { label: 'Reviews', href: '/#reviews' },
+  { label: 'Process', href: '/#process' },
   { label: 'FAQ', href: '/#faq' },
 ];
 
@@ -43,8 +42,8 @@ export default function Navbar() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-            ? 'bg-[#020b17]/92 backdrop-blur-xl shadow-lg'
-            : 'bg-transparent'
+          ? 'bg-[#020b17]/92 backdrop-blur-xl shadow-lg'
+          : 'bg-transparent'
           }`}
       >
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10 h-[88px] flex items-center justify-between">
@@ -53,7 +52,7 @@ export default function Navbar() {
             <img
               src="/zafaf-trans.png"
               alt="Zafaf Atelier"
-              className="h-16 w-auto object-contain rounded-2xl py-1"
+              className="h-14 w-auto object-contain rounded-2xl py-1"
             />
           </Link>
 
@@ -84,7 +83,7 @@ export default function Navbar() {
             </a> */}
 
             {/* Authenticated User Menu or Dedicated Link */}
-            {isAuthenticated ? (
+            {/* {isAuthenticated ? (
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setUserDropdown(!userDropdown)}
@@ -97,8 +96,6 @@ export default function Navbar() {
                     {user?.name?.split(' ')[0]}
                   </span>
                 </button>
-
-                {/* Dropdown Menu */}
                 {userDropdown && (
                   <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#031221] border border-[#b5e8c5]/20 shadow-2xl p-2 z-50 animate-slide-up">
                     <div className="px-3 py-2 border-b border-[#b5e8c5]/10">
@@ -148,14 +145,14 @@ export default function Navbar() {
                   <span>Sign In</span>
                 </Link>
               </div>
-            )}
+            )} */}
 
-            {/* <Link
-              to="/order"
-              className="btn-mint text-[11px] px-4 py-1.5 hidden sm:inline-flex cursor-pointer"
+            <span
+              className="text-md sm:text-lg text-[#b5e8c5]/70 tracking-widest cursor-pointer select-none"
+              style={{ fontFamily: 'Amiri, serif' }}
             >
-              Grab Yours
-            </Link> */}
+              بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+            </span>
 
             {/* Mobile toggle */}
             <button
@@ -175,7 +172,7 @@ export default function Navbar() {
           className="fixed inset-0 z-40 bg-[#020b17]/97 backdrop-blur-xl flex flex-col items-center justify-center gap-6 text-center"
           onClick={() => setOpen(false)}
         >
-          {isAuthenticated ? (
+          {/* {isAuthenticated ? (
             <div className="flex flex-col items-center gap-2 pb-2">
               <span className="text-xs text-[#8ab89c]">Signed in as</span>
               <span className="text-base text-white font-semibold">{user?.name}</span>
@@ -213,7 +210,7 @@ export default function Navbar() {
                 Register
               </Link>
             </div>
-          )}
+          )} */}
 
           {NAV_LINKS.map((l) => (
             <a

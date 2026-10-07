@@ -7,6 +7,9 @@ import OrdersPage from './pages/OrdersPage';
 import AccountPage from './pages/AccountPage';
 import OrderPage from './pages/OrderPage';
 import NotFoundPage from './pages/NotFoundPage';
+import TemplatesPage from './pages/TemplatesPage';
+import TemplateViewerPage from './pages/TemplateViewerPage';
+import MizaanRoyal from './templates/mizaan-royal/MizaanRoyal';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import ScrollToTop from './components/common/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
@@ -25,6 +28,11 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/order" element={<OrderPage />} />
+
+            {/* Wedding Invitation Template Routes */}
+            <Route path="/templates" element={<TemplatesPage />} />
+            <Route path="/templates/:templateSlug" element={<TemplateViewerPage />} />
+            <Route path="/mizaan-royal" element={<MizaanRoyal isPreview={false} />} />
 
             {/* Protected Routes */}
             <Route

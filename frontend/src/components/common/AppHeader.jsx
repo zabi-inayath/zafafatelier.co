@@ -8,7 +8,8 @@ import {
   RiUserLine,
   RiAddLine,
   RiLogoutBoxRLine,
-  RiHome6Fill
+  RiHome6Fill,
+  RiSparklingLine
 } from 'react-icons/ri';
 import { LuLogOut } from "react-icons/lu";
 
@@ -37,6 +38,15 @@ export default function AppHeader({ current = '' }) {
           {/* <ThemeToggle /> */}
           {isAuthenticated ? (
             <>
+              {current !== 'templates' && (
+                <Link
+                  to="/templates"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#b5e8c5]/20 text-[#8ab89c] hover:text-[#b5e8c5] hover:border-[#b5e8c5]/50 text-xs font-medium transition-all"
+                >
+                  <RiSparklingLine size={14} />
+                  <span className="hidden sm:inline">Templates</span>
+                </Link>
+              )}
               {current !== 'orders' && (
                 <Link
                   to="/dashboard"
