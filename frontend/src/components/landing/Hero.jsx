@@ -42,7 +42,7 @@ function PhoneFrame() {
         }}
       >
         <svg
-          className="block w-[170px] sm:w-[200px] lg:w-[240px] xl:w-[260px] h-auto"
+          className="block w-[220px] sm:w-[240px] lg:w-[260px] xl:w-[260px] h-auto"
           viewBox="0 0 290 608"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +93,7 @@ function PhoneFrame() {
                 autoPlay loop muted playsInline
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               >
-                <source src="/videos/hero-invite.mp4" type="video/mp4" />
+                <source src="/videos/zafaf-demo.mp4" type="video/mp4" />
               </video>
             </div>
           </foreignObject>
@@ -132,9 +132,9 @@ function PhoneFrame() {
         </svg>
 
         {/* Floating badge — halal */}
-        <div className="absolute -bottom-4 left-12 flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy border border-gold/30 shadow-xl text-[11px] font-semibold text-gold whitespace-nowrap">
+        {/* <div className="absolute -bottom-4 md:left-12 flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy border border-gold/30 shadow-xl text-[11px] font-semibold text-gold whitespace-nowrap">
           🤍 Halal &amp; Sunnah Aligned
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -190,10 +190,10 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
 
           {/* LEFT — "Beautiful Invitations" */}
           <div className="flex flex-col items-center md:items-end text-center md:text-right md:pr-10 lg:pr-14 xl:pr-16 order-1">
-            <h1 className="MiguErsansRegular text-3xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-7xl text-white leading-none">
+            <h1 className="MiguErsansRegular text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl text-white leading-none">
               Beautiful
             </h1>
-            <h1 className="MiguErsansRegular text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-8xl font-bold">
+            <h1 className="MiguErsansRegular text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-bold">
               Invitations
             </h1>
           </div>
@@ -205,10 +205,10 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
 
           {/* RIGHT — "for Blessed Moments 🤍" */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left md:pl-10 lg:pl-14 xl:pl-16 order-3">
-            <p className="MiguErsansRegular text-3xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-7xl text-white leading-none">
+            <p className="MiguErsansRegular text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl text-white leading-none">
               for Blessed
             </p>
-            <p className="MiguErsansRegular text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-8xl font-bold">
+            <p className="MiguErsansRegular text-5xl sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-bold">
               Moments
             </p>
           </div>
@@ -270,7 +270,7 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
               </div>
 
               {/* Label */}
-              <h3 className="font-display text-[clamp(20px,2vw,30px)] font-bold text-white mb-3 leading-tight">
+              <h3 className="text-2xl font-bold text-white mb-3 leading-tight">
                 {item.label}
               </h3>
 
@@ -292,14 +292,14 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
 
         <Eyebrow>Ready to begin?</Eyebrow>
 
-        <h2 className="font-display text-[clamp(26px,4vw,64px)] font-bold text-white text-center mb-3 leading-tight">
+        <h2 className="dm-sans text-[clamp(26px,4vw,64px)] font-semibold text-white text-center mb-3 leading-tight">
           Your invitation awaits.
         </h2>
-        <p className="text-[clamp(14px,1.1vw,17px)] text-mint-dim/80 font-light text-center max-w-md leading-relaxed mb-11">
+        <p className="dm-sans text-[clamp(14px,1.1vw,17px)] text-mint-dim/80 font-light text-center max-w-md leading-relaxed mb-11">
           Join hundreds of families who chose elegance with barakah for their blessed day.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-xs sm:max-w-none">
+        <div className="poppins flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-xs sm:max-w-none">
           <button
             className="btn-mint flex items-center gap-2 px-8 py-3.5 text-[15px] w-full sm:w-auto justify-center"
             onClick={onOpenOrderModal}
