@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const NAV_LINKS = [
   { label: 'Services', href: '/#services' },
-  { label: 'Templates', href: '/#templates' },
+  { label: 'Templates', href: '/templates' },
   { label: 'Occasions', href: '/#occasions' },
   // { label: 'Process', href: '/#process' },
   { label: 'FAQ', href: '/#faq' },
@@ -59,14 +59,14 @@ export default function Navbar() {
           {/* Desktop Links */}
           <nav className="hidden lg:flex items-center gap-8">
             {NAV_LINKS.map((l) => (
-              <a
+              <Link
                 key={l.label}
-                href={l.href}
+                to={l.href}
                 className="relative text-[13px] font-medium text-[#c8e6d4]/70 hover:text-[#b5e8c5] transition-colors duration-200 tracking-wide
                   after:content-[''] after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-[#b5e8c5]/60 hover:after:w-full after:transition-all after:duration-300"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -213,15 +213,15 @@ export default function Navbar() {
           )} */}
 
           {NAV_LINKS.map((l) => (
-            <a
+            <Link
               key={l.label}
-              href={l.href}
+              to={l.href}
               onClick={() => setOpen(false)}
               className="display-md text-white hover:text-[#b5e8c5] transition-colors"
               style={{ fontSize: '2rem', fontWeight: 300 }}
             >
               {l.label}
-            </a>
+            </Link>
           ))}
 
           <div className="rule-fade w-48 my-2" />

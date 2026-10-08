@@ -12,6 +12,7 @@ import TemplateViewerPage from './pages/TemplateViewerPage';
 import MizaanRoyal from './templates/mizaan-royal/MizaanRoyal';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import ScrollToTop from './components/common/ScrollToTop';
+import FloatingWhatsApp from './components/common/FloatingWhatsApp';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Toaster } from 'react-hot-toast';
@@ -55,6 +56,9 @@ export default function App() {
             {/* 404 Route */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+
+          {/* Global Components */}
+          <FloatingWhatsApp />
 
           {/* Global Luxury Toasts */}
           <Toaster

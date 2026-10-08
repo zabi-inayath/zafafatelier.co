@@ -1,15 +1,16 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaWhatsapp, FaInstagram, FaEnvelope } from 'react-icons/fa6';
 import { BRAND } from '../../constants';
 
 const NAV_LINKS = [
-  { label: 'Home', href: '#top' },
-  { label: 'Services', href: '#services' },
-  // { label: 'Work',      href: '#templates' },
+  { label: 'Home', href: '/#top' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Templates', href: '/templates' },
   // { label: 'Process',   href: '#process' },
-  { label: 'Occasions', href: '#occasions' },
+  { label: 'Occasions', href: '/#occasions' },
   // { label: 'Reviews',   href: '#reviews' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'FAQ', href: '/#faq' },
 ];
 
 const SERVICES_LIST = [
@@ -73,9 +74,9 @@ export default function Footer({ onOpenOrderModal }) {
             <ul className="space-y-3">
               {NAV_LINKS.map(l => (
                 <li key={l.label}>
-                  <a href={l.href} className="dm-sans text-sm text-white hover:text-mint transition-colors">
+                  <Link to={l.href} className="dm-sans text-sm text-white hover:text-mint transition-colors">
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
