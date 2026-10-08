@@ -3,15 +3,23 @@ import { PROCESS_STEPS } from '../../constants';
 import { RiMessage3Line, RiFileTextLine, RiPaletteLine, RiSendPlaneLine, RiArrowRightLine } from 'react-icons/ri';
 
 const STEP_ICONS = [
-  <RiMessage3Line   size={28} className="text-mint" />,
-  <RiFileTextLine   size={28} className="text-mint" />,
-  <RiPaletteLine    size={28} className="text-mint" />,
-  <RiSendPlaneLine  size={28} className="text-mint" />,
+  <RiMessage3Line size={28} className="text-mint" />,
+  <RiFileTextLine size={28} className="text-mint" />,
+  <RiPaletteLine size={28} className="text-mint" />,
+  <RiSendPlaneLine size={28} className="text-mint" />,
 ];
+
+function Eyebrow({ children }) {
+  return (
+    <p className="text-md sm:text-xl tracking-[0.25em] poppins uppercase font-semibold mb-8 text-center">
+      {children}
+    </p>
+  );
+}
 
 export default function HowItWorks({ onOpenOrderModal }) {
   return (
-    <section id="process" className="relative py-28 sm:py-36 border-t border-mint/[0.06] overflow-hidden">
+    <section id="process" className="relative py-20 border-t border-mint/[0.06] overflow-hidden">
 
       {/* Ambient glow */}
       <div className="absolute bottom-0 right-0 w-[600px] h-[500px] rounded-full bg-mint/[0.025] blur-[130px] pointer-events-none" />
@@ -19,13 +27,11 @@ export default function HowItWorks({ onOpenOrderModal }) {
       <div className="relative z-10 max-w-screen-xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
-        <div className="mb-16 sm:mb-20">
-          <p className="poppins text-[10px] sm:text-xs text-mint tracking-[0.25em] uppercase font-semibold opacity-65 mb-4">
-            How It Works
-          </p>
-          <h2 className="MiguErsansRegular text-[clamp(2.4rem,5vw,5rem)] text-white leading-none max-w-xl">
-            Your Custom Invite<br />
-            <span className="text-mint">in 4 Simple Steps</span>
+        <Eyebrow>How It Works</Eyebrow>
+        <div className="flex justify-center items-center flex-col text-center mb-14 text-5xl font-semibold dm-sans">
+          <h2 className="text-white leading-none">
+            Your Custom Invite in 4 <br />
+            <span className="text-mint">Simple Steps</span>
           </h2>
         </div>
 

@@ -1,61 +1,115 @@
 import React from 'react';
 import { OCCASIONS } from '../../constants';
-import { RiHeartLine, RiBuilding2Line, RiUserAddLine, RiGiftLine, RiBookOpenLine, RiCalendarScheduleLine, RiArrowRightLine } from 'react-icons/ri';
+import { RiHeartLine, RiBuilding2Line, RiUserAddLine, RiCalendarScheduleLine } from 'react-icons/ri';
 
 const ICONS = {
-  nikah:      <RiHeartLine              size={26} />,
-  walima:     <RiBuilding2Line          size={26} />,
-  aqiqah:     <RiUserAddLine            size={26} />,
-  engagement: <RiGiftLine               size={26} />,
-  mahfil:     <RiBookOpenLine           size={26} />,
-  custom:     <RiCalendarScheduleLine   size={26} />,
+  nikah: RiHeartLine,
+  walima: RiBuilding2Line,
+  aqiqah: RiUserAddLine,
+  custom: RiCalendarScheduleLine,
 };
+
+function Eyebrow({ children }) {
+  return (
+    <p className="text-md sm:text-xl tracking-[0.25em] poppins uppercase font-semibold mb-8 text-center text-white">
+      {children}
+    </p>
+  );
+}
 
 export default function OccasionsGrid({ onSelectOccasion }) {
   return (
-    <section id="occasions" className="relative py-28 sm:py-36 border-t border-mint/[0.06] overflow-hidden">
-
+    <section id="occasions" className="relative py-24 border-y border-white/[0.06] bg-navy/40 overflow-hidden">
       {/* Ambient */}
-      <div className="absolute bottom-0 right-0 w-[500px] h-[400px] rounded-full bg-mint/[0.025] blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[400px] rounded-full bg-mint/[0.025] blur-[120px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-screen-xl mx-auto px-6 lg:px-10">
+      <div className="relative z-10 max-w-screen-xl mx-auto px-5 sm:px-6 lg:px-10">
 
         {/* Header */}
-        <div className="mb-14">
-          <p className="poppins text-[10px] sm:text-xs text-mint tracking-[0.25em] uppercase font-semibold opacity-65 mb-4">
-            Occasions We Craft For
-          </p>
-          <h2 className="MiguErsansRegular text-[clamp(2.4rem,5vw,5rem)] text-white leading-none">
+        <Eyebrow>Occasions We Craft For</Eyebrow>
+        <div className="flex justify-center items-center flex-col text-center mb-16 text-5xl font-semibold dm-sans">
+          <h2 className="text-white leading-tight">
             Every Blessed<br />
             <span className="text-mint">Celebration</span>
           </h2>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {OCCASIONS.map(occ => (
-            <button
-              key={occ.id}
-              onClick={() => onSelectOccasion(occ.title)}
-              className="group flex flex-col gap-4 p-6 rounded-3xl border border-mint/10 hover:border-mint/30 bg-navy-mid/40 hover:bg-navy-mid/70 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 text-left cursor-pointer"
-            >
-              <div className="text-mint/50 group-hover:text-mint transition-colors">
-                {ICONS[occ.id]}
-              </div>
-              <div>
-                <h3 className="MiguErsansRegular text-sm text-white group-hover:text-mint transition-colors mb-1 leading-snug">
-                  {occ.title}
-                </h3>
-                <p className="dm-sans text-[11px] text-mint-dim/45 font-light leading-snug">{occ.desc}</p>
-              </div>
-              <RiArrowRightLine
-                size={14}
-                className="text-mint/0 group-hover:text-mint/60 transition-all translate-x-0 group-hover:translate-x-1"
-              />
-            </button>
-          ))}
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-l border-white/[0.06]">
+          {OCCASIONS.map((occ) => {
+            const Icon = ICONS[occ.id];
 
+            return (
+              <article
+                key={occ.id}
+                onClick={() => onSelectOccasion(occ.title)}
+                className="
+                  group relative
+                  px-6 py-10 sm:px-8 sm:py-12 lg:px-10 lg:py-14
+                  transition-all duration-500
+                  hover:bg-white/[0.015]
+                  cursor-pointer text-left
+                  border-b border-r border-white/[0.06]
+                "
+              >
+                {/* Soft hover glow */}
+                <div
+                  className="
+                    pointer-events-none absolute inset-0
+                    bg-[radial-gradient(circle_at_20%_20%,rgba(173,255,224,0.045),transparent_55%)]
+                    opacity-0 transition-opacity duration-500
+                    group-hover:opacity-100
+                  "
+                />
+
+                <div className="relative">
+                  {/* Icon */}
+                  <div
+                    className="
+                      mb-8 flex h-18 w-18 items-center justify-start
+                      text-mint/60
+                      transition-all duration-500
+                      group-hover:-translate-y-1 group-hover:text-mint
+                    "
+                  >
+                    <Icon className="h-16 w-16" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="max-w-sm">
+                    <h3
+                      className="
+                        font-['DM_Sans']
+                        text-[20px]
+                        font-medium
+                        text-white
+                        transition-colors
+                        group-hover:text-mint
+                      "
+                    >
+                      {occ.title}
+                    </h3>
+
+                    <p
+                      className="
+                        mt-3
+                        poppins
+                        text-[14px]
+                        font-medium
+                        leading-[1.7]
+                        text-white/50
+                        transition-colors duration-300
+                        group-hover:text-white/65
+                      "
+                    >
+                      {occ.desc}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

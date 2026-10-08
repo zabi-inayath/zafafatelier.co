@@ -56,17 +56,17 @@ export default function HomePage() {
           onSelectService={handleSelectService}
           onOpenInteractiveDemo={() => setInteractiveDemoOpen(true)}
         />
-        <TemplateGallery onOrderTemplate={handleOrderTemplate} />
-        <HowItWorks onOpenOrderModal={() => handleOpenOrder()} />
+        {/* <TemplateGallery onOrderTemplate={handleOrderTemplate} /> */}
+        {/* <HowItWorks onOpenOrderModal={() => handleOpenOrder()} /> */}
         <OccasionsGrid onSelectOccasion={handleSelectOccasion} />
-        <IslamicValuesBanner />
-        <TrustBar />
-        <Testimonials onOpenOrderModal={() => handleOpenOrder()} />
+        {/* <IslamicValuesBanner /> */}
+        {/* <Testimonials onOpenOrderModal={() => handleOpenOrder()} /> */}
         <FaqSection />
-        <CtaBanner
+        {/* <TrustBar /> */}
+        {/* <CtaBanner
           onOpenOrderModal={() => handleOpenOrder()}
           onOpenInteractiveDemo={() => setInteractiveDemoOpen(true)}
-        />
+        /> */}
       </main>
 
       <Footer onOpenOrderModal={() => handleOpenOrder()} />

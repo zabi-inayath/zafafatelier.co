@@ -25,7 +25,7 @@ export const SERVICES = [
       "Interactive RSVP & Guest Management",
       "Live Countdown to Event",
       "Direct Google Maps Location",
-      "Multi-Event Timeline (Nikah, Walima, Haldi)",
+      "Multi-Event Timeline (Nikah, Walima)",
       "Strictly Music-Free & Modest Aesthetics",
       "Custom Domain / Shareable Link"
     ],
@@ -156,21 +156,9 @@ export const OCCASIONS = [
     icon: "baby",
   },
   {
-    id: "engagement",
-    title: "Islamic Engagements",
-    desc: "Mangni and family announcement cards crafted with modesty and warmth.",
-    icon: "sparkles",
-  },
-  {
-    id: "mahfil",
-    title: "Mahfil & Khatam",
-    desc: "Quran Khwani, Khatam-ul-Quran, and spiritual gathering invites.",
-    icon: "book",
-  },
-  {
     id: "custom",
     title: "Custom Blessed Events",
-    desc: "Hajj/Umrah homecoming, family anniversaries, and bespoke occasions.",
+    desc: "Engagements, Hajj/Umrah homecoming, family anniversaries, and bespoke occasions.",
     icon: "calendar",
   },
 ];

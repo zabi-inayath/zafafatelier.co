@@ -2,6 +2,15 @@ import React from 'react';
 import { TESTIMONIALS } from '../../constants';
 import { RiStarFill, RiDoubleQuotesR, RiArrowRightLine } from 'react-icons/ri';
 
+
+function Eyebrow({ children }) {
+  return (
+    <p className="text-md sm:text-xl tracking-[0.25em] poppins uppercase font-semibold mb-8 text-center">
+      {children}
+    </p>
+  );
+}
+
 export default function Testimonials({ onOpenOrderModal }) {
   return (
     <section id="reviews" className="relative py-28 sm:py-36 border-t border-mint/[0.06] overflow-hidden">
@@ -12,14 +21,12 @@ export default function Testimonials({ onOpenOrderModal }) {
       <div className="relative z-10 max-w-screen-xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16 sm:mb-20">
+        <Eyebrow>Client Love</Eyebrow>
+        <div className="flex justify-center items-center flex-col text-center mb-16 text-5xl font-semibold dm-sans">
           <div>
-            <p className="poppins text-[10px] sm:text-xs text-mint tracking-[0.25em] uppercase font-semibold opacity-65 mb-4">
-              Client Love
-            </p>
-            <h2 className="MiguErsansRegular text-[clamp(2.4rem,5vw,5rem)] text-white leading-none">
-              What They<br />
-              <span className="text-mint">Said</span>
+            <h2 className="text-white leading-tight">
+              What They
+              <span className="text-mint"> Said</span>
             </h2>
           </div>
           <button onClick={onOpenOrderModal} className="btn-outline self-start sm:self-end">

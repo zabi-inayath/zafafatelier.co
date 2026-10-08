@@ -62,10 +62,10 @@ export default function ServicesSection({ onSelectService, onOpenInteractiveDemo
                 {/* Content */}
                 <div className={`flex flex-col justify-between p-8 lg:p-12 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
                   <div>
-                    <h3 className="MiguErsansRegular text-[clamp(1.8rem,3vw,3rem)] text-white mb-4 leading-tight">
+                    <h3 className="dm-sans font-semibold text-[clamp(1.8rem,3vw,3rem)] text-white mb-4 leading-tight">
                       {service.title}
                     </h3>
-                    <p className="dm-sans text-sm text-mint-dim/70 font-light leading-relaxed mb-8">
+                    <p className="poppins text-sm text-mint-dim/70 font-light leading-relaxed mb-8">
                       {service.description}
                     </p>
 
@@ -73,7 +73,7 @@ export default function ServicesSection({ onSelectService, onOpenInteractiveDemo
                       {service.features.map((feat, fi) => (
                         <li key={fi} className="flex items-start gap-3 text-[13px] text-mint/80">
                           <RiCheckLine size={16} className="text-mint shrink-0 mt-0.5" />
-                          <span className="dm-sans font-light">{feat}</span>
+                          <span className="poppins font-light">{feat}</span>
                         </li>
                       ))}
                     </ul>

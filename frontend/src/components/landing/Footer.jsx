@@ -3,13 +3,13 @@ import { FaWhatsapp, FaInstagram, FaEnvelope } from 'react-icons/fa6';
 import { BRAND } from '../../constants';
 
 const NAV_LINKS = [
-  { label: 'Home',      href: '#top' },
-  { label: 'Services',  href: '#services' },
-  { label: 'Work',      href: '#templates' },
-  { label: 'Process',   href: '#process' },
+  { label: 'Home', href: '#top' },
+  { label: 'Services', href: '#services' },
+  // { label: 'Work',      href: '#templates' },
+  // { label: 'Process',   href: '#process' },
   { label: 'Occasions', href: '#occasions' },
-  { label: 'Reviews',   href: '#reviews' },
-  { label: 'FAQ',       href: '#faq' },
+  // { label: 'Reviews',   href: '#reviews' },
+  { label: 'FAQ', href: '#faq' },
 ];
 
 const SERVICES_LIST = [
@@ -40,7 +40,7 @@ export default function Footer({ onOpenOrderModal }) {
               Islamic E-Invitations<br />
               <span className="text-mint">&amp; Wedding Websites</span>
             </p>
-            <p className="dm-sans text-xs text-mint-dim/35 leading-relaxed max-w-xs mb-7 font-light mt-3">
+            <p className="dm-sans text-xs text-white leading-relaxed max-w-xs mb-7 font-light mt-3">
               Bespoke, modern digital invitations crafted with Islamic values.
               No music. No haram content. Just beautiful barakah.
             </p>
@@ -48,9 +48,9 @@ export default function Footer({ onOpenOrderModal }) {
             {/* Socials */}
             <div className="flex items-center gap-3">
               {[
-                { href: BRAND.whatsappUrl,              icon: <FaWhatsapp  size={18} />, color: '#25d366', label: 'WhatsApp' },
-                { href: BRAND.instagramUrl,             icon: <FaInstagram size={18} />, color: '#e1306c', label: 'Instagram' },
-                { href: `mailto:${BRAND.email}`,        icon: <FaEnvelope  size={18} />, color: '#b5e8c5', label: 'Email' },
+                { href: BRAND.whatsappUrl, icon: <FaWhatsapp size={18} />, color: '#25d366', label: 'WhatsApp' },
+                { href: BRAND.instagramUrl, icon: <FaInstagram size={18} />, color: '#e1306c', label: 'Instagram' },
+                { href: `mailto:${BRAND.email}`, icon: <FaEnvelope size={18} />, color: '#b5e8c5', label: 'Email' },
               ].map(s => (
                 <a
                   key={s.label}
@@ -73,7 +73,7 @@ export default function Footer({ onOpenOrderModal }) {
             <ul className="space-y-3">
               {NAV_LINKS.map(l => (
                 <li key={l.label}>
-                  <a href={l.href} className="dm-sans text-xs text-mint-dim/40 hover:text-mint transition-colors">
+                  <a href={l.href} className="dm-sans text-sm text-white hover:text-mint transition-colors">
                     {l.label}
                   </a>
                 </li>
@@ -86,7 +86,7 @@ export default function Footer({ onOpenOrderModal }) {
             <h5 className="poppins text-[10px] text-mint tracking-[0.22em] uppercase font-semibold opacity-65 mb-5">Services</h5>
             <ul className="space-y-3">
               {SERVICES_LIST.map(s => (
-                <li key={s} className="dm-sans text-xs text-mint-dim/40">{s}</li>
+                <li key={s} className="dm-sans text-sm text-white">{s}</li>
               ))}
             </ul>
           </div>
@@ -96,20 +96,17 @@ export default function Footer({ onOpenOrderModal }) {
             <h5 className="poppins text-[10px] text-mint tracking-[0.22em] uppercase font-semibold opacity-65 mb-5">Get in Touch</h5>
             <div className="space-y-4">
               <div>
-                <span className="poppins text-[9px] text-mint-dim/30 uppercase tracking-widest block mb-0.5">WhatsApp</span>
-                <a href={BRAND.whatsappUrl} target="_blank" rel="noopener noreferrer" className="dm-sans text-xs text-white hover:text-mint transition-colors font-mono">
+                <a href={BRAND.whatsappUrl} target="_blank" rel="noopener noreferrer" className="dm-sans text-sm sm:text-base text-white hover:text-mint transition-colors font-mono font-medium">
                   {BRAND.whatsappNumber}
                 </a>
               </div>
               <div>
-                <span className="poppins text-[9px] text-mint-dim/30 uppercase tracking-widest block mb-0.5">Email</span>
-                <a href={`mailto:${BRAND.email}`} className="dm-sans text-xs text-white hover:text-mint transition-colors break-all">
+                <a href={`mailto:${BRAND.email}`} className="dm-sans text-sm sm:text-base text-white hover:text-mint transition-colors break-all font-medium">
                   {BRAND.email}
                 </a>
               </div>
               <div>
-                <span className="poppins text-[9px] text-mint-dim/30 uppercase tracking-widest block mb-0.5">Website</span>
-                <a href={`https://${BRAND.website}`} target="_blank" rel="noopener noreferrer" className="dm-sans text-xs text-white hover:text-mint transition-colors">
+                <a href={`https://${BRAND.website}`} target="_blank" rel="noopener noreferrer" className="dm-sans text-sm sm:text-base text-white hover:text-mint transition-colors font-medium">
                   {BRAND.website}
                 </a>
               </div>
@@ -125,16 +122,16 @@ export default function Footer({ onOpenOrderModal }) {
         {/* Bottom bar */}
         <div className="rule-fade mb-6" />
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="dm-sans text-[11px] text-mint-dim/25">
+          <span className="dm-sans text-[13px] text-mint-dim">
             © {new Date().getFullYear()} {BRAND.name}. All rights reserved.
           </span>
-          <span className="dm-sans text-[11px] text-mint-dim/25 text-center">
+          <span className="dm-sans text-[13px] text-mint-dim/75 text-center">
             A proud initiative of{' '}
-            <a href={BRAND.parentCompanyUrl} target="_blank" rel="noopener noreferrer" className="text-mint/40 hover:text-mint transition-colors font-medium">
+            <a href={BRAND.parentCompanyUrl} target="_blank" rel="noopener noreferrer" className="text-mint hover:text-mint transition-colors font-medium">
               {BRAND.parentCompany}
             </a>
           </span>
-          <span className="dm-sans text-[11px] text-mint-dim/25">Crafted with barakah 🤍</span>
+          <span className="dm-sans text-[13px] text-mint-dim">Crafted with barakah 🤍</span>
         </div>
 
       </div>

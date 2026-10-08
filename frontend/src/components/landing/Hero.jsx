@@ -286,7 +286,7 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
       {/* ══════════════════════════════════════════
           BLOCK 4 — Centered CTAs
       ══════════════════════════════════════════ */}
-      <Block className="px-6 pt-24 pb-28">
+      <Block className="px-6 py-15">
         {/* Top glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-72 bg-mint/[0.03] blur-[100px] pointer-events-none" />
 
