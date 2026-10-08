@@ -52,7 +52,6 @@ export default function HomePage() {
           onOpenOrderModal={() => handleOpenOrder()}
           onOpenInteractiveDemo={() => setInteractiveDemoOpen(true)}
         />
-        <TrustBar />
         <ServicesSection
           onSelectService={handleSelectService}
           onOpenInteractiveDemo={() => setInteractiveDemoOpen(true)}
@@ -61,6 +60,7 @@ export default function HomePage() {
         <HowItWorks onOpenOrderModal={() => handleOpenOrder()} />
         <OccasionsGrid onSelectOccasion={handleSelectOccasion} />
         <IslamicValuesBanner />
+        <TrustBar />
         <Testimonials onOpenOrderModal={() => handleOpenOrder()} />
         <FaqSection />
         <CtaBanner

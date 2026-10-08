@@ -4,9 +4,17 @@ import { RiCheckLine, RiArrowRightLine, RiGlobalLine, RiImageLine, RiFilmLine } 
 
 const SERVICE_ICONS = {
   'web-invitations': <RiGlobalLine size={24} className="text-mint" />,
-  'e-invites':       <RiImageLine  size={24} className="text-mint" />,
-  'video-invites':   <RiFilmLine   size={24} className="text-mint" />,
+  'e-invites': <RiImageLine size={24} className="text-mint" />,
+  'video-invites': <RiFilmLine size={24} className="text-mint" />,
 };
+
+function Eyebrow({ children }) {
+  return (
+    <p className="text-md sm:text-xl tracking-[0.25em] poppins uppercase font-semibold mb-8 text-center">
+      {children}
+    </p>
+  );
+}
 
 export default function ServicesSection({ onSelectService, onOpenInteractiveDemo }) {
   return (
@@ -18,19 +26,13 @@ export default function ServicesSection({ onSelectService, onOpenInteractiveDemo
       <div className="relative z-10 max-w-screen-xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 sm:mb-20">
-          <div>
-            <p className="poppins text-[10px] sm:text-xs text-mint tracking-[0.25em] uppercase font-semibold opacity-65 mb-4">
-              Our Services
-            </p>
-            <h2 className="MiguErsansRegular text-[clamp(2.4rem,5vw,5rem)] text-white leading-none">
-              Invitations for Every<br />
-              <span className="text-mint">Blessed Occasion</span>
-            </h2>
-          </div>
-          <p className="dm-sans text-sm text-mint-dim/70 max-w-xs leading-relaxed md:text-right font-light">
-            Thoughtfully designed for Nikah, Walima &amp; Islamic celebrations worldwide.
-          </p>
+        <Eyebrow>Our Services</Eyebrow>
+
+        <div className="flex justify-center items-center flex-col text-center mb-14 text-5xl font-semibold dm-sans">
+          <h2 className="text-white leading-none">
+            Invitations for Every
+            <span className="text-mint"> Blessed Occasion</span>
+          </h2>
         </div>
 
         {/* Services stack — editorial alternating */}

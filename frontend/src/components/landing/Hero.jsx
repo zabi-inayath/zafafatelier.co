@@ -225,7 +225,7 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
 
         <Eyebrow>What we craft</Eyebrow>
 
-        <h2 className="dm-sans font-display text-[clamp(28px,5vw,88px)] font-semibold text-white text-center leading-[1.18] max-w-6xl mx-auto">
+        <h2 className="dm-sans text-[clamp(28px,5vw,88px)] font-semibold text-white text-center leading-[1.18] max-w-6xl mx-auto">
           Web Invitations, E-Invites &amp;{' '}
           <em className="not-italic text-mint">Cinematic Video Invites</em>{' '}
           crafted with{' '}
@@ -314,12 +314,6 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
           </button>
         </div>
 
-        {/* Scroll hint */}
-        <div className="mt-16 flex items-center gap-3 text-[#4a6655]/90 text-xs font-medium">
-          <div className="w-10 h-px bg-mint/20" />
-          <span>Scroll to explore</span>
-          <div className="w-10 h-px bg-mint/20" />
-        </div>
       </Block>
 
     </section>
