@@ -18,6 +18,7 @@ import {
   RiCloseLine
 } from 'react-icons/ri';
 import toast from 'react-hot-toast';
+import DotMatrixLoader from '../../components/common/DotMatrixLoader';
 
 // --- STYLES ---
 const MizaStyle = () => (
@@ -119,8 +120,8 @@ const Celebration = () => {
     const newParticles = Array.from({ length: 70 }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
-      animationDuration: `${Math.random() * 3 + 3}s`,
-      animationDelay: `${Math.random() * 1.5}s`,
+      animationDuration: `${Math.random() * 2 + 2}s`,
+      animationDelay: `${Math.random() * 0.8}s`,
       size: `${Math.random() * 8 + 6}px`,
       type: Math.random() > 0.5 ? 'circle' : 'diamond'
     }));
@@ -132,7 +133,7 @@ const Celebration = () => {
       {particles.map(p => (
         <div
           key={p.id}
-          className={`absolute top-[-10%] bg-gradient-to-br from-[#f8e7b9] to-[#d4af37] opacity-90 animate-confetti shadow-[0_0_8px_rgba(212,175,55,0.6)]`}
+          className={`absolute top-[-10%] bg-gradient-to-br from-[#123F36]/50 to-[#123F36] opacity-90 animate-confetti shadow-[0_0_8px_rgba(212,175,55,0.6)]`}
           style={{
             left: p.left,
             width: p.size,
@@ -154,47 +155,118 @@ const ScratchCard = ({ children, onReveal }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || isRevealed) return;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+useEffect(() => {
+  const canvas = canvasRef.current;
+  if (!canvas || isRevealed) return;
 
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+  const ctx = canvas.getContext('2d', {
+    willReadFrequently: true,
+  });
 
-    // Elegant gold cover
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    gradient.addColorStop(0, '#031424');
-    gradient.addColorStop(0.5, '#05233c');
-    gradient.addColorStop(1, '#031424');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
 
-    ctx.strokeStyle = '#d4af37';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
-    ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
 
-    ctx.fillStyle = '#d4af37';
-    ctx.font = '300 13px "Cormorant Garamond", serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('SCRATCH TO REVEAL', canvas.width / 2, canvas.height / 2 - 10);
+  ctx.scale(dpr, dpr);
 
-    ctx.font = 'italic 11px "Amiri", serif';
-    ctx.fillStyle = '#8ab89c';
-    ctx.fillText('Uncover the sacred date', canvas.width / 2, canvas.height / 2 + 15);
+  const width = rect.width;
+  const height = rect.height;
+  const centerX = width / 2;
+  const centerY = height / 2;
 
-    ctx.globalCompositeOperation = 'destination-out';
-  }, [isRevealed]);
+  // Warm textured parchment background
+  const gradient = ctx.createLinearGradient(
+    0, 0, width, height
+  );
+
+  gradient.addColorStop(0, '#123F36');
+  gradient.addColorStop(0.5, '#123F36');
+  gradient.addColorStop(1, '#123F36');
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+
+  // Fine paper grain
+  for (let i = 0; i < width * height * 0.035; i++) {
+    const x = Math.random() * width;
+    const y = Math.random() * height;
+    const alpha = Math.random() * 0.07;
+
+    ctx.fillStyle = `rgba(91, 79, 54, ${alpha})`;
+    ctx.fillRect(x, y, Math.random() * 2 + 0.5, 0.5);
+  }
+
+  // Elegant double border — keep the existing shape
+  ctx.strokeStyle = 'rgba(108, 119, 84, 0.65)';
+  ctx.lineWidth = 1;
+
+  ctx.strokeRect(15, 15, width - 30, height - 30);
+
+  ctx.strokeStyle = 'rgba(108, 119, 84, 0.3)';
+  ctx.strokeRect(21, 21, width - 42, height - 42);
+
+  // Script heading
+  ctx.fillStyle = '#526B4E';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  let headingSize = Math.min(30, width * 0.065);
+  ctx.font = `italic ${headingSize}px "Cormorant Garamond", serif`;
+
+  ctx.fillText(
+    'Scratch to Reveal',
+    centerX,
+    centerY - 20,
+    width - 55
+  );
+
+  // Delicate divider with a tiny central diamond
+  const dividerY = centerY + 17;
+  const dividerWidth = Math.min(100, width * 0.22);
+
+  ctx.strokeStyle = 'rgba(108, 119, 84, 0.45)';
+  ctx.lineWidth = 0.8;
+
+  ctx.beginPath();
+  ctx.moveTo(centerX - dividerWidth, dividerY);
+  ctx.lineTo(centerX - 8, dividerY);
+  ctx.moveTo(centerX + 8, dividerY);
+  ctx.lineTo(centerX + dividerWidth, dividerY);
+  ctx.stroke();
+
+  ctx.save();
+  ctx.translate(centerX, dividerY);
+  ctx.rotate(Math.PI / 4);
+  ctx.fillStyle = '#879273';
+  ctx.fillRect(-3, -3, 6, 6);
+  ctx.restore();
+
+  // Subtle subtitle
+  ctx.fillStyle = '#78846A';
+  ctx.font = 'italic 12px "Cormorant Garamond", serif';
+
+  ctx.fillText(
+    'Uncover your special date',
+    centerX,
+    centerY + 42,
+    width - 50
+  );
+
+  // Preserve the scratch-to-reveal effect
+  ctx.globalCompositeOperation = 'destination-out';
+}, [isRevealed]);
 
   const scratch = (x, y) => {
     if (isRevealed) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
     const rect = canvas.getBoundingClientRect();
+
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
 
@@ -202,53 +274,85 @@ const ScratchCard = ({ children, onReveal }) => {
     const currentY = (y - rect.top) * scaleY;
 
     ctx.beginPath();
-    ctx.arc(currentX, currentY, 40, 0, Math.PI * 2);
+    ctx.arc(currentX, currentY, 40 * scaleX, 0, Math.PI * 2);
     ctx.fill();
 
     checkReveal();
   };
 
   const checkReveal = () => {
+    // Avoid expensive pixel checks on every pointer movement
     if (Math.random() > 0.8) {
       const canvas = canvasRef.current;
       if (!canvas) return;
+
       const ctx = canvas.getContext('2d');
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const imageData = ctx.getImageData(
+        0, 0, canvas.width, canvas.height
+      );
+
       const pixels = imageData.data;
       let transparentPixels = 0;
-      for (let i = 0; i < pixels.length; i += 4) {
-        if (pixels[i + 3] < 128) transparentPixels++;
+
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] < 128) transparentPixels++;
       }
-      const percentage = (transparentPixels / (pixels.length / 4)) * 100;
+
+      const percentage =
+        (transparentPixels / (pixels.length / 4)) * 100;
+
       if (percentage > 45) {
         setIsRevealed(true);
-        onReveal();
+        onReveal?.();
       }
     }
   };
 
   const handleStart = (e) => {
     setIsDrawing(true);
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const clientX = e.touches
+      ? e.touches[0].clientX
+      : e.clientX;
+
+    const clientY = e.touches
+      ? e.touches[0].clientY
+      : e.clientY;
+
     scratch(clientX, clientY);
   };
 
   const handleMove = (e) => {
     if (!isDrawing) return;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const clientX = e.touches
+      ? e.touches[0].clientX
+      : e.clientX;
+
+    const clientY = e.touches
+      ? e.touches[0].clientY
+      : e.clientY;
+
     scratch(clientX, clientY);
   };
 
   const handleEnd = () => setIsDrawing(false);
 
   return (
-    <div className="relative inline-block w-full h-full min-h-[220px] select-none rounded-3xl overflow-hidden shadow-2xl border border-[#d4af37]/20">
-      <div className={`transition-opacity duration-[1500ms] w-full h-full flex flex-col justify-center items-center p-6 bg-[#031424]/90 backdrop-blur-md ${isRevealed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+    <div className="relative inline-block w-full h-full min-h-[220px] select-none rounded-3xl overflow-hidden shadow-sm border border-[#B9A17A]/40">
+
+      {/* Revealed content */}
+      <div
+        className={`transition-opacity duration-[1500ms] w-full h-full flex flex-col justify-center items-center p-6 bg-[#F8F5ED] ${
+          isRevealed
+            ? 'opacity-100'
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
         {children}
       </div>
 
+      {/* Scratchable luxury cover */}
       {!isRevealed && (
         <canvas
           ref={canvasRef}
@@ -260,7 +364,9 @@ const ScratchCard = ({ children, onReveal }) => {
           onTouchMove={handleMove}
           onTouchEnd={handleEnd}
           className="absolute inset-0 w-full h-full cursor-crosshair"
-          style={{ touchAction: 'none' }}
+          style={{
+            touchAction: 'none',
+          }}
         />
       )}
     </div>
@@ -271,9 +377,30 @@ const ScratchCard = ({ children, onReveal }) => {
 const VideoHero = ({ onUnlock }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const videoRef = useRef(null);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.readyState >= 3) {
+      setIsVideoLoaded(true);
+      return;
+    }
+
+    const handleReady = () => setIsVideoLoaded(true);
+    video.addEventListener('canplaythrough', handleReady);
+    video.addEventListener('loadeddata', handleReady);
+
+    return () => {
+      video.removeEventListener('canplaythrough', handleReady);
+      video.removeEventListener('loadeddata', handleReady);
+    };
+  }, []);
+
   const handleTap = () => {
+    if (!isVideoLoaded) return;
     if (!isPlaying && videoRef.current) {
       setIsPlaying(true);
       videoRef.current.play().catch(e => {
@@ -298,19 +425,27 @@ const VideoHero = ({ onUnlock }) => {
 
   return (
     <div
-      className="relative w-full h-screen bg-[#010610] cursor-pointer z-[50] flex flex-col justify-center items-center overflow-hidden"
+      className="relative w-full h-screen bg-[#010610] cursor-pointer z-[50] flex flex-col items-center overflow-hidden"
       onClick={handleTap}
     >
       <video
         ref={videoRef}
-        src="/videos/openingdemo2.mp4"
+        src="/templates/template1/openingdemo2.mp4"
+        preload="auto"
         className="absolute inset-0 w-full h-full object-cover"
         playsInline
         muted
       />
 
+      {/* Loading Animation until template video is fully loaded */}
+      {!isVideoLoaded && (
+        <div className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6 transition-opacity duration-700">
+          <DotMatrixLoader text="PREPARING YOUR INVITATION" />
+        </div>
+      )}
+
       {/* Tap to Open overlay */}
-      {!isPlaying && (
+      {isVideoLoaded && !isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-700">
           <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase animate-pulse border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/40 shadow-[0_0_25px_rgba(212,175,55,0.25)] flex items-center space-x-3">
             <span>Tap to Open</span>
@@ -320,7 +455,7 @@ const VideoHero = ({ onUnlock }) => {
 
       {/* Invitation Card Revealed after 3 seconds with smooth scale up */}
       {isUnlocked && (
-        <div className="relative z-30 max-w-sm sm:max-w-md w-[88%] px-5 py-6 sm:px-8 sm:py-7 rounded-2xl text-center animate-scale-up select-none pointer-events-auto">
+        <div className="relative mt-35 z-30 max-w-sm sm:max-w-md w-[88%] px-5 py-6 sm:px-8 sm:py-7 rounded-2xl text-center animate-scale-up select-none pointer-events-auto">
           {/* 1. Top Bismillah (pops up first) */}
           <div className="pop-item-1">
             <p
@@ -334,16 +469,15 @@ const VideoHero = ({ onUnlock }) => {
 
           {/* 2. Invitation Lead Text (pops up second) */}
           <div className="pop-item-2 my-2.5">
-            <p className="text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#1e3f2d] font-medium leading-relaxed max-w-xs mx-auto">
-              With Allah&apos;s blessings, we joyfully invite you to the nikah ceremony of
+            <p className="text-md font-sans text-[#1e3f2d] font-medium leading-relaxed max-w-xs mx-auto">
+              With Allah&apos;s blessings, we joyfully invite you to the Nikah ceremony of
             </p>
           </div>
 
           {/* 3. Groom & Bride Names (pops up third) */}
-          <div className="pop-item-3 my-3 space-y-0.5">
+          <div className="pop-item-3 my-3 space-y-0.5 mt-10">
             <h2
-              className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#082215] font-normal tracking-wide"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              className="text-3xl DXRigraf md:text-4xl font-serif text-[#082215] tracking-wide"
             >
               Zayd Ibrahim
             </h2>
@@ -353,8 +487,7 @@ const VideoHero = ({ onUnlock }) => {
               <span className="h-px w-8 bg-[#9e7d3b]/50" />
             </div>
             <h2
-              className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#082215] font-normal tracking-wide"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
+              className="text-3xl DXRigraf md:text-4xl text-[#082215] tracking-wide"
             >
               Maryam Al-Zahra
             </h2>
@@ -362,8 +495,8 @@ const VideoHero = ({ onUnlock }) => {
 
           </div>
 
-          <div className="pop-item-4 mt-4 p-2 rounded-3xl bg-[#faf6f0]/85 border border-[#c8aa62]/60 shadow-[0_20px_50px_rgba(0,0,0,0.25)] backdrop-blur-sm">
-            {/* 4. Date & Time (pops up fourth) */}
+          {/* <div className="pop-item-4 mt-4 p-2 rounded-3xl bg-[#faf6f0]/85 border border-[#c8aa62]/60 shadow-[0_20px_50px_rgba(0,0,0,0.25)] backdrop-blur-sm">
+           
             <div className="pop-item-4 my-2 text-[11px] sm:text-xs font-semibold tracking-wider text-[#0e3321] uppercase flex items-center justify-center gap-2">
               <span>Saturday, 28th Nov 2026</span>
             </div>
@@ -374,7 +507,7 @@ const VideoHero = ({ onUnlock }) => {
             <div className="pop-item-4 max-w-[350px] my-2 text-[11px] sm:text-xs font-semibold tracking-wider text-[#0e3321] uppercase flex items-center justify-center">
               <span>The Grand Royal Ballroom, Taj Falaknuma Palace, Hyderabad</span>
             </div>
-          </div>
+          </div> */}
 
         </div>
       )}
@@ -512,7 +645,7 @@ export default function MizaanRoyal({ isPreview = false }) {
   };
 
   return (
-    <div className={`min-h-screen bg-[#020b17] text-[#e8f4ec] relative overflow-x-clip selection:bg-[#d4af37]/30 selection:text-[#f8e7b9] ${!hasOpenedEnvelope ? 'h-screen overflow-hidden' : ''}`}>
+    <div className={`min-h-screen bg-white text-[#193b2b] relative overflow-x-clip selection:bg-[#d4af37]/30 selection:text-[#C49A45] ${!hasOpenedEnvelope ? 'h-screen overflow-hidden' : ''}`}>
       <MizaStyle />
 
       {/* Permanent Video Hero Layer */}
@@ -521,102 +654,105 @@ export default function MizaanRoyal({ isPreview = false }) {
       {/* Experience Layers */}
       {hasRevealedDate && <Celebration />}
 
-      {/* Background Ambience Layers */}
-      <div className="fixed inset-0 pointer-events-none opacity-40 z-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[550px] bg-gradient-to-b from-[#113d29]/30 via-[#0d2e1f]/15 to-transparent rounded-full blur-[140px]" />
-        <div className="absolute top-1/3 right-0 w-[450px] h-[450px] bg-gradient-to-l from-[#d4af37]/08 via-transparent to-transparent rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 left-0 w-[450px] h-[450px] bg-gradient-to-r from-[#0d3b25]/15 via-transparent to-transparent rounded-full blur-[120px]" />
+      {/* Repeating Background across all sections (Fit to full screen, not fixed, duplicated until end, reduced opacity in white) */}
+      <div className="absolute inset-0 w-full h-full bg-white z-0 pointer-events-none overflow-hidden">
+        <div
+          className="w-full h-full opacity-15"
+          style={{
+            backgroundImage: "url('/templates/template1/background.png')",
+            backgroundRepeat: 'repeat-y',
+            backgroundSize: '100% 100vh',
+            backgroundPosition: 'top center'
+          }}
+        />
       </div>
-
-      <div
-        className="fixed inset-0 pointer-events-none opacity-[0.035] z-0"
-        style={{ backgroundImage: 'radial-gradient(#d4af37 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }}
-      />
 
       <div className={`relative z-10 transition-opacity duration-1000 ${hasOpenedEnvelope ? 'opacity-100' : 'opacity-0'}`}>
         {/* HERO SECTION */}
-        <header className="pt-24 pb-16 px-6 text-center max-w-4xl mx-auto">
-          <div className="inline-flex flex-col items-center mb-8 reveal-on-scroll stagger-1">
+        <header className="pt-5 pb-10 px-6 text-center max-w-4xl mx-auto">
+          <div className="inline-flex flex-col items-center mb-4 reveal-on-scroll stagger-1">
             <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#d4af37]/60 to-transparent mb-3" />
-            <p className="text-[11px] uppercase tracking-[0.35em] text-[#d4af37] font-semibold">
-              In The Name of Allah, The Most Gracious, The Most Merciful
+            <p className="text-lg dm-sans text-[#123F36] font-semibold">
+              In The Name of Allah, The Most Gracious, <br /> The Most Merciful
             </p>
             <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#d4af37]/60 to-transparent mt-3" />
           </div>
 
-          <div className="my-6 reveal-on-scroll stagger-2">
-            <p className="text-3xl sm:text-4xl md:text-5xl text-[#e8f4ec] font-normal tracking-wide drop-shadow-md py-2" style={{ fontFamily: 'Amiri, serif', lineHeight: 1.6 }}>
-              بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-            </p>
-          </div>
-
-          <div className="my-10 p-6 sm:p-8 rounded-3xl bg-[#031527]/70 border border-[#d4af37]/25 backdrop-blur-xl relative overflow-hidden shadow-2xl reveal-on-scroll stagger-3">
-            <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-24 bg-[#d4af37]/10 rounded-full blur-2xl pointer-events-none" />
-            <p className="text-lg sm:text-xl md:text-2xl text-[#f3eedb] font-light leading-relaxed mb-4" style={{ fontFamily: 'Amiri, serif', direction: 'rtl' }}>
-              وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً
-            </p>
-            <div className="w-24 h-px bg-gradient-to-r from-transparent via-[#d4af37]/50 to-transparent mx-auto my-4" />
-            <p className="text-xs sm:text-sm text-[#a4c5b2] font-light italic max-w-2xl mx-auto leading-relaxed">
-              &ldquo;And among His signs is that He created for you spouses from among yourselves, that you may find tranquility in them; and He placed between you affection and mercy.&rdquo;
-            </p>
-            <span className="block text-[10px] uppercase tracking-[0.25em] text-[#d4af37]/90 mt-2 font-semibold">
-              — Surah Ar-Rum [30:21]
-            </span>
-          </div>
-
-          <div className="space-y-3 mt-16 mb-8 reveal-on-scroll stagger-1">
-            <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-[#8ab89c] font-medium">Under the grace and blessings of Almighty Allah</p>
-            <p className="text-xs sm:text-sm text-[#c8e2d2] font-light max-w-md mx-auto">
+          <div className="space-y-3 my-4 reveal-on-scroll stagger-1">
+            <p className="text-lg dm-sans uppercase text-[#C49A45] mb-4 font-semibold">Under the grace and blessings of Almighty Allah</p>
+            <p className="text-xl text-[#123F36] font-light max-w-md mx-auto poppins">
               Mr. &amp; Mrs. Ibrahim Khan <br />
-              <span className="text-[11px] text-[#8ab89c] italic">&amp;</span> <br />
+              <span className="text-md text-[#C49A45] italic">&amp;</span> <br />
               Dr. &amp; Mrs. Tariq Al-Hashimi
             </p>
-            <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-[#d4af37] font-semibold pt-4">
+            <p className="text-lg dm-sans uppercase text-[#C49A45] font-semibold pt-8">
               Joyfully invite you to the blessed wedding celebration of
             </p>
           </div>
 
-          <div className="py-6 sm:py-10 reveal-on-scroll stagger-2">
-            <div className="space-y-4">
-              <h1 className="text-5xl sm:text-7xl font-normal text-white tracking-wide" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Zayd Ibrahim</h1>
-              <p className="text-xl sm:text-2xl text-[#d4af37] font-light" style={{ fontFamily: 'Amiri, serif' }}>زَيْد إِبْرَاهِيم</p>
+          <div className="py-3 reveal-on-scroll stagger-2">
+            <div className="space-y-2">
+              <h1 className="text-4xl sm:text-7xl hagrid text-[#123F36] tracking-wide">Zayd Ibrahim</h1>
+              <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>زَيْد إِبْرَاهِيم</p>
 
-              <div className="flex items-center justify-center gap-4 py-4">
-                <span className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-[#d4af37]/60" />
-                <span className="text-2xl sm:text-3xl text-[#d4af37] font-serif italic">&amp;</span>
-                <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-[#d4af37]/60" />
+              <div className="flex items-center justify-center gap-4 pt-2">
+                <span className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-[#C49A45]/60" />
+                <span className="text-2xl sm:text-3xl text-[#C49A45] font-serif italic">&amp;</span>
+                <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-[#C49A45]/60" />
               </div>
 
-              <h1 className="text-5xl sm:text-7xl font-normal text-white tracking-wide" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Maryam Al-Zahra</h1>
-              <p className="text-xl sm:text-2xl text-[#d4af37] font-light" style={{ fontFamily: 'Amiri, serif' }}>مَرْيَم الزَّهْرَاء</p>
+              <h1 className="text-4xl sm:text-7xl hagrid text-[#123F36] tracking-wide">Maryam Al-Zahra</h1>
+              <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>مَرْيَم الزَّهْرَاء</p>
             </div>
           </div>
         </header>
 
         {/* SCRATCH REVEAL SECTION */}
-        <section className="max-w-xl mx-auto px-6 py-10 text-center reveal-on-scroll stagger-1 relative z-20">
+        <section className="max-w-xl mx-auto px-6 py-5 text-center reveal-on-scroll stagger-1 relative z-20 ">
           <ScratchCard onReveal={() => setHasRevealedDate(true)}>
-            <div className="flex flex-col items-center justify-center space-y-6">
-              <div className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-[#020b17] border border-[#d4af37]/35 shadow-lg">
-                <RiCalendarLine size={16} className="text-[#d4af37]" />
-                <span className="text-xs sm:text-sm font-semibold tracking-wider text-[#e8f4ec]">Saturday, 28th Nov 2026</span>
+            <div className="flex flex-col items-center justify-center gap-8 cursor-pointer">
+
+              {/* Wedding Date */}
+              <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-[#f8f5ed]/90 border border-[#b9a17a]/40 shadow-sm">
+                <RiCalendarLine
+                  size={17}
+                  className="text-[#C49A45]"
+                />
+                <span className="text-sm font-medium tracking-wide text-[#244333]">
+                  Saturday, 28 November 2026
+                </span>
               </div>
 
-              <div className="grid grid-cols-4 gap-3 sm:gap-5 w-full mt-2">
+              {/* Countdown */}
+              <div className="grid grid-cols-4 gap-3 sm:gap-5 w-full">
                 {[
                   { label: 'Days', value: timeLeft.days },
                   { label: 'Hours', value: timeLeft.hours },
                   { label: 'Minutes', value: timeLeft.minutes },
                   { label: 'Seconds', value: timeLeft.seconds },
-                ].map((item, idx) => (
-                  <div key={idx} className="p-3 sm:p-4 rounded-2xl bg-[#020b17]/80 border border-[#b5e8c5]/20 backdrop-blur-md shadow-inner">
-                    <p className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight">
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex flex-col items-center justify-center py-5 sm:py-6 rounded-xl bg-[#f8f5ed]/80 border border-[#b9a17a]/25 shadow-sm"
+                  >
+                    <p className="text-2xl sm:text-3xl font-medium text-[#193b2b] tracking-tight tabular-nums">
                       {String(item.value).padStart(2, '0')}
                     </p>
-                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-[#8ab89c] mt-1 font-semibold">{item.label}</p>
+
+                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-[#8a795c] mt-2 font-medium">
+                      {item.label}
+                    </p>
                   </div>
                 ))}
               </div>
+
+              {/* Minimal decorative accent */}
+              <div className="flex items-center gap-3 opacity-70">
+                <span className="h-px w-10 bg-[#b9a17a]" />
+                <span className="w-1.5 h-1.5 rotate-45 border border-[#b9a17a]" />
+                <span className="h-px w-10 bg-[#b9a17a]" />
+              </div>
+
             </div>
           </ScratchCard>
         </section>
@@ -624,8 +760,8 @@ export default function MizaanRoyal({ isPreview = false }) {
         {/* ITINERARY */}
         <section className="max-w-4xl mx-auto px-6 py-20 reveal-on-scroll">
           <div className="text-center mb-12">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-[#d4af37] font-semibold mb-2">Order of Celebrations</p>
-            <h2 className="text-3xl sm:text-4xl text-white font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Wedding Itinerary</h2>
+            <p className="text-[11px] uppercase tracking-[0.3em] text-[#C49A45] font-semibold mb-2">Order of Celebrations</p>
+            <h2 className="text-3xl sm:text-4xl font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Wedding Itinerary</h2>
             <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#b5e8c5]/40 to-transparent mx-auto mt-4" />
           </div>
 
