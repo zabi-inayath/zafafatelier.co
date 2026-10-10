@@ -72,7 +72,41 @@ const MizaStyle = () => (
       }
     }
     .animate-scale-up {
-      animation: smoothScaleUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: smoothScaleUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes textPopUp {
+      0% {
+        opacity: 0;
+        transform: scale(0.75) translateY(12px);
+      }
+      70% {
+        opacity: 1;
+        transform: scale(1.03) translateY(-2px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    .pop-item-1 {
+      animation: textPopUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.15s;
+    }
+    .pop-item-2 {
+      animation: textPopUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.5s;
+    }
+    .pop-item-3 {
+      animation: textPopUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.85s;
+    }
+    .pop-item-4 {
+      animation: textPopUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 1.25s;
+    }
+    .pop-item-5 {
+      animation: textPopUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 1.6s;
     }
   `}</style>
 );
@@ -80,7 +114,7 @@ const MizaStyle = () => (
 // --- CELEBRATION COMPONENT ---
 const Celebration = () => {
   const [particles, setParticles] = useState([]);
-  
+
   useEffect(() => {
     const newParticles = Array.from({ length: 70 }).map((_, i) => ({
       id: i,
@@ -124,7 +158,7 @@ const ScratchCard = ({ children, onReveal }) => {
     const canvas = canvasRef.current;
     if (!canvas || isRevealed) return;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    
+
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width;
     canvas.height = rect.height;
@@ -147,7 +181,7 @@ const ScratchCard = ({ children, onReveal }) => {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('SCRATCH TO REVEAL', canvas.width / 2, canvas.height / 2 - 10);
-    
+
     ctx.font = 'italic 11px "Amiri", serif';
     ctx.fillStyle = '#8ab89c';
     ctx.fillText('Uncover the sacred date', canvas.width / 2, canvas.height / 2 + 15);
@@ -158,7 +192,7 @@ const ScratchCard = ({ children, onReveal }) => {
   const scratch = (x, y) => {
     if (isRevealed) return;
     const canvas = canvasRef.current;
-    if(!canvas) return;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -176,20 +210,20 @@ const ScratchCard = ({ children, onReveal }) => {
 
   const checkReveal = () => {
     if (Math.random() > 0.8) {
-       const canvas = canvasRef.current;
-       if(!canvas) return;
-       const ctx = canvas.getContext('2d');
-       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-       const pixels = imageData.data;
-       let transparentPixels = 0;
-       for (let i = 0; i < pixels.length; i += 4) {
-         if (pixels[i + 3] < 128) transparentPixels++;
-       }
-       const percentage = (transparentPixels / (pixels.length / 4)) * 100;
-       if (percentage > 45) {
-         setIsRevealed(true);
-         onReveal();
-       }
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imageData.data;
+      let transparentPixels = 0;
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i + 3] < 128) transparentPixels++;
+      }
+      const percentage = (transparentPixels / (pixels.length / 4)) * 100;
+      if (percentage > 45) {
+        setIsRevealed(true);
+        onReveal();
+      }
     }
   };
 
@@ -214,7 +248,7 @@ const ScratchCard = ({ children, onReveal }) => {
       <div className={`transition-opacity duration-[1500ms] w-full h-full flex flex-col justify-center items-center p-6 bg-[#031424]/90 backdrop-blur-md ${isRevealed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
         {children}
       </div>
-      
+
       {!isRevealed && (
         <canvas
           ref={canvasRef}
@@ -245,12 +279,12 @@ const VideoHero = ({ onUnlock }) => {
       videoRef.current.play().catch(e => {
         console.error("Video play failed", e);
       });
-      
-      // Unlock scroll and reveal details after 5 seconds
+
+      // Unlock scroll and reveal details after 3 seconds
       setTimeout(() => {
         setIsUnlocked(true);
         onUnlock();
-      }, 5000); 
+      }, 3000);
     }
   };
 
@@ -263,7 +297,7 @@ const VideoHero = ({ onUnlock }) => {
   };
 
   return (
-    <div 
+    <div
       className="relative w-full h-screen bg-[#010610] cursor-pointer z-[50] flex flex-col justify-center items-center overflow-hidden"
       onClick={handleTap}
     >
@@ -274,7 +308,7 @@ const VideoHero = ({ onUnlock }) => {
         playsInline
         muted
       />
-      
+
       {/* Tap to Open overlay */}
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-700">
@@ -284,28 +318,31 @@ const VideoHero = ({ onUnlock }) => {
         </div>
       )}
 
-      {/* Invitation Card Revealed after 5 seconds with smooth scale up */}
+      {/* Invitation Card Revealed after 3 seconds with smooth scale up */}
       {isUnlocked && (
-        <div className="relative z-30 max-w-sm sm:max-w-md w-[88%] px-5 py-6 sm:px-8 sm:py-7 rounded-2xl bg-[#faf6f0]/85 border border-[#c8aa62]/60 shadow-[0_20px_50px_rgba(0,0,0,0.25)] backdrop-blur-sm text-center animate-scale-up select-none pointer-events-auto">
-          {/* Top Bismillah */}
-          <p 
-            className="text-2xl sm:text-3xl text-[#082115] font-normal leading-relaxed tracking-wide mb-1" 
-            style={{ fontFamily: 'Amiri, serif' }}
-          >
-            بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
-          </p>
+        <div className="relative z-30 max-w-sm sm:max-w-md w-[88%] px-5 py-6 sm:px-8 sm:py-7 rounded-2xl text-center animate-scale-up select-none pointer-events-auto">
+          {/* 1. Top Bismillah (pops up first) */}
+          <div className="pop-item-1">
+            <p
+              className="text-2xl sm:text-3xl text-[#082115] font-normal leading-relaxed tracking-wide mb-1"
+              style={{ fontFamily: 'Amiri, serif' }}
+            >
+              بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+            </p>
+            <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
+          </div>
 
-          <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
+          {/* 2. Invitation Lead Text (pops up second) */}
+          <div className="pop-item-2 my-2.5">
+            <p className="text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#1e3f2d] font-medium leading-relaxed max-w-xs mx-auto">
+              With Allah&apos;s blessings, we joyfully invite you to the nikah ceremony of
+            </p>
+          </div>
 
-          {/* Invitation Lead Text */}
-          <p className="text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#1e3f2d] font-medium leading-relaxed max-w-xs mx-auto">
-            With Allah&apos;s blessings, we joyfully invite you to the nikah ceremony of
-          </p>
-
-          {/* Groom & Bride Names */}
-          <div className="my-3 space-y-0.5">
-            <h2 
-              className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#082215] font-normal tracking-wide" 
+          {/* 3. Groom & Bride Names (pops up third) */}
+          <div className="pop-item-3 my-3 space-y-0.5">
+            <h2
+              className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#082215] font-normal tracking-wide"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               Zayd Ibrahim
@@ -315,33 +352,36 @@ const VideoHero = ({ onUnlock }) => {
               <span className="text-lg sm:text-xl text-[#9e7d3b] font-serif italic">&amp;</span>
               <span className="h-px w-8 bg-[#9e7d3b]/50" />
             </div>
-            <h2 
-              className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#082215] font-normal tracking-wide" 
+            <h2
+              className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#082215] font-normal tracking-wide"
               style={{ fontFamily: 'Cormorant Garamond, serif' }}
             >
               Maryam Al-Zahra
             </h2>
+            <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
+
           </div>
 
-          <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/60 to-transparent mx-auto my-2" />
+          <div className="pop-item-4 mt-4 p-2 rounded-3xl bg-[#faf6f0]/85 border border-[#c8aa62]/60 shadow-[0_20px_50px_rgba(0,0,0,0.25)] backdrop-blur-sm">
+            {/* 4. Date & Time (pops up fourth) */}
+            <div className="pop-item-4 my-2 text-[11px] sm:text-xs font-semibold tracking-wider text-[#0e3321] uppercase flex items-center justify-center gap-2">
+              <span>Saturday, 28th Nov 2026</span>
+            </div>
+            <div className="pop-item-4 my-2 text-[11px] sm:text-xs font-semibold tracking-wider text-[#0e3321] uppercase flex items-center justify-center gap-2">
+              <span>At 11:30 AM</span>
+            </div>
 
-          {/* Date & Time */}
-          <div className="text-[11px] sm:text-xs font-semibold tracking-wider text-[#0e3321] uppercase flex items-center justify-center gap-2">
-            <span>Saturday, 28th Nov 2026</span>
-            <span className="text-[#9e7d3b]">•</span>
-            <span>11:30 AM</span>
+            <div className="pop-item-4 max-w-[350px] my-2 text-[11px] sm:text-xs font-semibold tracking-wider text-[#0e3321] uppercase flex items-center justify-center">
+              <span>The Grand Royal Ballroom, Taj Falaknuma Palace, Hyderabad</span>
+            </div>
           </div>
 
-          {/* Address */}
-          <p className="mt-1 text-[10px] sm:text-[11px] text-[#2b4b39] tracking-wide font-normal max-w-xs mx-auto leading-relaxed">
-            The Grand Royal Ballroom, Taj Falaknuma Palace, Hyderabad
-          </p>
         </div>
       )}
 
       {/* Scroll Down Cue */}
       {isUnlocked && (
-        <div 
+        <div
           onClick={handleScrollDown}
           className="absolute bottom-5 z-30 animate-bounce flex flex-col items-center cursor-pointer px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/40 text-[#d4af37] text-[11px] tracking-widest uppercase transition-all duration-500 hover:bg-[#d4af37]/20 shadow-lg"
         >
@@ -363,7 +403,7 @@ export default function MizaanRoyal({ isPreview = false }) {
   // Reveal States
   const [hasOpenedEnvelope, setHasOpenedEnvelope] = useState(false);
   const [hasRevealedDate, setHasRevealedDate] = useState(false);
-  
+
   // Countdown timer state
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -395,11 +435,11 @@ export default function MizaanRoyal({ isPreview = false }) {
         }
       });
     }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-    
+
     setTimeout(() => {
       document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
     }, 100);
-    
+
     return () => observer.disconnect();
   }, [hasOpenedEnvelope]);
 
@@ -413,9 +453,9 @@ export default function MizaanRoyal({ isPreview = false }) {
   // RSVP Form state
   const [showRsvpModal, setShowRsvpModal] = useState(false);
   const [guestName, setGuestName] = useState('');
-  const [attendance, setAttendance] = useState('attending'); 
+  const [attendance, setAttendance] = useState('attending');
   const [guestCount, setGuestCount] = useState('2');
-  const [ceremonies, setCeremonies] = useState('both'); 
+  const [ceremonies, setCeremonies] = useState('both');
   const [duaMessage, setDuaMessage] = useState('');
   const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
 
@@ -474,10 +514,10 @@ export default function MizaanRoyal({ isPreview = false }) {
   return (
     <div className={`min-h-screen bg-[#020b17] text-[#e8f4ec] relative overflow-x-clip selection:bg-[#d4af37]/30 selection:text-[#f8e7b9] ${!hasOpenedEnvelope ? 'h-screen overflow-hidden' : ''}`}>
       <MizaStyle />
-      
+
       {/* Permanent Video Hero Layer */}
       <VideoHero onUnlock={() => setHasOpenedEnvelope(true)} />
-      
+
       {/* Experience Layers */}
       {hasRevealedDate && <Celebration />}
 
@@ -488,7 +528,7 @@ export default function MizaanRoyal({ isPreview = false }) {
         <div className="absolute bottom-1/4 left-0 w-[450px] h-[450px] bg-gradient-to-r from-[#0d3b25]/15 via-transparent to-transparent rounded-full blur-[120px]" />
       </div>
 
-      <div 
+      <div
         className="fixed inset-0 pointer-events-none opacity-[0.035] z-0"
         style={{ backgroundImage: 'radial-gradient(#d4af37 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }}
       />
@@ -540,7 +580,7 @@ export default function MizaanRoyal({ isPreview = false }) {
             <div className="space-y-4">
               <h1 className="text-5xl sm:text-7xl font-normal text-white tracking-wide" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Zayd Ibrahim</h1>
               <p className="text-xl sm:text-2xl text-[#d4af37] font-light" style={{ fontFamily: 'Amiri, serif' }}>زَيْد إِبْرَاهِيم</p>
-              
+
               <div className="flex items-center justify-center gap-4 py-4">
                 <span className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-[#d4af37]/60" />
                 <span className="text-2xl sm:text-3xl text-[#d4af37] font-serif italic">&amp;</span>
@@ -556,28 +596,28 @@ export default function MizaanRoyal({ isPreview = false }) {
         {/* SCRATCH REVEAL SECTION */}
         <section className="max-w-xl mx-auto px-6 py-10 text-center reveal-on-scroll stagger-1 relative z-20">
           <ScratchCard onReveal={() => setHasRevealedDate(true)}>
-             <div className="flex flex-col items-center justify-center space-y-6">
-                <div className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-[#020b17] border border-[#d4af37]/35 shadow-lg">
-                  <RiCalendarLine size={16} className="text-[#d4af37]" />
-                  <span className="text-xs sm:text-sm font-semibold tracking-wider text-[#e8f4ec]">Saturday, 28th Nov 2026</span>
-                </div>
-                
-                <div className="grid grid-cols-4 gap-3 sm:gap-5 w-full mt-2">
-                  {[
-                    { label: 'Days', value: timeLeft.days },
-                    { label: 'Hours', value: timeLeft.hours },
-                    { label: 'Minutes', value: timeLeft.minutes },
-                    { label: 'Seconds', value: timeLeft.seconds },
-                  ].map((item, idx) => (
-                    <div key={idx} className="p-3 sm:p-4 rounded-2xl bg-[#020b17]/80 border border-[#b5e8c5]/20 backdrop-blur-md shadow-inner">
-                      <p className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight">
-                        {String(item.value).padStart(2, '0')}
-                      </p>
-                      <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-[#8ab89c] mt-1 font-semibold">{item.label}</p>
-                    </div>
-                  ))}
-                </div>
-             </div>
+            <div className="flex flex-col items-center justify-center space-y-6">
+              <div className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-[#020b17] border border-[#d4af37]/35 shadow-lg">
+                <RiCalendarLine size={16} className="text-[#d4af37]" />
+                <span className="text-xs sm:text-sm font-semibold tracking-wider text-[#e8f4ec]">Saturday, 28th Nov 2026</span>
+              </div>
+
+              <div className="grid grid-cols-4 gap-3 sm:gap-5 w-full mt-2">
+                {[
+                  { label: 'Days', value: timeLeft.days },
+                  { label: 'Hours', value: timeLeft.hours },
+                  { label: 'Minutes', value: timeLeft.minutes },
+                  { label: 'Seconds', value: timeLeft.seconds },
+                ].map((item, idx) => (
+                  <div key={idx} className="p-3 sm:p-4 rounded-2xl bg-[#020b17]/80 border border-[#b5e8c5]/20 backdrop-blur-md shadow-inner">
+                    <p className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight">
+                      {String(item.value).padStart(2, '0')}
+                    </p>
+                    <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-[#8ab89c] mt-1 font-semibold">{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </ScratchCard>
         </section>
 
