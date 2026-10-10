@@ -383,10 +383,10 @@ const VideoHero = ({ onUnlock }) => {
       {isUnlocked && (
         <div
           onClick={handleScrollDown}
-          className="absolute bottom-5 z-30 animate-bounce flex flex-col items-center cursor-pointer px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/40 text-[#d4af37] text-[11px] tracking-widest uppercase transition-all duration-500 hover:bg-[#d4af37]/20 shadow-lg"
+          className="absolute bottom-5 z-30 animate-[bounce_3s_ease-in-out_infinite] flex flex-row gap-2 cursor-pointer px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/40 text-[#d4af37] text-[11px] tracking-widest uppercase transition-all duration-500 hover:bg-[#d4af37]/20 shadow-lg"
         >
           <span>Scroll to explore</span>
-          <svg className="w-3.5 h-3.5 mt-1 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-3.5 h-3.5 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </div>
