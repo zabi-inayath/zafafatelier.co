@@ -312,7 +312,7 @@ const VideoHero = ({ onUnlock }) => {
       {/* Tap to Open overlay */}
       {!isPlaying && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-700">
-          <div className="text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase animate-pulse border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/40 shadow-[0_0_25px_rgba(212,175,55,0.25)] flex items-center space-x-3">
+          <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase animate-pulse border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/40 shadow-[0_0_25px_rgba(212,175,55,0.25)] flex items-center space-x-3">
             <span>Tap to Open</span>
           </div>
         </div>
