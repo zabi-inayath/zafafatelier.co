@@ -45,9 +45,6 @@ export default function TemplateViewerPage() {
 
   return (
     <div className="relative">
-      {/* Floating Interactive Atelier Preview Bar */}
-      <TemplatePreviewBar template={template} />
-
       {/* Render the Invitation Suite */}
       {renderTemplateComponent()}
     </div>
