@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import {
   RiCalendarLine,
@@ -150,225 +150,317 @@ const Celebration = () => {
 };
 
 // --- SCRATCH CARD COMPONENT ---
+
 const ScratchCard = ({ children, onReveal }) => {
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  const isDrawingRef = useRef(false);
+  const lastPointRef = useRef(null);
+  const revealedRef = useRef(false);
+  const lastCheckRef = useRef(0);
+  const hasScratchedRef = useRef(false);
+
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isDrawing, setIsDrawing] = useState(false);
 
-useEffect(() => {
-  const canvas = canvasRef.current;
-  if (!canvas || isRevealed) return;
+  const REVEAL_THRESHOLD = 45;
+  const BRUSH_RADIUS = 24;
+  const CHECK_INTERVAL = 180;
 
-  const ctx = canvas.getContext('2d', {
-    willReadFrequently: true,
-  });
-
-  const rect = canvas.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-
-  ctx.scale(dpr, dpr);
-
-  const width = rect.width;
-  const height = rect.height;
-  const centerX = width / 2;
-  const centerY = height / 2;
-
-  // Warm textured parchment background
-  const gradient = ctx.createLinearGradient(
-    0, 0, width, height
-  );
-
-  gradient.addColorStop(0, '#123F36');
-  gradient.addColorStop(0.5, '#123F36');
-  gradient.addColorStop(1, '#123F36');
-
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, width, height);
-
-  // Fine paper grain
-  for (let i = 0; i < width * height * 0.035; i++) {
-    const x = Math.random() * width;
-    const y = Math.random() * height;
-    const alpha = Math.random() * 0.07;
-
-    ctx.fillStyle = `rgba(91, 79, 54, ${alpha})`;
-    ctx.fillRect(x, y, Math.random() * 2 + 0.5, 0.5);
-  }
-
-  // Elegant double border — keep the existing shape
-  ctx.strokeStyle = 'rgba(108, 119, 84, 0.65)';
-  ctx.lineWidth = 1;
-
-  ctx.strokeRect(15, 15, width - 30, height - 30);
-
-  ctx.strokeStyle = 'rgba(108, 119, 84, 0.3)';
-  ctx.strokeRect(21, 21, width - 42, height - 42);
-
-  // Script heading
-  ctx.fillStyle = '#526B4E';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-
-  let headingSize = Math.min(30, width * 0.065);
-  ctx.font = `italic ${headingSize}px "Cormorant Garamond", serif`;
-
-  ctx.fillText(
-    'Scratch to Reveal',
-    centerX,
-    centerY - 20,
-    width - 55
-  );
-
-  // Delicate divider with a tiny central diamond
-  const dividerY = centerY + 17;
-  const dividerWidth = Math.min(100, width * 0.22);
-
-  ctx.strokeStyle = 'rgba(108, 119, 84, 0.45)';
-  ctx.lineWidth = 0.8;
-
-  ctx.beginPath();
-  ctx.moveTo(centerX - dividerWidth, dividerY);
-  ctx.lineTo(centerX - 8, dividerY);
-  ctx.moveTo(centerX + 8, dividerY);
-  ctx.lineTo(centerX + dividerWidth, dividerY);
-  ctx.stroke();
-
-  ctx.save();
-  ctx.translate(centerX, dividerY);
-  ctx.rotate(Math.PI / 4);
-  ctx.fillStyle = '#879273';
-  ctx.fillRect(-3, -3, 6, 6);
-  ctx.restore();
-
-  // Subtle subtitle
-  ctx.fillStyle = '#78846A';
-  ctx.font = 'italic 12px "Cormorant Garamond", serif';
-
-  ctx.fillText(
-    'Uncover your special date',
-    centerX,
-    centerY + 42,
-    width - 50
-  );
-
-  // Preserve the scratch-to-reveal effect
-  ctx.globalCompositeOperation = 'destination-out';
-}, [isRevealed]);
-
-  const scratch = (x, y) => {
-    if (isRevealed) return;
-
+  useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
 
-    const ctx = canvas.getContext('2d');
+    if (!canvas || !container || isRevealed) return;
+
+    const ctx = canvas.getContext('2d', {
+      willReadFrequently: true,
+    });
+
+    if (!ctx) return;
+
+    let animationFrame;
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+    const drawRoundedRect = (context, x, y, w, h, radius) => {
+      const r = Math.min(radius, w / 2, h / 2);
+
+      context.beginPath();
+      context.moveTo(x + r, y);
+      context.lineTo(x + w - r, y);
+      context.quadraticCurveTo(x + w, y, x + w, y + r);
+      context.lineTo(x + w, y + h - r);
+      context.quadraticCurveTo(
+        x + w, y + h, x + w - r, y + h
+      );
+      context.lineTo(x + r, y + h);
+      context.quadraticCurveTo(
+        x, y + h, x, y + h - r
+      );
+      context.lineTo(x, y + r);
+      context.quadraticCurveTo(x, y, x + r, y);
+      context.closePath();
+    };
+
+    const drawCover = () => {
+      const rect = container.getBoundingClientRect();
+
+      width = rect.width;
+      height = rect.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      if (!width || !height) return;
+
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      // Draw in CSS-pixel coordinates for accurate pointer mapping.
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, width, height);
+
+      // Clip the cover to rounded outer corners.
+      ctx.save();
+      drawRoundedRect(ctx, 0, 0, width, height, 24);
+      ctx.clip();
+
+      ctx.fillStyle = '#123F36';
+      ctx.fillRect(0, 0, width, height);
+
+      // Lightweight parchment-like grain.
+      for (let i = 0; i < width * height * 0.012; i++) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+
+        ctx.fillStyle = `rgba(190, 180, 140, ${Math.random() * 0.09})`;
+        ctx.fillRect(x, y, 1, 1);
+      }
+
+      // Rounded double borders.
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(190, 180, 140, 0.65)';
+      drawRoundedRect(ctx, 15, 15, width - 30, height - 30, 15);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(190, 180, 140, 0.32)';
+      drawRoundedRect(ctx, 21, 21, width - 42, height - 42, 11);
+      ctx.stroke();
+
+      const centerX = width / 2;
+      const centerY = height / 2;
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#D4C9A5';
+
+      const headingSize = Math.min(30, width * 0.065);
+      ctx.font = `italic ${headingSize}px "Cormorant Garamond", serif`;
+
+      ctx.fillText(
+        'Scratch to Reveal',
+        centerX,
+        centerY - 20,
+        Math.max(0, width - 55)
+      );
+
+      const dividerY = centerY + 17;
+      const dividerWidth = Math.min(100, width * 0.22);
+
+      ctx.strokeStyle = 'rgba(190, 180, 140, 0.55)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(centerX - dividerWidth, dividerY);
+      ctx.lineTo(centerX - 8, dividerY);
+      ctx.moveTo(centerX + 8, dividerY);
+      ctx.lineTo(centerX + dividerWidth, dividerY);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(centerX, dividerY);
+      ctx.rotate(Math.PI / 4);
+      ctx.fillStyle = '#C5B78D';
+      ctx.fillRect(-3, -3, 6, 6);
+      ctx.restore();
+
+      ctx.fillStyle = '#C5BFA7';
+      ctx.font = 'italic 12px "Cormorant Garamond", serif';
+      ctx.fillText(
+        'Uncover your special date',
+        centerX,
+        centerY + 42,
+        Math.max(0, width - 50)
+      );
+
+      ctx.restore();
+
+      // Future brush strokes erase the cover.
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(() => {
+        if (hasScratchedRef.current || revealedRef.current) return;
+        drawCover();
+      });
+    });
+
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [isRevealed]);
+
+  const checkReveal = useCallback(() => {
+    const canvas = canvasRef.current;
+
+    if (!canvas || revealedRef.current) return;
+
+    const now = performance.now();
+    if (now - lastCheckRef.current < CHECK_INTERVAL) return;
+
+    lastCheckRef.current = now;
+
+    const ctx = canvas.getContext('2d', {
+      willReadFrequently: true,
+    });
+
+    if (!ctx) return;
+
+    // Sample a smaller grid instead of scanning every pixel.
+    const sampleWidth = 100;
+    const sampleHeight = 100;
+
+    const sampleCanvas = document.createElement('canvas');
+    sampleCanvas.width = sampleWidth;
+    sampleCanvas.height = sampleHeight;
+
+    const sampleCtx = sampleCanvas.getContext('2d', {
+      willReadFrequently: true,
+    });
+
+    if (!sampleCtx) return;
+
+    sampleCtx.drawImage(canvas, 0, 0, sampleWidth, sampleHeight);
+
+    const pixels = sampleCtx.getImageData(
+      0, 0, sampleWidth, sampleHeight
+    ).data;
+
+    let transparentPixels = 0;
+
+    for (let i = 3; i < pixels.length; i += 4) {
+      if (pixels[i] < 128) transparentPixels++;
+    }
+
+    const scratchedPercentage =
+      (transparentPixels / (sampleWidth * sampleHeight)) * 100;
+
+    if (scratchedPercentage >= REVEAL_THRESHOLD) {
+      revealedRef.current = true;
+      isDrawingRef.current = false;
+      lastPointRef.current = null;
+
+      setIsRevealed(true);
+      onReveal?.();
+    }
+  }, [onReveal]);
+
+  const scratch = useCallback((event) => {
+    const canvas = canvasRef.current;
+    if (!canvas || revealedRef.current) return;
+
     const rect = canvas.getBoundingClientRect();
 
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
+    // Coordinates stay in CSS pixels, matching the drawing context.
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
-    const currentX = (x - rect.left) * scaleX;
-    const currentY = (y - rect.top) * scaleY;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    ctx.beginPath();
-    ctx.arc(currentX, currentY, 40 * scaleX, 0, Math.PI * 2);
-    ctx.fill();
+    hasScratchedRef.current = true;
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = BRUSH_RADIUS * 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
+    const lastPoint = lastPointRef.current;
+
+    if (lastPoint) {
+      ctx.beginPath();
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(x, y, BRUSH_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    lastPointRef.current = { x, y };
+
+    checkReveal();
+  }, [checkReveal]);
+
+  const handlePointerDown = (event) => {
+    if (revealedRef.current) return;
+
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+
+    isDrawingRef.current = true;
+    lastPointRef.current = null;
+
+    scratch(event);
+  };
+
+  const handlePointerMove = (event) => {
+    if (!isDrawingRef.current) return;
+
+    event.preventDefault();
+    scratch(event);
+  };
+
+  const handlePointerUp = () => {
+    isDrawingRef.current = false;
+    lastPointRef.current = null;
+
+    // Check once more at the end of the gesture.
     checkReveal();
   };
 
-  const checkReveal = () => {
-    // Avoid expensive pixel checks on every pointer movement
-    if (Math.random() > 0.8) {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      const ctx = canvas.getContext('2d');
-      const imageData = ctx.getImageData(
-        0, 0, canvas.width, canvas.height
-      );
-
-      const pixels = imageData.data;
-      let transparentPixels = 0;
-
-      for (let i = 3; i < pixels.length; i += 4) {
-        if (pixels[i] < 128) transparentPixels++;
-      }
-
-      const percentage =
-        (transparentPixels / (pixels.length / 4)) * 100;
-
-      if (percentage > 45) {
-        setIsRevealed(true);
-        onReveal?.();
-      }
-    }
-  };
-
-  const handleStart = (e) => {
-    setIsDrawing(true);
-
-    const clientX = e.touches
-      ? e.touches[0].clientX
-      : e.clientX;
-
-    const clientY = e.touches
-      ? e.touches[0].clientY
-      : e.clientY;
-
-    scratch(clientX, clientY);
-  };
-
-  const handleMove = (e) => {
-    if (!isDrawing) return;
-
-    const clientX = e.touches
-      ? e.touches[0].clientX
-      : e.clientX;
-
-    const clientY = e.touches
-      ? e.touches[0].clientY
-      : e.clientY;
-
-    scratch(clientX, clientY);
-  };
-
-  const handleEnd = () => setIsDrawing(false);
-
   return (
-    <div className="relative inline-block w-full h-full min-h-[220px] select-none rounded-3xl overflow-hidden shadow-sm border border-[#B9A17A]/40">
-
-      {/* Revealed content */}
-      <div
-        className={`transition-opacity duration-[1500ms] w-full h-full flex flex-col justify-center items-center p-6 bg-[#F8F5ED] ${
-          isRevealed
-            ? 'opacity-100'
-            : 'opacity-0 pointer-events-none'
-        }`}
-      >
+    <div
+      ref={containerRef}
+      className="relative w-full min-h-[220px] select-none rounded-3xl overflow-hidden shadow-sm border border-[#B9A17A]/40"
+    >
+      {/* Revealed content (rendered live in the background behind the scratch canvas) */}
+      <div className="w-full h-full flex flex-col justify-center items-center p-6 bg-[#F8F5ED] rounded-3xl">
         {children}
       </div>
 
-      {/* Scratchable luxury cover */}
-      {!isRevealed && (
-        <canvas
-          ref={canvasRef}
-          onMouseDown={handleStart}
-          onMouseMove={handleMove}
-          onMouseUp={handleEnd}
-          onMouseLeave={handleEnd}
-          onTouchStart={handleStart}
-          onTouchMove={handleMove}
-          onTouchEnd={handleEnd}
-          className="absolute inset-0 w-full h-full cursor-crosshair"
-          style={{
-            touchAction: 'none',
-          }}
-        />
-      )}
+      {/* Scratchable cover */}
+      <canvas
+        ref={canvasRef}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        className={`absolute inset-0 z-10 block w-full h-full cursor-crosshair rounded-3xl transition-opacity duration-700 ${
+          isRevealed ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+        style={{
+          touchAction: 'none',
+        }}
+      />
     </div>
   );
 };
