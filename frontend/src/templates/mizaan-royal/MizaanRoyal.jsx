@@ -15,7 +15,11 @@ import {
   RiArrowRightLine,
   RiUserLine,
   RiMailLine,
-  RiCloseLine
+  RiCloseLine,
+  RiQuillPenLine,
+  RiRestaurantLine,
+  RiCalendarEventLine,
+  RiDirectionLine
 } from 'react-icons/ri';
 import toast from 'react-hot-toast';
 import DotMatrixLoader from '../../components/common/DotMatrixLoader';
@@ -454,9 +458,8 @@ const ScratchCard = ({ children, onReveal }) => {
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        className={`absolute inset-0 z-10 block w-full h-full cursor-crosshair rounded-3xl transition-opacity duration-700 ${
-          isRevealed ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}
+        className={`absolute inset-0 z-10 block w-full h-full cursor-crosshair rounded-3xl transition-opacity duration-700 ${isRevealed ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
         style={{
           touchAction: 'none',
         }}
@@ -608,7 +611,7 @@ const VideoHero = ({ onUnlock }) => {
       {isUnlocked && (
         <div
           onClick={handleScrollDown}
-          className="absolute bottom-5 z-30 animate-[bounce_3s_ease-in-out_infinite] flex flex-row gap-2 cursor-pointer px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/40 text-[#d4af37] text-[11px] tracking-widest uppercase transition-all duration-500 hover:bg-[#d4af37]/20 shadow-lg"
+          className="absolute bottom-35 z-30 animate-[bounce_3s_ease-in-out_infinite] flex flex-row gap-2 cursor-pointer px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#d4af37]/40 text-[#d4af37] text-[11px] tracking-widest uppercase transition-all duration-500 shadow-lg"
         >
           <span>Scroll to explore</span>
           <svg className="w-3.5 h-3.5 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -850,96 +853,240 @@ export default function MizaanRoyal({ isPreview = false }) {
         </section>
 
         {/* ITINERARY */}
-        <section className="max-w-4xl mx-auto px-6 py-20 reveal-on-scroll">
-          <div className="text-center mb-12">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-[#C49A45] font-semibold mb-2">Order of Celebrations</p>
-            <h2 className="text-3xl sm:text-4xl font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Wedding Itinerary</h2>
-            <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#b5e8c5]/40 to-transparent mx-auto mt-4" />
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 py-20 reveal-on-scroll">
+          {/* Section Header */}
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#123F36]/5 border border-[#B9A17A]/30 text-[#A67B2E] text-[10px] uppercase font-bold tracking-[0.25em] mb-3 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C49A45]" />
+              Order of Celebrations
+            </div>
+            <h2 className="text-3xl sm:text-5xl hagrid text-[#123F36] tracking-tight">
+              Wedding Itinerary
+            </h2>
+            <p className="text-sm text-[#5B6F63] mt-2.5 font-light max-w-lg mx-auto dm-sans">
+              Two blessed occasions honoring sacred tradition, family companionship, and joyous festivities.
+            </p>
+            <div className="flex items-center justify-center gap-3 mt-4">
+              <span className="h-px w-12 bg-gradient-to-r from-transparent to-[#B9A17A]/60" />
+              <span className="w-1.5 h-1.5 rotate-45 border border-[#B9A17A] bg-[#C49A45]" />
+              <span className="h-px w-12 bg-gradient-to-l from-transparent to-[#B9A17A]/60" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="p-7 sm:p-8 rounded-3xl bg-[#031424]/90 border border-[#b5e8c5]/25 shadow-2xl backdrop-blur-xl space-y-6 flex flex-col justify-between hover:border-[#b5e8c5]/50 transition-all reveal-on-scroll stagger-1">
-              <div>
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <span className="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-[#b5e8c5]/15 text-[#b5e8c5] border border-[#b5e8c5]/30">Aqd al-Nikah</span>
-                  <span className="text-xs text-[#d4af37] font-mono font-semibold">Part I</span>
-                </div>
-                <h3 className="text-2xl sm:text-3xl text-white font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Nikah Ceremony</h3>
-                <p className="text-base text-[#d4af37] font-light mt-0.5" style={{ fontFamily: 'Amiri, serif' }}>عَقْدُ النِّكَاحِ الْمُبَارَك</p>
+          {/* Celebration Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+            {/* PART I: NIKAH CEREMONY */}
+            <div className="relative rounded-3xl bg-[#123F36] border border-[#B9A17A]/35 shadow-[0_4px_30px_-5px_rgba(18,63,54,0.06)] hover:shadow-[0_12px_40px_-8px_rgba(18,63,54,0.12)] hover:border-[#C49A45]/50 transition-all duration-500 flex flex-col justify-between overflow-hidden group">
 
-                <div className="mt-6 space-y-3.5 text-xs text-[#c8e2d2]">
-                  <div className="flex items-start gap-3">
-                    <RiCalendarLine size={16} className="text-[#b5e8c5] shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block font-medium">Saturday, 28th November 2026</strong>
-                      <span className="text-[#8ab89c]">18 Jumada al-Awwal 1448 AH</span>
+              <div className="p-7 sm:p-9 space-y-7">
+                {/* Header & Badges */}
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-2xl sm:text-3xl text-[#FAF8F5] font-normal tracking-tight font-serif mt-2.5">
+                      The Nikah Ceremony
+                    </h3>
+                    {/* <p className="text-base text-[#C49A45] font-light mt-0.5" style={{ fontFamily: 'Amiri, serif' }}>
+                      عَقْدُ النِّكَاحِ الْمُبَارَك
+                    </p> */}
+                  </div>
+
+                  {/* Bespoke Emblem */}
+                  <div className="w-12 h-12 flex items-center justify-center text-[#FAF8F5]">
+                    <RiQuillPenLine size={72} className="text-[#FAF8F5]" />
+                  </div>
+                </div>
+
+                {/* Key Metadata Rows */}
+                <div className="space-y-3 pt-1">
+                  {/* Date */}
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70">
+                    <div className="w-9 h-9 rounded-xl bg-[#FAF8F5]/5 text-[#C49A45] flex items-center justify-center shrink-0">
+                      <RiCalendarEventLine size={38} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-[#193b2b] tracking-tight">
+                        Saturday, 28th November 2026
+                      </p>
+                      <p className="text-[14px] text-[#8A795C] font-medium">
+                        18 Jumada al-Awwal 1448 AH
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <RiTimeLine size={16} className="text-[#b5e8c5] shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block font-medium">11:30 AM (Morning)</strong>
-                      <span className="text-[#8ab89c]">Baraat: 11:00 AM • Nikah: 11:30 AM • Dawat: 01:00 PM</span>
+
+                  {/* Time */}
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70">
+                    <div className="w-9 h-9 rounded-xl bg-[#FAF8F5]/5 text-[#C49A45] flex items-center justify-center shrink-0">
+                      <RiTimeLine size={38} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-[#193b2b] tracking-tight">
+                        11:30 AM IST (Morning)
+                      </p>
+                      <p className="text-[14px] text-[#6B7F73]">
+                        Arrival &amp; Baraat welcome from 11:00 AM
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <RiMapPinLine size={16} className="text-[#b5e8c5] shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block font-medium">The Grand Royal Ballroom</strong>
-                      <span className="text-[#8ab89c]">Taj Falaknuma Palace, Falaknuma, Hyderabad</span>
+
+                  {/* Venue */}
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70">
+                    <div className="w-9 h-9 rounded-xl bg-[#FAF8F5]/5 text-[#C49A45] flex items-center justify-center shrink-0">
+                      <RiMapPinLine size={38} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-[#193b2b] tracking-tight truncate">
+                        The Grand Royal Ballroom
+                      </p>
+                      <p className="text-[14px] text-[#6B7F73] truncate">
+                        Taj Falaknuma Palace, Falaknuma, Hyderabad
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="pt-6 border-t border-[#b5e8c5]/15 flex flex-wrap gap-2.5">
-                <a href={nikahCalUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-[#b5e8c5]/25 text-[#b5e8c5] text-xs font-semibold transition-all">
-                  <RiCalendarLine size={14} /><span>Add to Calendar</span>
+
+              {/* Action Buttons */}
+              <div className="p-6 pt-4 bg-[#C49A45] border-t border-[#B9A17A]/25 flex flex-wrap sm:flex-nowrap gap-3">
+                <a
+                  href={nikahCalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#123F36] text-[#123F36] hover:text-[#FAF8F5] border border-[#B9A17A]/40 text-xs font-semibold transition-all duration-300 shadow-xs group/btn"
+                >
+                  <RiCalendarEventLine size={15} className="text-[#C49A45] group-hover/btn:text-[#FAF8F5]" />
+                  <span>Add to Calendar</span>
                 </a>
-                <a href="https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#b5e8c5]/15 hover:bg-[#b5e8c5]/25 border border-[#b5e8c5]/35 text-[#b5e8c5] text-xs font-semibold transition-all">
-                  <RiMapPinLine size={14} /><span>Get Directions</span>
+                <a
+                  href="https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#123F36] hover:bg-[#1B5246] text-[#F8F5ED] text-xs font-semibold transition-all duration-300 shadow-sm"
+                >
+                  <RiDirectionLine size={15} className="text-[#C49A45]" />
+                  <span>Get Directions</span>
                 </a>
               </div>
             </div>
 
-            <div className="p-7 sm:p-8 rounded-3xl bg-[#031424]/90 border border-[#d4af37]/25 shadow-2xl backdrop-blur-xl space-y-6 flex flex-col justify-between hover:border-[#d4af37]/50 transition-all reveal-on-scroll stagger-2">
-              <div>
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <span className="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30">Sunnah Banquet</span>
-                  <span className="text-xs text-[#d4af37] font-mono font-semibold">Part II</span>
-                </div>
-                <h3 className="text-2xl sm:text-3xl text-white font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Walima Reception</h3>
-                <p className="text-base text-[#d4af37] font-light mt-0.5" style={{ fontFamily: 'Amiri, serif' }}>وَلِيمَةُ النِّكَاح</p>
+            {/* PART II: WALIMA RECEPTION */}
+            <div className="relative rounded-3xl bg-[#FAF8F5]/90 border border-[#B9A17A]/35 shadow-[0_4px_30px_-5px_rgba(18,63,54,0.06)] hover:shadow-[0_12px_40px_-8px_rgba(18,63,54,0.12)] hover:border-[#C49A45]/50 transition-all duration-500 flex flex-col justify-between overflow-hidden group">
+              <div className="p-7 sm:p-9 space-y-7">
+                {/* Header & Badges */}
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-2xl sm:text-3xl text-[#123F36] font-normal tracking-tight font-serif mt-2.5">
+                      The Walima Reception
+                    </h3>
+                    {/* <p className="text-base text-[#C49A45] font-light mt-0.5" style={{ fontFamily: 'Amiri, serif' }}>
+                      وَلِيمَةُ النِّكَاحِ السَّعِيدَة
+                    </p> */}
+                  </div>
 
-                <div className="mt-6 space-y-3.5 text-xs text-[#c8e2d2]">
-                  <div className="flex items-start gap-3">
-                    <RiCalendarLine size={16} className="text-[#d4af37] shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block font-medium">Sunday, 29th November 2026</strong>
-                      <span className="text-[#8ab89c]">19 Jumada al-Awwal 1448 AH</span>
+                  {/* Bespoke Emblem */}
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#C49A45]/15 to-[#123F36]/10 border border-[#B9A17A]/30 flex items-center justify-center text-[#C49A45] shrink-0 group-hover:scale-105 transition-transform duration-500 shadow-xs">
+                    <RiRestaurantLine size={22} className="text-[#C49A45]" />
+                  </div>
+                </div>
+
+                {/* Key Metadata Rows */}
+                <div className="space-y-3 pt-1">
+                  {/* Date */}
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70 border border-[#B9A17A]/20">
+                    <div className="w-9 h-9 rounded-xl bg-[#123F36]/5 text-[#C49A45] border border-[#B9A17A]/25 flex items-center justify-center shrink-0">
+                      <RiCalendarEventLine size={18} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-semibold text-[#193b2b] tracking-tight">
+                        Sunday, 29th November 2026
+                      </p>
+                      <p className="text-[11px] text-[#8A795C] font-medium">
+                        19 Jumada al-Awwal 1448 AH
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <RiTimeLine size={16} className="text-[#d4af37] shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block font-medium">07:30 PM (Evening)</strong>
-                      <span className="text-[#8ab89c]">Guest Reception &amp; Celebratory Dinner</span>
+
+                  {/* Time */}
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70 border border-[#B9A17A]/20">
+                    <div className="w-9 h-9 rounded-xl bg-[#123F36]/5 text-[#C49A45] border border-[#B9A17A]/25 flex items-center justify-center shrink-0">
+                      <RiTimeLine size={18} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-semibold text-[#193b2b] tracking-tight">
+                        07:30 PM IST (Evening)
+                      </p>
+                      <p className="text-[11px] text-[#6B7F73]">
+                        Welcoming of esteemed guests &amp; family
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <RiMapPinLine size={16} className="text-[#d4af37] shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-white block font-medium">The Crystal Pavilion &amp; Lawns</strong>
-                      <span className="text-[#8ab89c]">Road No. 36, Jubilee Hills, Hyderabad</span>
+
+                  {/* Venue */}
+                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70 border border-[#B9A17A]/20">
+                    <div className="w-9 h-9 rounded-xl bg-[#123F36]/5 text-[#C49A45] border border-[#B9A17A]/25 flex items-center justify-center shrink-0">
+                      <RiMapPinLine size={18} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-semibold text-[#193b2b] tracking-tight truncate">
+                        The Crystal Pavilion &amp; Lawns
+                      </p>
+                      <p className="text-[11px] text-[#6B7F73] truncate">
+                        Road No. 36, Jubilee Hills, Hyderabad
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Minimalist Micro Timeline */}
+                <div className="pt-2">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#8A795C] font-bold mb-3 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C49A45]" />
+                    <span>Evening Sequence</span>
+                  </p>
+                  <div className="relative pl-5 space-y-3.5 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-px before:bg-[#B9A17A]/30">
+                    <div className="relative flex items-start gap-3">
+                      <span className="absolute -left-5 top-1.5 w-2 h-2 rounded-full bg-[#C49A45] ring-2 ring-[#FAF8F5]" />
+                      <div>
+                        <span className="text-[11px] font-bold text-[#123F36] tracking-wide block">07:30 PM — Arrival of Guests</span>
+                        <span className="text-[11px] text-[#6B7F73] font-light">Welcoming drinks, greetings &amp; fellowship</span>
+                      </div>
+                    </div>
+                    <div className="relative flex items-start gap-3">
+                      <span className="absolute -left-5 top-1.5 w-2 h-2 rounded-full bg-[#123F36] ring-2 ring-[#FAF8F5]" />
+                      <div>
+                        <span className="text-[11px] font-bold text-[#123F36] tracking-wide block">08:30 PM — Grand Entrance</span>
+                        <span className="text-[11px] text-[#6B7F73] font-light">Entry of the newlyweds, stage felicitation &amp; photos</span>
+                      </div>
+                    </div>
+                    <div className="relative flex items-start gap-3">
+                      <span className="absolute -left-5 top-1.5 w-2 h-2 rounded-full bg-[#C49A45] ring-2 ring-[#FAF8F5]" />
+                      <div>
+                        <span className="text-[11px] font-bold text-[#123F36] tracking-wide block">09:00 PM — Celebratory Dinner</span>
+                        <span className="text-[11px] text-[#6B7F73] font-light">Sunnah banquet feast &amp; heartfelt blessings</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="pt-6 border-t border-[#d4af37]/15 flex flex-wrap gap-2.5">
-                <a href={walimaCalUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-[#d4af37]/25 text-[#d4af37] text-xs font-semibold transition-all">
-                  <RiCalendarLine size={14} /><span>Add to Calendar</span>
+
+              {/* Action Buttons */}
+              <div className="p-6 pt-4 bg-[#F2EDE2]/50 border-t border-[#B9A17A]/25 flex flex-wrap sm:flex-nowrap gap-3">
+                <a
+                  href={walimaCalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#123F36] text-[#123F36] hover:text-[#FAF8F5] border border-[#B9A17A]/40 text-xs font-semibold transition-all duration-300 shadow-xs group/btn"
+                >
+                  <RiCalendarEventLine size={15} className="text-[#C49A45] group-hover/btn:text-[#FAF8F5]" />
+                  <span>Add to Calendar</span>
                 </a>
-                <a href="https://maps.google.com/?q=Jubilee+Hills+Hyderabad" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#d4af37]/15 hover:bg-[#d4af37]/25 border border-[#d4af37]/35 text-[#d4af37] text-xs font-semibold transition-all">
-                  <RiMapPinLine size={14} /><span>Get Directions</span>
+                <a
+                  href="https://maps.google.com/?q=Jubilee+Hills+Hyderabad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#123F36] hover:bg-[#1B5246] text-[#F8F5ED] text-xs font-semibold transition-all duration-300 shadow-sm"
+                >
+                  <RiDirectionLine size={15} className="text-[#C49A45]" />
+                  <span>Get Directions</span>
                 </a>
               </div>
             </div>
