@@ -23,8 +23,9 @@ import {
 } from 'react-icons/ri';
 import toast from 'react-hot-toast';
 import DotMatrixLoader from '../../components/common/DotMatrixLoader';
-import { FaCalendarDays } from 'react-icons/fa6';
+import { FaCalendarDays, FaGoogle } from 'react-icons/fa6';
 import { PiClockCountdownBold } from "react-icons/pi";
+import { FaDirections } from "react-icons/fa";
 
 // --- STYLES ---
 const MizaStyle = () => (
@@ -1034,7 +1035,7 @@ export default function MizaanRoyal({ isPreview = false }) {
                     rel="noopener noreferrer"
                     className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
                   >
-                    <RiCalendarEventLine size={17} />
+                    <FaGoogle size={17} />
                     <span>Add to Calendar</span>
                   </a>
 
@@ -1044,7 +1045,7 @@ export default function MizaanRoyal({ isPreview = false }) {
                     rel="noopener noreferrer"
                     className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
                   >
-                    <RiDirectionLine size={17} className="text-[#C49A45]" />
+                    <FaDirections size={17} />
                     <span>Get Directions</span>
                   </a>
 
