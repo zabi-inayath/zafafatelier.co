@@ -1,10 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  RiArrowLeftLine,
-  RiArrowRightLine,
-  RiSparklingLine,
-} from 'react-icons/ri';
+import { RiArrowLeftLine, RiEyeLine } from 'react-icons/ri';
 import Footer from '../components/landing/Footer';
 import { getAllTemplates } from '../templates/registry';
 
@@ -14,114 +10,139 @@ export default function WebInvitation() {
     tpl.category?.toLowerCase().includes('web')
   );
 
+  // Group templates by invitationType (Category)
+  const categories = React.useMemo(() => {
+    const map = new Map();
+    webTemplates.forEach((tpl) => {
+      const typeName = tpl.invitationType || 'Zafaf Signature';
+      if (!map.has(typeName)) {
+        map.set(typeName, []);
+      }
+      map.get(typeName).push(tpl);
+    });
+
+    return Array.from(map.entries()).map(([name, templates]) => ({
+      name,
+      templates,
+    }));
+  }, [webTemplates]);
+
   return (
     <div className="min-h-screen bg-[#020b17] text-[#e4f4ea] relative overflow-x-clip selection:bg-[#b5e8c5]/30 selection:text-[#b5e8c5]">
       {/* Ambient background glows */}
       <div className="fixed inset-0 ambient-glow pointer-events-none" />
       <div className="fixed inset-0 subtle-grid opacity-20 pointer-events-none" />
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 pt-8 sm:pt-14 pb-24 anim-app-screen">
+      <main className="relative z-10 max-w-4xl mx-auto px-3 sm:px-6 pt-6 sm:pt-12 pb-24 anim-app-screen">
         {/* Navigation Breadcrumb */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Link
             to="/templates"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md bg-white/5 hover:bg-white/10 border border-[#b5e8c5]/20 hover:border-[#b5e8c5]/50 text-[#b5e8c5] hover:text-white text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.25)] group"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full backdrop-blur-md bg-white/5 hover:bg-white/10 border border-[#b5e8c5]/20 hover:border-[#b5e8c5]/50 text-[#b5e8c5] hover:text-white text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.25)] group"
           >
             <RiArrowLeftLine
-              size={15}
+              size={14}
               className="transition-transform group-hover:-translate-x-1"
             />
             <span>Web Invitations</span>
           </Link>
         </div>
 
-        {/* Web Templates Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-          {webTemplates.map((tpl) => {
-            const whatsappText = `Assalamu Alaikum Zafaf Atelier! I would like to inquire about ordering the "${tpl.name}" (${tpl.invitationType || 'Web Invitation'}) suite for our wedding.`;
-            const whatsappUrl = `https://wa.me/917448552778?text=${encodeURIComponent(whatsappText)}`;
-
-            return (
-              <div key={tpl.id} className="flex flex-col items-center">
-                {/* Invitation Type - Centered Above the Template */}
-                {/* <div className="mb-6 text-center">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#d4af37] backdrop-blur-md bg-[#d4af37]/10 border border-[#d4af37]/30 shadow-[0_4px_16px_rgba(212,175,55,0.12)]">
-                    <span>{tpl.invitationType || 'Zafaf Signature'}</span>
-                  </span>
-                </div> */}
-
-                {/* Category Header */}
-                <div className="max-w-3xl mb-10 space-y-4">
-                  <div className="space-y-2 text-center">
-                    <h1
-                      className="text-4xl SpaceGrotesk sm:text-5xl md:text-6xl text-[#d4af37] font-light tracking-wide"
-                    >
-                      {tpl.invitationType || 'Zafaf Signature'}
-                    </h1>
-                  </div>
-                </div>
-
-                {/* Template Card */}
-                <div className="w-full p-6 sm:p-8 rounded-3xl bg-[#031424] border border-[#b5e8c5]/25 shadow-2xl backdrop-blur-xl relative overflow-hidden group hover:border-[#b5e8c5]/50 transition-all flex flex-col justify-between flex-1">
-                  {/* Ambient glow accent */}
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#b5e8c5]/10 via-[#d4af37]/05 to-transparent rounded-full blur-3xl pointer-events-none" />
-
-                  <div className="space-y-5">
-                    {/* Template Image Preview */}
-                    <div className="w-full h-56 sm:h-64 rounded-2xl overflow-hidden relative bg-[#020b17] border border-[#b5e8c5]/15 shadow-md">
-                      <img
-                        src={tpl.image || '/images/web-invite.jpg'}
-                        alt={tpl.name}
-                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#031424]/80 via-transparent to-transparent pointer-events-none" />
-                    </div>
-
-                    {/* Badges */}
-                    <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-[#b5e8c5]/15 text-[#b5e8c5] border border-[#b5e8c5]/30">
-                        {tpl.badge}
-                      </span>
-                      <span className="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30">
-                        {tpl.occasion}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <div>
-                      <h3
-                        className="text-2xl sm:text-3xl text-white font-light tracking-wide"
-                        style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                      >
-                        {tpl.name}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="pt-6 flex flex-wrap items-center gap-3">
-                    <Link
-                      to={tpl.templateRoute || `/templates/webpage/${tpl.slug}`}
-                      className="inline-flex flex-1 items-center justify-center gap-2 px-6 py-3.5 rounded-2xl backdrop-blur-xl bg-[#b5e8c5]/20 hover:bg-[#b5e8c5]/30 border border-[#b5e8c5]/40 hover:border-[#b5e8c5]/80 text-[#e4f4ea] hover:text-white font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.35)] hover:shadow-[0_0_25px_rgba(181,232,197,0.25)] active:scale-[0.98] cursor-pointer"
-                    >
-                      <span>View Template</span>
-                    </Link>
-
-                    {/* Order Now - Direct WhatsApp Inquiry */}
-                    <a
-                      href={whatsappUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl backdrop-blur-xl bg-white/5 hover:bg-white/15 border border-white/15 hover:border-[#b5e8c5]/50 text-[#b5e8c5] hover:text-white font-semibold text-xs transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_0_20px_rgba(181,232,197,0.2)] active:scale-[0.98] cursor-pointer"
-                    >
-                      <span>Order Now</span>
-                      <RiArrowRightLine size={16} />
-                    </a>
-                  </div>
-                </div>
+        {/* Grouped by Category - 2 Templates Per Row */}
+        <div className="space-y-12 sm:space-y-16">
+          {categories.map((category) => (
+            <section key={category.name} className="flex flex-col">
+              {/* Category Header - Centered Above the Templates */}
+              <div className="mb-6 sm:mb-8 text-center">
+                <h2 className="text-2xl SpaceGrotesk sm:text-3xl md:text-4xl text-[#d4af37] font-light tracking-wide">
+                  {category.name}
+                </h2>
+                <div className="mt-2 w-10 h-0.5 bg-[#d4af37]/35 mx-auto rounded-full" />
               </div>
-            );
-          })}
+
+              {/* 2 Templates Per Row Grid */}
+              <div className="grid grid-cols-2 gap-3 sm:gap-6">
+                {category.templates.map((tpl) => {
+                  const whatsappText = `Assalamu Alaikum Zafaf Atelier! I would like to inquire about ordering the "${tpl.name}" (${category.name}) suite for our wedding.`;
+                  const whatsappUrl = `https://wa.me/917448552778?text=${encodeURIComponent(whatsappText)}`;
+
+                  // Badge tone styling
+                  const badgeBg =
+                    tpl.badge === 'Cinematic'
+                      ? 'bg-[#c87a14]'
+                      : tpl.badge === 'New'
+                        ? 'bg-[#b8860b]'
+                        : 'bg-[#966b1d]';
+
+                  return (
+                    <div
+                      key={tpl.id}
+                      className="w-full rounded-2xl sm:rounded-3xl bg-[#111827] border border-white/10 shadow-xl overflow-hidden flex flex-col group transition-all duration-300 hover:border-[#d4af37]/40"
+                    >
+                      {/* Image Preview Area with floating badge and View Demo */}
+                      <div className="relative w-full aspect-[4/6] sm:aspect-[3/4] overflow-hidden bg-[#0a0f18]">
+                        <img
+                          src={tpl.image || '/images/web-invite.jpg'}
+                          alt={tpl.name}
+                          className="w-full h-full object-cover object-top transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20 pointer-events-none" />
+
+                        {/* Top-left Pill Badge */}
+                        <div className="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 z-10">
+                          <span
+                            className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold text-white shadow-md tracking-wide ${badgeBg}`}
+                          >
+                            {tpl.badge || 'Premium'}
+                          </span>
+                        </div>
+
+                        {/* Floating "View Demo" Button */}
+                        {/* <div className="absolute bottom-3 sm:bottom-4 inset-x-0 flex justify-center z-10 px-2">
+                          <Link
+                            to={tpl.templateRoute || `/templates/webpage/${tpl.slug}`}
+                            className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full bg-[#1e2634]/85 hover:bg-[#0c121e] backdrop-blur-md border border-white/25 hover:border-white/50 text-white text-[10px] sm:text-xs font-medium tracking-wide shadow-lg transition-all duration-200 active:scale-95 whitespace-nowrap cursor-pointer"
+                          >
+                            <RiEyeLine size={13} className="shrink-0" />
+                            <span>View Demo</span>
+                          </Link>
+                        </div> */}
+                      </div>
+
+                      {/* Details Area */}
+                      <div className="p-3 sm:p-4 md:p-5 bg-gradient-to-b from-[#182132] to-[#111827] flex flex-col justify-between flex-1 border-t border-white/5">
+                        <div className="space-y-1">
+                          <h3
+                            className="text-sm sm:text-base md:text-lg font-semibold text-white tracking-wide truncate"
+                          >
+                            {tpl.name}
+                          </h3>
+                          {/* price */}
+                          <p className="text-md md:text-base font-semibold text-[#b5e8c5]">₹{tpl.price}</p>
+                        </div>
+
+                        {/* USE THIS DESIGN Button */}
+                        <Link
+                          to={tpl.templateRoute || `/templates/webpage/${tpl.slug}`}
+                          className="mt-3 sm:mt-4 w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer"
+                        >
+                          View Demo
+                        </Link>
+                        <a
+                          href={whatsappUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 sm:mt-4 w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer"
+                        >
+                          USE THIS DESIGN
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
       </main>
 

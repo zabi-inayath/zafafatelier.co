@@ -36,8 +36,8 @@ export default function Footer({ onOpenOrderModal }) {
 
           {/* Brand */}
           <div className="lg:col-span-5">
-            <img src="/zafaf-trans.png" alt="Zafaf Atelier" className="h-16 w-auto mb-5 object-contain" />
-            <p className="MiguErsansRegular text-2xl text-white font-light mb-2 leading-tight">
+            <img src="/zafaf-trans.png" alt="Zafaf Atelier" className="h-12 w-auto mb-5 object-contain" />
+            <p className="MiguErsansRegular text-xl text-white font-light mb-2 leading-tight">
               Islamic E-Invitations<br />
               <span className="text-mint">&amp; Wedding Websites</span>
             </p>

@@ -11,7 +11,7 @@ export default function TemplatesPage() {
       firstLine: 'Web',
       secondLine: 'Invitations',
       route: '/templates/webpage',
-      image: '/templates/template1/Thankyoucard1.png',
+      image: '/web.png',
       gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
       shadow: 'shadow-[#b6e6b5]/25',
       bubbles: [
@@ -25,7 +25,7 @@ export default function TemplatesPage() {
       firstLine: 'Video',
       secondLine: 'Invitations',
       route: '/templates/videos',
-      image: '',
+      image: '/video.png',
       gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
       shadow: 'shadow-[#b6e6b5]/25',
       bubbles: [
@@ -39,7 +39,7 @@ export default function TemplatesPage() {
       firstLine: 'Pdf',
       secondLine: 'Invitations',
       route: '/templates/pdfs',
-      image: '',
+      image: '/pdf.png',
       gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
       shadow: 'shadow-[#b6e6b5]/25',
       bubbles: [
@@ -53,7 +53,7 @@ export default function TemplatesPage() {
       firstLine: 'Photo',
       secondLine: 'Invitations',
       route: '/templates/photos',
-      image: '',
+      image: '/photo.png',
       gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
       shadow: 'shadow-[#b6e6b5]/25',
       bubbles: [
@@ -90,7 +90,7 @@ export default function TemplatesPage() {
             <Link
               key={cat.id}
               to={cat.route}
-              className={`relative overflow-hidden rounded-[24px] sm:rounded-[30px] p-5 sm:p-6 aspect-square bg-gradient-to-br ${cat.gradient} shadow-lg ${cat.shadow} cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl active:scale-[0.98] flex flex-col justify-between group block`}
+              className={`relative overflow-hidden rounded-[24px] sm:rounded-[30px] p-5 sm:p-6 aspect-square bg-gradient-to-br ${cat.gradient} shadow-lg ${cat.shadow} cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-[0.98] flex flex-col justify-between group block`}
             >
               {/* Top-Right Image Slot */}
               <div className="self-end relative z-10 w-25 h-25 flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function TemplatesPage() {
 
               {/* Bottom-Left Category Title */}
               <div className="relative z-10 select-none">
-                <h3 className="text-black font-bold text-lg sm:text-xl md:text-2xl leading-[1.12] tracking-tight group-hover:translate-x-0.5 transition-transform">
+                <h3 className="text-black font-bold text-lg sm:text-xl md:text-2xl leading-[1.12] tracking-tight">
                   <span className="block">{cat.firstLine}</span>
                   <span className="block">{cat.secondLine}</span>
                 </h3>
