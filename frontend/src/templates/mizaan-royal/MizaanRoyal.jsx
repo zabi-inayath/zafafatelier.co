@@ -33,7 +33,10 @@ const MizaStyle = () => (
   <style>{`
     @keyframes confettiFall {
       0% { transform: translateY(-10vh) rotate(0deg) scale(1); opacity: 1; }
-      100% { transform: translateY(110vh) rotate(720deg) scale(0.5); opacity: 0; }
+      100% { transform: translateY(120vh) rotate(720deg) scale(0.5); opacity: 0; }
+    }
+    .animate-confetti {
+      animation: confettiFall linear forwards;
     }
     @keyframes partyBomb {
       0% {
@@ -184,7 +187,7 @@ const ScratchCard = ({ children, onReveal }) => {
 
   const [isRevealed, setIsRevealed] = useState(false);
 
-  const REVEAL_THRESHOLD = 45;
+  const REVEAL_THRESHOLD = 38;
   const BRUSH_RADIUS = 24;
   const CHECK_INTERVAL = 180;
 
@@ -340,13 +343,13 @@ const ScratchCard = ({ children, onReveal }) => {
     };
   }, [isRevealed]);
 
-  const checkReveal = useCallback(() => {
+  const checkReveal = useCallback((force = false) => {
     const canvas = canvasRef.current;
 
     if (!canvas || revealedRef.current) return;
 
     const now = performance.now();
-    if (now - lastCheckRef.current < CHECK_INTERVAL) return;
+    if (!force && now - lastCheckRef.current < CHECK_INTERVAL) return;
 
     lastCheckRef.current = now;
 
@@ -456,7 +459,7 @@ const ScratchCard = ({ children, onReveal }) => {
     lastPointRef.current = null;
 
     // Check once more at the end of the gesture.
-    checkReveal();
+    checkReveal(true);
   };
 
   return (
@@ -615,22 +618,17 @@ const VideoHero = ({ onUnlock }) => {
         </div>
       )}
 
-      {/* Tap to Open / Opening overlay */}
+      {/* Tap to Open Overlay */}
       {isVideoLoaded && (
         <div
           className={`absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-700 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'
             }`}
         >
-          <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)] flex items-center space-x-3 transition-all">
-            {isOpening ? (
-              <>
-                <div className="w-4 h-4 border-2 border-[#d4af37] border-t-transparent rounded-full animate-spin" />
-                <span>Opening...</span>
-              </>
-            ) : (
-              <span className="animate-pulse">Tap to Open</span>
-            )}
-          </div>
+          {!isOpening && (
+            <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)] animate-pulse">
+              Tap to Open
+            </div>
+          )}
         </div>
       )}
 
@@ -717,6 +715,12 @@ export default function MizaanRoyal({ isPreview = false }) {
   // Reveal States
   const [hasOpenedEnvelope, setHasOpenedEnvelope] = useState(false);
   const [hasRevealedDate, setHasRevealedDate] = useState(false);
+  const [celebrationKey, setCelebrationKey] = useState(0);
+
+  const handleDateReveal = useCallback(() => {
+    setHasRevealedDate(true);
+    setCelebrationKey(prev => prev + 1);
+  }, []);
 
   // Countdown timer state
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -776,49 +780,70 @@ export default function MizaanRoyal({ isPreview = false }) {
   const [partyParticles, setPartyParticles] = useState([]);
   const [rsvpCount, setRsvpCount] = useState(0);
 
-  const handleConfirmRsvp = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const originX = rect.left + rect.width / 2;
-    const originY = rect.top + rect.height / 2;
+const handleConfirmRsvp = (e) => {
+  const button = e.currentTarget;
+  const rect = button.getBoundingClientRect();
 
-    setRsvpCount(prev => prev + 1);
+  const originX = rect.left + rect.width / 2;
+  const originY = rect.top + rect.height / 2;
 
-    const colors = [
-      '#C49A45', '#D4AF37', '#FAF8F5', '#123F36',
-      '#E8D5A3', '#8A795C', '#F3EEDB', '#206558', '#E6C673'
-    ];
+  setRsvpCount((prev) => prev + 1);
 
-    const batchId = `${Date.now()}-${Math.random()}`;
-    const newBatch = Array.from({ length: 48 }).map((_, i) => {
-      const angle = Math.PI * 2 * Math.random();
-      const velocity = 80 + Math.random() * 240;
-      const size = 6 + Math.random() * 10;
-      const shapeType = Math.random();
-      const isRibbon = shapeType > 0.65;
-      const isDiamond = shapeType <= 0.65 && shapeType > 0.35;
+  const colors = [
+    '#C49A45',
+    '#D4AF37',
+    '#F3E6C4',
+    '#FAF8F5',
+    '#E8D5A3',
+    '#A88746',
+  ];
 
-      return {
-        id: `${batchId}-${i}`,
-        batchId,
-        x: originX,
-        y: originY,
-        dx: Math.cos(angle) * velocity,
-        dy: Math.sin(angle) * velocity - (60 + Math.random() * 120),
-        size,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        rotation: (Math.random() - 0.5) * 720,
-        shape: isRibbon ? 'ribbon' : isDiamond ? 'diamond' : 'circle',
-        duration: 0.9 + Math.random() * 0.7
-      };
-    });
+  const batchId = `${Date.now()}-${Math.random()}`;
 
-    setPartyParticles(prev => [...prev, ...newBatch]);
+  const newBatch = Array.from({ length: 65 }, (_, i) => {
+    const angle =
+      -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.5;
 
-    setTimeout(() => {
-      setPartyParticles(prev => prev.filter(p => p.batchId !== batchId));
-    }, 1800);
+    const speed = 100 + Math.random() * 260;
+    const type = Math.random();
 
-  };
+    return {
+      id: `${batchId}-${i}`,
+      batchId,
+      x: originX,
+      y: originY,
+      dx: Math.cos(angle) * speed,
+      dy: Math.sin(angle) * speed - 45,
+      gravity: 420 + Math.random() * 300,
+      drag: 0.985 + Math.random() * 0.012,
+      size: 3 + Math.random() * 5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      shape:
+        type > 0.72
+          ? 'ribbon'
+          : type > 0.42
+            ? 'diamond'
+            : 'circle',
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 540,
+      sway: 10 + Math.random() * 30,
+      swaySpeed: 1 + Math.random() * 2,
+      phase: Math.random() * Math.PI * 2,
+      delay: Math.random() * 0.12,
+      duration: 1.8 + Math.random() * 1.2,
+    };
+  });
+
+  // Append a fresh burst on EVERY click.
+  setPartyParticles((prev) => [...prev, ...newBatch]);
+
+  // Remove only this click's particles.
+  window.setTimeout(() => {
+    setPartyParticles((prev) =>
+      prev.filter((particle) => particle.batchId !== batchId)
+    );
+  }, 3400);
+};
 
   // Link copy
   const [copied, setCopied] = useState(false);
@@ -880,7 +905,7 @@ export default function MizaanRoyal({ isPreview = false }) {
       <VideoHero onUnlock={() => setHasOpenedEnvelope(true)} />
 
       {/* Experience Layers */}
-      {hasRevealedDate && <Celebration />}
+      {hasRevealedDate && <Celebration key={celebrationKey} />}
 
       {/* Repeating Background across all sections (Fit to full screen, not fixed, duplicated until end, reduced opacity in white) */}
       <div className="absolute inset-0 w-full h-full bg-white z-0 pointer-events-none overflow-hidden">
@@ -920,7 +945,7 @@ export default function MizaanRoyal({ isPreview = false }) {
 
           <div className="py-3 reveal-on-scroll stagger-2">
             <div className="space-y-2">
-              <h1 className="text-4xl sm:text-7xl hagrid text-[#123F36] tracking-wide">Zayd Ibrahim</h1>
+              <h1 className="text-4xl sm:text-7xl arizonia-regular text-[#123F36] tracking-wide">Zayd Ibrahim</h1>
               <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>زَيْد إِبْرَاهِيم</p>
 
               <div className="flex items-center justify-center gap-4 pt-2">
@@ -929,7 +954,7 @@ export default function MizaanRoyal({ isPreview = false }) {
                 <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-[#C49A45]/60" />
               </div>
 
-              <h1 className="text-4xl sm:text-7xl hagrid text-[#123F36] tracking-wide">Maryam Al-Zahra</h1>
+              <h1 className="text-4xl sm:text-7xl arizonia-regular text-[#123F36] tracking-wide">Maryam Al-Zahra</h1>
               <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>مَرْيَم الزَّهْرَاء</p>
             </div>
           </div>
@@ -937,8 +962,15 @@ export default function MizaanRoyal({ isPreview = false }) {
 
         {/* SCRATCH REVEAL SECTION */}
         <section className="max-w-xl mx-auto px-6 py-5 text-center reveal-on-scroll stagger-1 relative z-20 ">
-          <ScratchCard onReveal={() => setHasRevealedDate(true)}>
-            <div className="flex flex-col items-center justify-center gap-8 cursor-pointer">
+          <ScratchCard onReveal={handleDateReveal}>
+            <div
+              onClick={() => {
+                if (hasRevealedDate) {
+                  setCelebrationKey(prev => prev + 1);
+                }
+              }}
+              className="flex flex-col items-center justify-center gap-8 cursor-pointer"
+            >
 
               {/* Wedding Date */}
               <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-[#f8f5ed]/90 border border-[#b9a17a]/40 shadow-sm">
@@ -1289,7 +1321,6 @@ export default function MizaanRoyal({ isPreview = false }) {
                 onClick={handleConfirmRsvp}
                 className="relative flex min-h-[50px] w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-[#C49A45] hover:bg-[#D4B36D] active:scale-95 px-8 py-3.5 text-xs font-semibold tracking-wider uppercase text-[#123F36] transition-all duration-300 shadow-lg cursor-pointer"
               >
-                <RiSparklingLine size={18} />
                 <span>Confirm Presence</span>
               </button>
 
