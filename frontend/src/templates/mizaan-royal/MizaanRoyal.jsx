@@ -26,6 +26,7 @@ import DotMatrixLoader from '../../components/common/DotMatrixLoader';
 import { FaCalendarDays, FaGoogle } from 'react-icons/fa6';
 import { PiClockCountdownBold } from "react-icons/pi";
 import { FaDirections } from "react-icons/fa";
+import { HiGiftTop } from "react-icons/hi2";
 
 // --- STYLES ---
 const MizaStyle = () => (
@@ -951,8 +952,8 @@ export default function MizaanRoyal({ isPreview = false }) {
                 {/* Header */}
                 <div className="flex items-center justify-between gap-4 px-1 pb-1">
                   <div>
-                    <h3 className="font-poppins text-xl font-medium tracking-tight text-[#FAF8F5] sm:text-2xl">
-                      The Nikah Ceremony
+                    <h3 className="font-poppins text-2xl font-medium tracking-tight text-[#FAF8F5] sm:text-2xl">
+                      Nikah Ceremony
                     </h3>
                   </div>
 
@@ -965,26 +966,26 @@ export default function MizaanRoyal({ isPreview = false }) {
                 <div className="grid grid-cols-2 gap-3">
 
                   {/* Date Card */}
-                  <div className="flex min-h-[145px] flex-col items-center justify-center rounded-[22px] border border-white/50 bg-[#FAF8F5] p-2">
+                  <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-2">
 
-                    <div className="flex h-9 w-9 text-[#123F36]">
-                      <FaCalendarDays size={40} />
+                    <div className="flex mb-2 text-[#123F36]">
+                      <FaCalendarDays size={30} />
                     </div>
 
-                    <div className="mt-4 text-center">
+                    <div className="text-center">
 
-                      <p className="text-sm font-semibold leading-5 text-[#193B2B] sm:text-base">
-                        28 November 2026
+                      <p className="text-md font-semibold leading-5 text-[#193B2B] sm:text-base">
+                        28 <br />November <br /> 2026
                       </p>
 
-                      <p className="mt-1 text-xs text-[#7B8278]">
+                      <p className="mt-2 text-xs text-[#7B8278]">
                         18 Jumada I 1448 AH
                       </p>
                     </div>
                   </div>
 
                   {/* Time Card */}
-                  <div className="flex min-h-[145px] flex-col items-center justify-center rounded-[22px] border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
+                  <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
 
                     <div className="flex text-[#123F36]">
                       <PiClockCountdownBold size={40} />
@@ -1004,27 +1005,29 @@ export default function MizaanRoyal({ isPreview = false }) {
                 </div>
 
                 {/* Venue Card */}
-                <div className="rounded-[22px] border border-white/50 bg-[#FAF8F5]  p-4 sm:p-5">
+                <div className="rounded-2xl border border-white/50 bg-[#FAF8F5]  p-4 sm:p-5">
                   <div className="flex items-center gap-3">
                     <div className="flex text-[#123F36]">
-                      <i class="fa-solid fa-hotel text-4xl"></i>
+                      {/* <i className="fa-solid fa-hotel text-4xl"></i> */}
+                      <i class="fa-solid fa-mosque text-4xl"></i>
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8A795C]">
-                        VENUE
-                      </p>
+                      {/* <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8A795C]">
+                        Masjid
+                      </p> */}
 
                       <h4 className="text-lg font-semibold leading-5 text-[#193B2B]">
-                        The Grand Royal Ballroom
+                        Masjid-e-Quba
                       </h4>
 
                       <p className="mt-1 text-sm leading-5 text-[#6B7F73]">
-                        Taj Falaknuma Palace, Falaknuma, Hyderabad
+                        Banjara Hills, Hyderabad
                       </p>
                     </div>
                   </div>
                 </div>
+                
 
                 {/* Actions */}
                 <div className="space-y-2.5 pt-1">
@@ -1054,125 +1057,112 @@ export default function MizaanRoyal({ isPreview = false }) {
             </div>
 
             {/* PART II: WALIMA RECEPTION */}
-            <div className="relative rounded-3xl bg-[#FAF8F5]/90 border border-[#B9A17A]/35 shadow-[0_4px_30px_-5px_rgba(18,63,54,0.06)] hover:shadow-[0_12px_40px_-8px_rgba(18,63,54,0.12)] hover:border-[#C49A45]/50 transition-all duration-500 flex flex-col justify-between overflow-hidden group">
-              <div className="p-7 sm:p-9 space-y-7">
-                {/* Header & Badges */}
-                <div className="flex items-start justify-between gap-4">
+            <div className="group relative w-full overflow-hidden rounded-[28px] border border-[#B9A17A]/30 bg-[#123F36] p-6 shadow-[0_12px_40px_-16px_rgba(18,63,54,0.3)] transition-all duration-500 hover:border-[#C49A45]/60">
+
+              <div className="relative space-y-4">
+
+                {/* Header */}
+                <div className="flex items-center justify-between gap-4 px-1 pb-1">
                   <div>
-                    <h3 className="text-2xl sm:text-3xl text-[#123F36] font-normal tracking-tight font-serif mt-2.5">
-                      The Walima Reception
+                    <h3 className="font-poppins text-xl font-medium tracking-tight text-[#FAF8F5] sm:text-2xl">
+                      Walima Reception
                     </h3>
-                    {/* <p className="text-base text-[#C49A45] font-light mt-0.5" style={{ fontFamily: 'Amiri, serif' }}>
-                      وَلِيمَةُ النِّكَاحِ السَّعِيدَة
-                    </p> */}
                   </div>
 
-                  {/* Bespoke Emblem */}
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#C49A45]/15 to-[#123F36]/10 border border-[#B9A17A]/30 flex items-center justify-center text-[#C49A45] shrink-0 group-hover:scale-105 transition-transform duration-500 shadow-xs">
-                    <RiRestaurantLine size={22} className="text-[#C49A45]" />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-[#C49A45]">
+                    <HiGiftTop size={40} />
                   </div>
                 </div>
 
-                {/* Key Metadata Rows */}
-                <div className="space-y-3 pt-1">
-                  {/* Date */}
-                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70 border border-[#B9A17A]/20">
-                    <div className="w-9 h-9 rounded-xl bg-[#123F36]/5 text-[#C49A45] border border-[#B9A17A]/25 flex items-center justify-center shrink-0">
-                      <RiCalendarEventLine size={18} />
+                {/* Date & Time */}
+                <div className="grid grid-cols-2 gap-3">
+
+                  {/* Date Card */}
+                  <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-2">
+
+                    <div className="flex mb-2 text-[#123F36]">
+                      <FaCalendarDays size={30} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm font-semibold text-[#193b2b] tracking-tight">
-                        Sunday, 29th November 2026
+
+                    <div className="text-center">
+
+                      <p className="text-md font-semibold leading-5 text-[#193B2B] sm:text-base">
+                        29 <br />November <br /> 2026
                       </p>
-                      <p className="text-[11px] text-[#8A795C] font-medium">
-                        19 Jumada al-Awwal 1448 AH
+
+                      <p className="mt-2 text-xs text-[#7B8278]">
+                        19 Jumada I 1448 AH
                       </p>
                     </div>
                   </div>
 
-                  {/* Time */}
-                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70 border border-[#B9A17A]/20">
-                    <div className="w-9 h-9 rounded-xl bg-[#123F36]/5 text-[#C49A45] border border-[#B9A17A]/25 flex items-center justify-center shrink-0">
-                      <RiTimeLine size={18} />
+                  {/* Time Card */}
+                  <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
+
+                    <div className="flex text-[#123F36]">
+                      <PiClockCountdownBold size={40} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm font-semibold text-[#193b2b] tracking-tight">
-                        07:30 PM IST (Evening)
+
+                    <div className="mt-4 text-center">
+
+                      <p className="text-lg font-semibold leading-5 text-[#193B2B] sm:text-xl">
+                        07:30 PM
                       </p>
-                      <p className="text-[11px] text-[#6B7F73]">
-                        Welcoming of esteemed guests &amp; family
+
+                      <p className="mt-1 text-xs leading-5 text-[#7B8278]">
+                        Walima Time
                       </p>
                     </div>
                   </div>
+                </div>
 
-                  {/* Venue */}
-                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70 border border-[#B9A17A]/20">
-                    <div className="w-9 h-9 rounded-xl bg-[#123F36]/5 text-[#C49A45] border border-[#B9A17A]/25 flex items-center justify-center shrink-0">
-                      <RiMapPinLine size={18} />
+                {/* Venue Card */}
+                <div className="rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex text-[#123F36]">
+                      <i className="fa-solid fa-hotel text-4xl"></i>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm font-semibold text-[#193b2b] tracking-tight truncate">
+
+                    <div className="min-w-0 flex-1">
+                      <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8A795C]">
+                        VENUE
+                      </p>
+
+                      <h4 className="text-lg font-semibold leading-5 text-[#193B2B]">
                         The Crystal Pavilion &amp; Lawns
-                      </p>
-                      <p className="text-[11px] text-[#6B7F73] truncate">
+                      </h4>
+
+                      <p className="mt-1 text-sm leading-5 text-[#6B7F73]">
                         Road No. 36, Jubilee Hills, Hyderabad
                       </p>
                     </div>
                   </div>
                 </div>
 
-                {/* Minimalist Micro Timeline */}
-                <div className="pt-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[#8A795C] font-bold mb-3 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#C49A45]" />
-                    <span>Evening Sequence</span>
-                  </p>
-                  <div className="relative pl-5 space-y-3.5 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-px before:bg-[#B9A17A]/30">
-                    <div className="relative flex items-start gap-3">
-                      <span className="absolute -left-5 top-1.5 w-2 h-2 rounded-full bg-[#C49A45] ring-2 ring-[#FAF8F5]" />
-                      <div>
-                        <span className="text-[11px] font-bold text-[#123F36] tracking-wide block">07:30 PM — Arrival of Guests</span>
-                        <span className="text-[11px] text-[#6B7F73] font-light">Welcoming drinks, greetings &amp; fellowship</span>
-                      </div>
-                    </div>
-                    <div className="relative flex items-start gap-3">
-                      <span className="absolute -left-5 top-1.5 w-2 h-2 rounded-full bg-[#123F36] ring-2 ring-[#FAF8F5]" />
-                      <div>
-                        <span className="text-[11px] font-bold text-[#123F36] tracking-wide block">08:30 PM — Grand Entrance</span>
-                        <span className="text-[11px] text-[#6B7F73] font-light">Entry of the newlyweds, stage felicitation &amp; photos</span>
-                      </div>
-                    </div>
-                    <div className="relative flex items-start gap-3">
-                      <span className="absolute -left-5 top-1.5 w-2 h-2 rounded-full bg-[#C49A45] ring-2 ring-[#FAF8F5]" />
-                      <div>
-                        <span className="text-[11px] font-bold text-[#123F36] tracking-wide block">09:00 PM — Celebratory Dinner</span>
-                        <span className="text-[11px] text-[#6B7F73] font-light">Sunnah banquet feast &amp; heartfelt blessings</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                {/* Actions */}
+                <div className="space-y-2.5 pt-1">
 
-              {/* Action Buttons */}
-              <div className="p-6 pt-4 bg-[#F2EDE2]/50 border-t border-[#B9A17A]/25 flex flex-wrap sm:flex-nowrap gap-3">
-                <a
-                  href={walimaCalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#123F36] text-[#123F36] hover:text-[#FAF8F5] border border-[#B9A17A]/40 text-xs font-semibold transition-all duration-300 shadow-xs group/btn"
-                >
-                  <RiCalendarEventLine size={15} className="text-[#C49A45] group-hover/btn:text-[#FAF8F5]" />
-                  <span>Add to Calendar</span>
-                </a>
-                <a
-                  href="https://maps.google.com/?q=Jubilee+Hills+Hyderabad"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#123F36] hover:bg-[#1B5246] text-[#F8F5ED] text-xs font-semibold transition-all duration-300 shadow-sm"
-                >
-                  <RiDirectionLine size={15} className="text-[#C49A45]" />
-                  <span>Get Directions</span>
-                </a>
+                  <a
+                    href={walimaCalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
+                  >
+                    <FaGoogle size={17} />
+                    <span>Add to Calendar</span>
+                  </a>
+
+                  <a
+                    href="https://maps.google.com/?q=Jubilee+Hills+Hyderabad"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
+                  >
+                    <FaDirections size={17} />
+                    <span>Get Directions</span>
+                  </a>
+
+                </div>
               </div>
             </div>
           </div>
@@ -1180,18 +1170,18 @@ export default function MizaanRoyal({ isPreview = false }) {
 
         {/* DUA */}
         <section className="max-w-3xl mx-auto px-6 py-12 text-center reveal-on-scroll">
-          <div className="p-8 sm:p-10 rounded-3xl bg-[#031527]/70 border border-[#d4af37]/25 shadow-2xl backdrop-blur-xl">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#d4af37] font-semibold mb-3">Prophetic Sunnah Dua for The Newlyweds</p>
-            <p className="text-2xl sm:text-3xl md:text-4xl text-[#f3eedb] font-normal my-4 leading-relaxed" style={{ fontFamily: 'Amiri, serif' }}>
+          <div className="p-8 sm:p-10 rounded-3xl bg-[#FAF8F5]/70 border border-[#C49A45]/25 shadow-2xl backdrop-blur-xl">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#C49A45] font-semibold mb-3">Prophetic Sunnah Dua for The Newlyweds</p>
+            <p className="text-2xl sm:text-3xl md:text-4xl text-[#123F36] font-normal my-4 leading-relaxed" style={{ fontFamily: 'Amiri, serif' }}>
               بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
             </p>
-            <p className="text-xs sm:text-sm text-[#8ab89c] font-mono italic">
+            <p className="text-xs sm:text-sm text-[#C49A45] font-mono italic">
               &ldquo;Barakallahu laka wa baraka &lsquo;alayka wa jama&lsquo;a baynakuma fee khayr&rdquo;
             </p>
-            <p className="text-xs text-[#c8e2d2] font-light max-w-lg mx-auto mt-2">
+            <p className="text-xs text-[#123F36] max-w-lg mx-auto mt-2">
               &ldquo;May Allah bless you, bestow His blessings upon you, and unite you both in goodness.&rdquo;
             </p>
-            <span className="block text-[10px] text-[#d4af37]/80 uppercase tracking-widest mt-3">— Sunan Abi Dawud</span>
+            <span className="block text-[10px] text-[#C49A45]/80 uppercase tracking-widest mt-3">— Sunan Abi Dawud</span>
           </div>
         </section>
 
