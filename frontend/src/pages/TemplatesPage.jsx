@@ -1,12 +1,67 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { RiSparklingLine, RiArrowRightLine, RiEyeLine } from 'react-icons/ri';
 import Navbar from '../components/landing/Navbar';
 import Footer from '../components/landing/Footer';
-import { getAllTemplates } from '../templates/registry';
 
 export default function TemplatesPage() {
-  const templates = getAllTemplates();
+  const categories = [
+    {
+      id: 'web',
+      name: 'Web Invitations',
+      firstLine: 'Web',
+      secondLine: 'Invitations',
+      route: '/templates/webpage',
+      image: '/templates/template1/Thankyoucard1.png',
+      gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
+      shadow: 'shadow-[#b6e6b5]/25',
+      bubbles: [
+        'w-28 h-28 -top-7 -right-7 bg-[#b6e6b5]/20',
+        'w-10 h-10 bottom-3 right-8 bg-[#b6e6b5]/10',
+      ],
+    },
+    {
+      id: 'video',
+      name: 'Video Invitations',
+      firstLine: 'Video',
+      secondLine: 'Invitations',
+      route: '/templates/videos',
+      image: '',
+      gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
+      shadow: 'shadow-[#b6e6b5]/25',
+      bubbles: [
+        'w-24 h-24 top-2 -right-8 bg-white/25',
+        'w-12 h-12 -top-4 left-4 bg-white/15',
+      ],
+    },
+    {
+      id: 'pdf',
+      name: 'Pdf Invitations',
+      firstLine: 'Pdf',
+      secondLine: 'Invitations',
+      route: '/templates/pdfs',
+      image: '',
+      gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
+      shadow: 'shadow-[#b6e6b5]/25',
+      bubbles: [
+        'w-32 h-32 -top-8 -right-8 bg-white/20',
+        'w-14 h-14 -bottom-4 left-6 bg-white/10',
+      ],
+    },
+    {
+      id: 'photo',
+      name: 'Photo Invitations',
+      firstLine: 'Photo',
+      secondLine: 'Invitations',
+      route: '/templates/photos',
+      image: '',
+      gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
+      shadow: 'shadow-[#b6e6b5]/25',
+      bubbles: [
+        'w-20 h-20 -top-4 -left-4 bg-white/20',
+        'w-28 h-28 -bottom-8 -right-8 bg-white/20',
+      ],
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#020b17] text-[#e4f4ea] relative overflow-x-clip selection:bg-[#b5e8c5]/30 selection:text-[#b5e8c5]">
@@ -17,82 +72,45 @@ export default function TemplatesPage() {
       {/* Global Header */}
       <Navbar current="templates" />
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 pt-32 pb-20 anim-app-screen">
+      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 pt-32 pb-24 anim-app-screen">
         {/* Page Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <div className="text-center max-w-3xl mx-auto mb-14 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#b5e8c5]/10 border border-[#b5e8c5]/25 text-[#b5e8c5] text-xs font-semibold uppercase tracking-widest">
-            <RiSparklingLine size={13} />
             <span>Atelier Collection</span>
           </div>
 
-          <h1
-            className="text-4xl sm:text-5xl md:text-6xl text-white font-light tracking-wide"
-            style={{ fontFamily: 'Cormorant Garamond, serif' }}
-          >
-            Wedding Invitation Suites
-          </h1>
-
           <p className="text-sm sm:text-base text-[#8ab89c] font-light leading-relaxed">
-            Explore our curated catalog of bespoke Islamic wedding web portals. Each suite is meticulously crafted with authentic Arabic calligraphy, live RSVP management, dual ceremony itineraries, and strictly music-free elegance.
+            Explore our curated catalog of bespoke Islamic wedding suites. Select your preferred invitation format below to discover tailored designs and custom commissions.
           </p>
         </div>
 
-        {/* Templates Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {templates.map((tpl) => (
-            <div
-              key={tpl.id}
-              className="p-8 rounded-3xl bg-[#031424] border border-[#b5e8c5]/25 shadow-2xl backdrop-blur-xl relative overflow-hidden group hover:border-[#b5e8c5]/50 transition-all flex flex-col justify-between"
+        {/* 4 Categories Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              to={cat.route}
+              className={`relative overflow-hidden rounded-[24px] sm:rounded-[30px] p-5 sm:p-6 aspect-square bg-gradient-to-br ${cat.gradient} shadow-lg ${cat.shadow} cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl active:scale-[0.98] flex flex-col justify-between group block`}
             >
-              {/* Subtle top corner ambient glow */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#b5e8c5]/10 via-[#d4af37]/05 to-transparent rounded-full blur-3xl pointer-events-none" />
-
-              <div className="space-y-6">
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-[#b5e8c5]/15 text-[#b5e8c5] border border-[#b5e8c5]/30">
-                    {tpl.badge}
-                  </span>
-                  <span className="px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30">
-                    {tpl.occasion}
-                  </span>
-                </div>
-
-                <div>
-                  <h3
-                    className="text-3xl text-white font-light tracking-wide"
-                    style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                  >
-                    {tpl.name}
-                  </h3>
-                  <p
-                    className="text-xl text-[#d4af37] font-light mt-1"
-                    style={{ fontFamily: 'Amiri, serif' }}
-                  >
-                    {tpl.arabicTitle}
-                  </p>
-                  <p className="text-sm text-[#8ab89c] font-light leading-relaxed mt-3">
-                    {tpl.description}
-                  </p>
-                </div>
+              {/* Top-Right Image Slot */}
+              <div className="self-end relative z-10 w-25 h-25 flex items-center justify-center">
+                {cat.image ? (
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="w-full h-full object-contain drop-shadow-md transition-opacity duration-300"
+                  />
+                ) : null}
               </div>
 
-              <div className="pt-8 flex flex-wrap items-center gap-3">
-                <Link
-                  to={tpl.templateRoute}
-                  className="inline-flex flex-1 items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-[#b5e8c5] hover:bg-[#cbf4d8] text-[#020b17] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#b5e8c5]/20 cursor-pointer"
-                >
-                  <RiEyeLine size={16} />
-                  <span>View Template</span>
-                </Link>
-                <Link
-                  to={`/order?template=${encodeURIComponent(tpl.slug)}`}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-[#b5e8c5]/30 text-[#b5e8c5] font-semibold text-xs transition-all cursor-pointer"
-                >
-                  <span>Order Now</span>
-                  <RiArrowRightLine size={16} />
-                </Link>
+              {/* Bottom-Left Category Title */}
+              <div className="relative z-10 select-none">
+                <h3 className="text-black font-bold text-lg sm:text-xl md:text-2xl leading-[1.12] tracking-tight group-hover:translate-x-0.5 transition-transform">
+                  <span className="block">{cat.firstLine}</span>
+                  <span className="block">{cat.secondLine}</span>
+                </h3>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </main>

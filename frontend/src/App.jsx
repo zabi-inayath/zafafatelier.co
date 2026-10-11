@@ -9,6 +9,10 @@ import OrderPage from './pages/OrderPage';
 import NotFoundPage from './pages/NotFoundPage';
 import TemplatesPage from './pages/TemplatesPage';
 import TemplateViewerPage from './pages/TemplateViewerPage';
+import WebInvitation from './pages/WebInvitation';
+import VideoInvitation from './pages/VideoInvitation';
+import PdfInvitation from './pages/PdfInvitation';
+import PhotoInvitation from './pages/PhotoInvitation';
 import MizaanRoyal from './templates/mizaan-royal/MizaanRoyal';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import ScrollToTop from './components/common/ScrollToTop';
@@ -30,8 +34,13 @@ export default function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/order" element={<OrderPage />} />
 
-            {/* Wedding Invitation Template Routes */}
+            {/* Wedding Invitation Category Routes */}
             <Route path="/templates" element={<TemplatesPage />} />
+            <Route path="/templates/webpage" element={<WebInvitation />} />
+            <Route path="/templates/videos" element={<VideoInvitation />} />
+            <Route path="/templates/pdfs" element={<PdfInvitation />} />
+            <Route path="/templates/photos" element={<PhotoInvitation />} />
+            <Route path="/templates/webpage/:templateSlug" element={<TemplateViewerPage />} />
             <Route path="/templates/:templateSlug" element={<TemplateViewerPage />} />
             <Route path="/mizaan-royal" element={<MizaanRoyal isPreview={false} />} />
 
