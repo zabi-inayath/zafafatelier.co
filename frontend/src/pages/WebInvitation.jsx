@@ -134,7 +134,7 @@ export default function WebInvitation() {
                           rel="noopener noreferrer"
                           className="mt-3 sm:mt-4 w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer"
                         >
-                          USE THIS DESIGN
+                          ORDER NOW
                         </a>
                       </div>
                     </div>

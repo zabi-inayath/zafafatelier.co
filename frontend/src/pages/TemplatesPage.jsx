@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { RiLockLine } from 'react-icons/ri';
+import toast from 'react-hot-toast';
 import Navbar from '../components/landing/Navbar';
 import Footer from '../components/landing/Footer';
 
@@ -14,10 +16,7 @@ export default function TemplatesPage() {
       image: '/web.png',
       gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
       shadow: 'shadow-[#b6e6b5]/25',
-      bubbles: [
-        'w-28 h-28 -top-7 -right-7 bg-[#b6e6b5]/20',
-        'w-10 h-10 bottom-3 right-8 bg-[#b6e6b5]/10',
-      ],
+      isLocked: false,
     },
     {
       id: 'video',
@@ -28,10 +27,7 @@ export default function TemplatesPage() {
       image: '/video.png',
       gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
       shadow: 'shadow-[#b6e6b5]/25',
-      bubbles: [
-        'w-24 h-24 top-2 -right-8 bg-white/25',
-        'w-12 h-12 -top-4 left-4 bg-white/15',
-      ],
+      isLocked: true,
     },
     {
       id: 'pdf',
@@ -42,10 +38,7 @@ export default function TemplatesPage() {
       image: '/pdf.png',
       gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
       shadow: 'shadow-[#b6e6b5]/25',
-      bubbles: [
-        'w-32 h-32 -top-8 -right-8 bg-white/20',
-        'w-14 h-14 -bottom-4 left-6 bg-white/10',
-      ],
+      isLocked: true,
     },
     {
       id: 'photo',
@@ -56,10 +49,7 @@ export default function TemplatesPage() {
       image: '/photo.png',
       gradient: 'from-[#b6e6b5] to-[#b6e6b5]',
       shadow: 'shadow-[#b6e6b5]/25',
-      bubbles: [
-        'w-20 h-20 -top-4 -left-4 bg-white/20',
-        'w-28 h-28 -bottom-8 -right-8 bg-white/20',
-      ],
+      isLocked: true,
     },
   ];
 
@@ -86,32 +76,84 @@ export default function TemplatesPage() {
 
         {/* 4 Categories Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          {categories.map((cat) => (
-            <Link
-              key={cat.id}
-              to={cat.route}
-              className={`relative overflow-hidden rounded-[24px] sm:rounded-[30px] pb-5 pl-5 aspect-square bg-gradient-to-br ${cat.gradient} shadow-lg ${cat.shadow} cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-[0.98] flex flex-col justify-between group block`}
-            >
-              {/* Top-Right Image Slot */}
-              <div className="self-end relative z-10 w-25 h-25 flex items-center justify-center">
-                {cat.image ? (
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="w-full h-full object-contain drop-shadow-md transition-opacity duration-300"
-                  />
-                ) : null}
-              </div>
+          {categories.map((cat) => {
+            if (cat.isLocked) {
+              return (
+                <div
+                  key={cat.id}
+                  onClick={() =>
+                    toast('Available soon, In Sha Allah ✨', {
+                      icon: '🔒',
+                      style: {
+                        background: '#031424',
+                        color: '#b5e8c5',
+                        border: '1px solid rgba(181, 232, 197, 0.3)',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                      },
+                    })
+                  }
+                  className={`relative overflow-hidden rounded-[24px] sm:rounded-[30px] pb-5 pl-5 aspect-square bg-gradient-to-br ${cat.gradient} cursor-pointer transition-all duration-300 hover:shadow-xl active:scale-[0.98] flex flex-col justify-between group select-none`}
+                >
+                  {/* Top-Right Image Slot */}
+                  <div className="self-end relative z-10 w-25 h-25 flex items-center justify-center opacity-60">
+                    {cat.image ? (
+                      <img
+                        src={cat.image}
+                        alt={cat.name}
+                        className="w-full h-full object-contain drop-shadow-md"
+                      />
+                    ) : null}
+                  </div>
 
-              {/* Bottom-Left Category Title */}
-              <div className="relative z-10 select-none">
-                <h3 className="text-black font-bold text-xl md:text-2xl leading-[1.12] tracking-tight">
-                  <span className="block">{cat.firstLine}</span>
-                  <span className="block">{cat.secondLine}</span>
-                </h3>
-              </div>
-            </Link>
-          ))}
+                  {/* Bottom-Left Category Title */}
+                  <div className="relative z-10 select-none">
+                    <h3 className="text-black font-bold text-xl md:text-2xl leading-[1.12] tracking-tight">
+                      <span className="block">{cat.firstLine}</span>
+                      <span className="block">{cat.secondLine}</span>
+                    </h3>
+                  </div>
+
+                  {/* Locked Overlay with Message */}
+                  <div className="absolute inset-0 z-20 bg-[#020b17]/55 backdrop-blur-[1px] flex flex-col items-center justify-center text-center transition-all duration-300">
+                    <div className="w-10 h-10 text-[#031424] flex items-center justify-center mb-2.5">
+                      <RiLockLine size={28} />
+                    </div>
+                    <span className="inline-flex items-center px-3 py-1 rounded-lg bg-[#031424]/95 text-[#e4f4ea] text-[10px] sm:text-xs font-semibold tracking-wide border border-[#b5e8c5]/30">
+                      Coming soon
+                    </span>
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={cat.id}
+                to={cat.route}
+                className={`relative overflow-hidden rounded-[24px] sm:rounded-[30px] pb-5 pl-5 aspect-square bg-gradient-to-br ${cat.gradient} shadow-lg ${cat.shadow} cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-[0.98] flex flex-col justify-between group block`}
+              >
+                {/* Top-Right Image Slot */}
+                <div className="self-end relative z-10 w-25 h-25 flex items-center justify-center">
+                  {cat.image ? (
+                    <img
+                      src={cat.image}
+                      alt={cat.name}
+                      className="w-full h-full object-contain drop-shadow-md transition-opacity duration-300"
+                    />
+                  ) : null}
+                </div>
+
+                {/* Bottom-Left Category Title */}
+                <div className="relative z-10 select-none">
+                  <h3 className="text-black font-bold text-xl md:text-2xl leading-[1.12] tracking-tight">
+                    <span className="block">{cat.firstLine}</span>
+                    <span className="block">{cat.secondLine}</span>
+                  </h3>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </main>
 

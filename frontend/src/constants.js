@@ -20,7 +20,7 @@ export const SERVICES = [
     title: "Wedding Web Invitations",
     badge: "Interactive & Modern",
     description: "Bespoke digital invitation websites designed for your Nikah & Walima. Includes live countdown, interactive RSVP management, Google Maps venue navigation, and timeline schedules.",
-    image: "/images/web-invite.jpg",
+    image: "/templates/template1/template1thum.png",
     features: [
       "Interactive RSVP & Guest Management",
       "Live Countdown to Event",
@@ -36,7 +36,7 @@ export const SERVICES = [
     title: "E-Invitations (Digital Cards)",
     badge: "Instant WhatsApp Sharing",
     description: "High-resolution digital invitation cards crafted in portrait mobile orientation. Perfect for effortless sharing across WhatsApp, Instagram, Telegram, and email.",
-    image: "/images/e-invite-card.jpg",
+    image: "/services2.png",
     features: [
       "Ultra-HD Quality for Mobile Screens",
       "Bespoke Arabic & English Calligraphy",
@@ -52,7 +52,7 @@ export const SERVICES = [
     title: "Video Wedding Invitations",
     badge: "Cinematic • No Music",
     description: "Aesthetic, motion-crafted video invitations with gentle floral reveals and shimmering gold foil effects. Strictly 100% music-free, maintaining spiritual tranquility.",
-    image: "/images/video-invite.jpg",
+    image: "/services3.png",
     features: [
       "Cinematic Motion Typography",
       "100% Music-Free / No Musical Instruments",

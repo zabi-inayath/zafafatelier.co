@@ -72,7 +72,7 @@ export default function App() {
           </Routes>
 
           {/* Global Components */}
-          {/* <FloatingWhatsApp /> */}
+          <FloatingWhatsApp />
 
           {/* Global Luxury Toasts */}
           <Toaster

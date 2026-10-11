@@ -1,5 +1,7 @@
 import React from 'react';
 import { RiVolumeMuteLine, RiSafeLine, RiLeafLine, RiArrowRightLine } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
+import { getAllTemplates } from '../../templates/registry';
 
 /* ─────────────────────────────────────────────
    Data
@@ -168,6 +170,8 @@ function Eyebrow({ children }) {
    Main export
 ───────────────────────────────────────────── */
 export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
+  const featuredTemplates = getAllTemplates().filter((tpl) => tpl.isAvailable);
+
   return (
     <section
       id="top"
@@ -247,6 +251,96 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
       </Block>
 
       {/* ══════════════════════════════════════════
+          FEATURED PRODUCTS — Zafaf Signature
+      ══════════════════════════════════════════ */}
+      <Block className="px-4 sm:px-6 py-16 sm:py-24 w-full">
+        {/* Section Header */}
+        <div className="mb-8 sm:mb-10 text-center">
+          <h2 className="text-3xl SpaceGrotesk sm:text-4xl text-[#d4af37] font-light tracking-wide">
+            Zafaf Signature
+          </h2>
+          <div className="mt-2 w-10 h-0.5 bg-[#d4af37]/35 mx-auto rounded-full" />
+        </div>
+
+        {/* Products Grid (2 to 4 products responsive) */}
+        <div
+          className={`w-full mx-auto grid grid-cols-2 ${
+            featuredTemplates.length > 2
+              ? 'lg:grid-cols-4 max-w-6xl'
+              : 'max-w-md sm:max-w-xl md:max-w-2xl'
+          } gap-3 sm:gap-6`}
+        >
+          {featuredTemplates.map((tpl) => {
+            const whatsappText = `Assalamu Alaikum Zafaf Atelier! I would like to inquire about ordering the "${tpl.name}" (${tpl.invitationType || 'Zafaf Signature'}) suite for our wedding.`;
+            const whatsappUrl = `https://wa.me/917448552778?text=${encodeURIComponent(whatsappText)}`;
+
+            const badgeBg =
+              tpl.badge === 'Cinematic'
+                ? 'bg-[#c87a14]'
+                : tpl.badge === 'New'
+                  ? 'bg-[#b8860b]'
+                  : 'bg-[#966b1d]';
+
+            return (
+              <div
+                key={tpl.id}
+                className="w-full rounded-2xl sm:rounded-3xl bg-[#111827] border border-white/10 shadow-xl overflow-hidden flex flex-col group transition-all duration-300 hover:border-[#d4af37]/40"
+              >
+                {/* Image Preview Area with floating badge */}
+                <div className="relative w-full aspect-[4/6] sm:aspect-[3/4] overflow-hidden bg-[#0a0f18]">
+                  <img
+                    src={tpl.image || '/images/web-invite.jpg'}
+                    alt={tpl.name}
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20 pointer-events-none" />
+
+                  {/* Top-left Pill Badge */}
+                  <div className="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 z-10">
+                    <span
+                      className={`px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold text-white shadow-md tracking-wide ${badgeBg}`}
+                    >
+                      {tpl.badge || 'New'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Details Area */}
+                <div className="p-3 sm:p-4 md:p-5 bg-gradient-to-b from-[#182132] to-[#111827] flex flex-col justify-between flex-1 border-t border-white/5">
+                  <div className="space-y-1">
+                    <h3 className="text-sm sm:text-base md:text-lg font-semibold text-white tracking-wide truncate">
+                      {tpl.name}
+                    </h3>
+                    <p className="text-sm md:text-base font-semibold text-[#b5e8c5]">
+                      ₹{tpl.price}
+                    </p>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="space-y-2 mt-3 sm:mt-4">
+                    <Link
+                      to={tpl.templateRoute || `/templates/webpage/${tpl.slug}`}
+                      className="w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer"
+                    >
+                      VIEW DEMO
+                    </Link>
+                    <a
+                      href={whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer"
+                    >
+                      ORDER NOW
+                    </a>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Block>
+
+      {/* ══════════════════════════════════════════
           BLOCK 3 — Full-screen Value Cards
       ══════════════════════════════════════════ */}
       <Block className="px-6 py-20">
@@ -300,18 +394,21 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
         </p>
 
         <div className="poppins flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-xs sm:max-w-none">
-          <button
-            className="btn-mint flex items-center gap-2 px-8 py-3.5 text-[15px] w-full sm:w-auto justify-center"
-            onClick={onOpenOrderModal}
+          <a
+            href="https://wa.me/917448552778?text=Assalamualaikum%2C%20I%20would%20like%20to%20order%20an%20invitation%20for%20my%20wedding"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-mint flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-3.5 text-[15px]"
           >
             Order Invitation <RiArrowRightLine size={16} />
-          </button>
-          <button
+          </a>
+
+          <Link
+            to="/templates/webpage/mizaan-royal"
             className="btn-outline px-8 py-3.5 text-[15px] w-full sm:w-auto justify-center"
-            onClick={onOpenInteractiveDemo}
           >
             Live RSVP Demo
-          </button>
+          </Link>
         </div>
 
       </Block>

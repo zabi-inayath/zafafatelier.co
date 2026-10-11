@@ -1,6 +1,7 @@
 import React from 'react';
 import { SERVICES } from '../../constants';
 import { RiCheckLine, RiArrowRightLine, RiGlobalLine, RiImageLine, RiFilmLine } from 'react-icons/ri';
+import { Link } from 'react-router-dom';
 
 const SERVICE_ICONS = {
   'web-invitations': <RiGlobalLine size={24} className="text-mint" />,
@@ -45,7 +46,7 @@ export default function ServicesSection({ onSelectService, onOpenInteractiveDemo
                 className="group grid lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden border border-mint/10 hover:border-mint/25 transition-all duration-500 bg-navy-mid/40 hover:shadow-2xl hover:shadow-black/60 backdrop-blur-sm"
               >
                 {/* Image */}
-                <div className={`relative aspect-[4/3] lg:aspect-auto overflow-hidden ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+                <div className={`relative aspect-[4/5] lg:aspect-auto overflow-hidden ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
                   <img
                     src={service.image}
                     alt={service.title}
@@ -78,15 +79,25 @@ export default function ServicesSection({ onSelectService, onOpenInteractiveDemo
                       ))}
                     </ul>
                   </div>
-
+                  
                   <div className="flex flex-wrap gap-3 mt-10 pt-6 border-t border-mint/10">
-                    <button onClick={() => onSelectService(service.id)} className="btn-mint">
+                    <a
+                      href="https://wa.me/917448552778?text=Assalamualaikum%2C%20I%20would%20like%20to%20order%20an%20invitation%20for%20my%20wedding"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-mint inline-flex items-center justify-center gap-2"
+                    >
                       {service.ctaText} <RiArrowRightLine size={16} />
-                    </button>
+                    </a>
+
                     {service.id === 'web-invitations' && (
-                      <button onClick={onOpenInteractiveDemo} className="btn-outline">
+                      <Link
+                        type="button"
+                        to="/templates/webpage/mizaan-royal"
+                        className="btn-outline inline-flex items-center justify-center gap-2"
+                      >
                         Live RSVP Demo
-                      </button>
+                      </Link>
                     )}
                   </div>
                 </div>
