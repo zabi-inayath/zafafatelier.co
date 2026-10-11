@@ -4,6 +4,7 @@ import { getTemplateBySlug } from '../templates/registry';
 import TemplatePreviewBar from '../templates/common/TemplatePreviewBar';
 import MizaanRoyal from '../templates/mizaan-royal/MizaanRoyal';
 import { RiArrowLeftLine, RiSparklingLine } from 'react-icons/ri';
+import RoyalMajesty from '../templates/mizaan-royal/RoyalMajesty';
 
 export default function TemplateViewerPage() {
   const { templateSlug } = useParams();
@@ -38,9 +39,13 @@ export default function TemplateViewerPage() {
   const renderTemplateComponent = () => {
     switch (template.slug) {
       case 'mizaan-royal':
+        return <MizaanRoyal isPreview={true} />;
+      case 'royal-majesty':
+        return <RoyalMajesty isPreview={true} />;
       default:
         return <MizaanRoyal isPreview={true} />;
     }
+
   };
 
   return (

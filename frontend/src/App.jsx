@@ -20,6 +20,7 @@ import FloatingWhatsApp from './components/common/FloatingWhatsApp';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Toaster } from 'react-hot-toast';
+import RoyalMajesty from './templates/mizaan-royal/RoyalMajesty';
 
 export default function App() {
   return (
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="/templates/webpage/:templateSlug" element={<TemplateViewerPage />} />
             <Route path="/templates/:templateSlug" element={<TemplateViewerPage />} />
             <Route path="/mizaan-royal" element={<MizaanRoyal isPreview={false} />} />
+            <Route path="/royal-majesty" element={<RoyalMajesty isPreview={false} />} />
 
             {/* Protected Routes */}
             <Route

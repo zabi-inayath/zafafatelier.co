@@ -35,8 +35,8 @@ export default function TemplatesPage() {
     },
     {
       id: 'pdf',
-      name: 'Pdf Invitations',
-      firstLine: 'Pdf',
+      name: 'PDF Invitations',
+      firstLine: 'PDF',
       secondLine: 'Invitations',
       route: '/templates/pdfs',
       image: '/pdf.png',
@@ -90,7 +90,7 @@ export default function TemplatesPage() {
             <Link
               key={cat.id}
               to={cat.route}
-              className={`relative overflow-hidden rounded-[24px] sm:rounded-[30px] p-5 sm:p-6 aspect-square bg-gradient-to-br ${cat.gradient} shadow-lg ${cat.shadow} cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-[0.98] flex flex-col justify-between group block`}
+              className={`relative overflow-hidden rounded-[24px] sm:rounded-[30px] pb-5 pl-5 aspect-square bg-gradient-to-br ${cat.gradient} shadow-lg ${cat.shadow} cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-[0.98] flex flex-col justify-between group block`}
             >
               {/* Top-Right Image Slot */}
               <div className="self-end relative z-10 w-25 h-25 flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function TemplatesPage() {
 
               {/* Bottom-Left Category Title */}
               <div className="relative z-10 select-none">
-                <h3 className="text-black font-bold text-lg sm:text-xl md:text-2xl leading-[1.12] tracking-tight">
+                <h3 className="text-black font-bold text-xl md:text-2xl leading-[1.12] tracking-tight">
                   <span className="block">{cat.firstLine}</span>
                   <span className="block">{cat.secondLine}</span>
                 </h3>
