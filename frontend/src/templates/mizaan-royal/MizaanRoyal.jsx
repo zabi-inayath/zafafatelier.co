@@ -35,8 +35,22 @@ const MizaStyle = () => (
       0% { transform: translateY(-10vh) rotate(0deg) scale(1); opacity: 1; }
       100% { transform: translateY(110vh) rotate(720deg) scale(0.5); opacity: 0; }
     }
-    .animate-confetti {
-      animation: confettiFall linear forwards;
+    @keyframes partyBomb {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(0.3) rotate(0deg);
+      }
+      25% {
+        opacity: 1;
+        transform: translate3d(var(--dx), var(--dy), 0) scale(1.3) rotate(calc(var(--rot) * 0.35));
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(calc(var(--dx) * 1.3), calc(var(--dy) + 120px), 0) scale(0.4) rotate(var(--rot));
+      }
+    }
+    .animate-party-bomb {
+      animation: partyBomb var(--duration) cubic-bezier(0.12, 0.85, 0.3, 1) forwards;
     }
     .reveal-on-scroll {
       opacity: 0;
@@ -758,6 +772,53 @@ export default function MizaanRoyal({ isPreview = false }) {
   const [ceremonies, setCeremonies] = useState('both');
   const [duaMessage, setDuaMessage] = useState('');
   const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
+  // Party Bomb celebration state for RSVP
+  const [partyParticles, setPartyParticles] = useState([]);
+  const [rsvpCount, setRsvpCount] = useState(0);
+
+  const handleConfirmRsvp = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+
+    setRsvpCount(prev => prev + 1);
+
+    const colors = [
+      '#C49A45', '#D4AF37', '#FAF8F5', '#123F36',
+      '#E8D5A3', '#8A795C', '#F3EEDB', '#206558', '#E6C673'
+    ];
+
+    const batchId = `${Date.now()}-${Math.random()}`;
+    const newBatch = Array.from({ length: 48 }).map((_, i) => {
+      const angle = Math.PI * 2 * Math.random();
+      const velocity = 80 + Math.random() * 240;
+      const size = 6 + Math.random() * 10;
+      const shapeType = Math.random();
+      const isRibbon = shapeType > 0.65;
+      const isDiamond = shapeType <= 0.65 && shapeType > 0.35;
+
+      return {
+        id: `${batchId}-${i}`,
+        batchId,
+        x: originX,
+        y: originY,
+        dx: Math.cos(angle) * velocity,
+        dy: Math.sin(angle) * velocity - (60 + Math.random() * 120),
+        size,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: (Math.random() - 0.5) * 720,
+        shape: isRibbon ? 'ribbon' : isDiamond ? 'diamond' : 'circle',
+        duration: 0.9 + Math.random() * 0.7
+      };
+    });
+
+    setPartyParticles(prev => [...prev, ...newBatch]);
+
+    setTimeout(() => {
+      setPartyParticles(prev => prev.filter(p => p.batchId !== batchId));
+    }, 1800);
+
+  };
 
   // Link copy
   const [copied, setCopied] = useState(false);
@@ -1009,7 +1070,7 @@ export default function MizaanRoyal({ isPreview = false }) {
                   <div className="flex items-center gap-3">
                     <div className="flex text-[#123F36]">
                       {/* <i className="fa-solid fa-hotel text-4xl"></i> */}
-                      <i class="fa-solid fa-mosque text-4xl"></i>
+                      <i className="fa-solid fa-mosque text-4xl"></i>
                     </div>
 
                     <div className="min-w-0 flex-1">
@@ -1027,7 +1088,7 @@ export default function MizaanRoyal({ isPreview = false }) {
                     </div>
                   </div>
                 </div>
-                
+
 
                 {/* Actions */}
                 <div className="space-y-2.5 pt-1">
@@ -1186,114 +1247,191 @@ export default function MizaanRoyal({ isPreview = false }) {
         </section>
 
         {/* RSVP ACTION */}
-        <section className="max-w-2xl mx-auto px-6 py-12 text-center reveal-on-scroll">
-          <div className="p-8 sm:p-10 rounded-3xl bg-[#031424] border border-[#b5e8c5]/25 shadow-2xl space-y-6">
-            <div className="w-14 h-14 rounded-full bg-[#b5e8c5]/15 border border-[#b5e8c5]/30 flex items-center justify-center mx-auto text-[#b5e8c5]">
-              <RiHeartLine size={26} />
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 py-14 text-center reveal-on-scroll">
+          <div className="group relative w-full overflow-hidden rounded-[28px] border border-[#B9A17A]/30 bg-[#123F36] p-8 sm:p-12 shadow-[0_12px_40px_-16px_rgba(18,63,54,0.3)] transition-all duration-500 hover:border-[#C49A45]/60 space-y-6">
+
+            {/* Top Heart Badge */}
+            <div className="w-16 h-16 flex items-center justify-center mx-auto text-[#C49A45] shadow-xs group-hover:scale-105 transition-transform duration-500">
+              <RiHeartLine size={62} />
             </div>
-            <div>
-              <h3 className="text-3xl text-white font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Confirm Your Blessed Presence</h3>
-              <p className="text-xs text-[#8ab89c] mt-2 font-light max-w-md mx-auto">
-                Your prayers and attendance are requested. Kindly RSVP by 15th November 2026 to assist with catering arrangements.
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.06] border border-[#C49A45]/30 text-[#C49A45] text-[10px] uppercase font-bold tracking-[0.25em] mb-1">
+                Honored Guests
+              </div>
+
+              <h3 className="font-poppins text-2xl sm:text-4xl font-medium tracking-tight text-[#FAF8F5]">
+                Confirm Your Blessed Presence
+              </h3>
+
+              <p className="text-base sm:text-lg text-[#C49A45] font-light" style={{ fontFamily: 'Amiri, serif' }}>
+                حُضُورُكُمْ يَسُرُّنَا وَيُبَارِكُ لَنَا
               </p>
+
+              <p className="text-xs sm:text-sm text-[#D4C9A5]/90 mt-2 font-light max-w-md mx-auto leading-relaxed">
+                Your prayers, love, and gracious attendance are requested. Kindly confirm by 15th November 2026 to assist with royal catering arrangements.
+              </p>
+
+              {rsvpCount > 0 && (
+                <div className="pt-2">
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#C49A45]/20 border border-[#C49A45]/40 text-[#FAF8F5] text-[11px] font-medium animate-pulse">
+                    <RiSparklingLine size={13} className="text-[#C49A45]" />
+                    <span>Blessed Presence Confirmed ({rsvpCount} {rsvpCount === 1 ? 'time' : 'times'})</span>
+                  </span>
+                </div>
+              )}
             </div>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-              <button onClick={() => setShowRsvpModal(true)} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-2xl bg-[#b5e8c5] hover:bg-[#cbf4d8] text-[#020b17] font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-[#b5e8c5]/20 cursor-pointer">
-                <RiSparklingLine size={16} /><span>Confirm RSVP Online</span>
+
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-3">
+              <button
+                type="button"
+                onClick={handleConfirmRsvp}
+                className="relative flex min-h-[50px] w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-[#C49A45] hover:bg-[#D4B36D] active:scale-95 px-8 py-3.5 text-xs font-semibold tracking-wider uppercase text-[#123F36] transition-all duration-300 shadow-lg cursor-pointer"
+              >
+                <RiSparklingLine size={18} />
+                <span>Confirm Presence</span>
               </button>
-              <button onClick={handleCopyLink} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-[#b5e8c5]/25 text-[#b5e8c5] text-xs font-semibold transition-all cursor-pointer">
-                {copied ? <RiCheckLine size={16} /> : <RiFileCopyLine size={16} />}<span>{copied ? 'Link Copied' : 'Share Invitation'}</span>
+
+              <button
+                type="button"
+                onClick={handleCopyLink}
+                className="flex min-h-[50px] w-full sm:w-auto items-center justify-center gap-2.5 rounded-full border border-[#C49A45]/35 bg-white/[0.04] hover:bg-white/[0.08] hover:border-[#C49A45] active:scale-95 px-7 py-3.5 text-xs font-semibold tracking-wider uppercase text-[#FAF8F5] transition-all duration-300 cursor-pointer"
+              >
+                {copied ? <RiCheckLine size={18} className="text-[#C49A45]" /> : <RiFileCopyLine size={18} className="text-[#C49A45]" />}
+                <span>{copied ? 'Link Copied' : 'Share Invitation'}</span>
               </button>
             </div>
           </div>
         </section>
 
         {/* ETIQUETTE */}
-        <section className="max-w-xl mx-auto px-6 py-8 text-center text-xs text-[#8ab89c] space-y-2 reveal-on-scroll">
-          <p className="font-semibold text-[#d4af37] uppercase tracking-wider text-[10px]">Event Etiquette &amp; Warm Requests</p>
-          <p className="font-light">• Modest Islamic formal attire is requested for both ceremonies.</p>
-          <p className="font-light">• Kindly avoid photography during ladies&apos; private gatherings.</p>
-          <p className="font-light">• In accordance with Sunnah values, our celebrations are strictly music-free.</p>
+        <section className="max-w-xl mx-auto px-6 py-8 reveal-on-scroll">
+
+          <h3 className="mb-5 text-center font-semibold text-[#C49A45] uppercase tracking-[0.12em] text-[13px]">
+            Event Etiquette &amp; Warm Requests
+          </h3>
+
+          <ul className="space-y-4 text-left text-[13px] sm:text-sm leading-relaxed text-[#123F36] px-5">
+
+            <li className="flex items-start gap-3">
+              <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#C49A45]" />
+              <p>
+                Modest Islamic formal attire is kindly requested for both ceremonies.
+              </p>
+            </li>
+
+            <li className="flex items-start gap-3">
+              <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#C49A45]" />
+              <p>
+                Please refrain from photography during private gatherings for ladies.
+              </p>
+            </li>
+
+            <li className="flex items-start gap-3">
+              <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#C49A45]" />
+              <p>
+                In keeping with the Sunnah, our celebrations will be strictly music-free.
+              </p>
+            </li>
+
+          </ul>
         </section>
 
         {/* FOOTER */}
-        <footer className="py-12 px-6 text-center border-t border-[#b5e8c5]/15 mt-12 space-y-4 reveal-on-scroll">
-          <div className="flex items-center justify-center gap-2">
-            <img src="/zafaf-trans.png" alt="Zafaf Atelier" className="h-7 w-auto object-contain" />
-            <span className="text-xs font-serif text-[#d4af37]">Zafaf Atelier</span>
-          </div>
-          <p className="text-[11px] text-[#8ab89c]/80 font-light">Bespoke Islamic Web Invitations &amp; Digital Suites</p>
-          <div>
-            <Link to="/order?template=mizaan-royal&type=Web+Invitation" className="inline-flex items-center gap-1.5 text-xs text-[#b5e8c5] hover:underline font-semibold">
-              <span>Commission your own bespoke wedding invitation</span><RiArrowRightLine size={13} />
-            </Link>
+        <footer className="relative z-10 w-full overflow-hidden border-t border-[#B9A17A]/25 bg-[#123F36] px-6 pb-10 pt-8 text-center reveal-on-scroll">
+
+          {/* Subtle Zafaf watermark */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 flex items-center justify-center select-none font-poppins text-5xl sm:text-7xl font-semibold tracking-[0.2em] text-white/[0.025]"
+          >
+            ZAFAF
+          </span>
+
+          <div className="relative z-10 mx-auto flex max-w-md flex-col items-center gap-4">
+
+            {/* Brand Logo */}
+            <a
+              href="https://zafaf.mizaantech.co.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit Zafaf Atelier"
+              className="inline-flex items-center justify-center transition-opacity duration-300 hover:opacity-80"
+            >
+              <img
+                src="/zafaf-white-trans.png"
+                alt="Zafaf Atelier"
+                className="h-9 w-auto object-contain"
+              />
+            </a>
+
+            {/* Invitation Credit */}
+            <div className="space-y-1.5">
+              <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#C49A45]">
+                Thoughtfully Crafted for Your Special Day
+              </p>
+
+              <p className="text-xs leading-relaxed text-[#FAF8F5]/75">
+                A bespoke digital wedding invitation, designed with elegance,
+                meaningful details, and timeless simplicity.
+              </p>
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 py-1">
+              <span className="h-px w-8 bg-[#C49A45]/40" />
+              <span className="h-1.5 w-1.5 rotate-45 border border-[#C49A45]/70" />
+              <span className="h-px w-8 bg-[#C49A45]/40" />
+            </div>
+
+            {/* Call to Action */}
+            <div className="space-y-3">
+              <p className="text-[11px] text-[#FAF8F5]/60">
+                Love the design? Let us create yours.
+              </p>
+
+              <Link
+                to="/order?template=mizaan-royal&type=Web+Invitation"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#C49A45]/50 px-5 py-2.5 text-xs font-medium text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-[#C49A45] hover:text-[#123F36]"
+              >
+                Create Your Own Invitation
+                <RiArrowRightLine size={14} />
+              </Link>
+            </div>
+
+            {/* Copyright */}
+            <p className="pt-1 text-[9px] tracking-wide text-[#FAF8F5]/40">
+              Designed with care by Zafaf Atelier
+            </p>
+
           </div>
         </footer>
       </div>
 
-      {/* RSVP MODAL */}
-      {showRsvpModal && (
-        <div className="fixed inset-0 z-[200] bg-[#020b17]/90 backdrop-blur-xl flex items-center justify-center p-4">
-          <div className="relative w-full max-w-md bg-[#031424] rounded-3xl border border-[#b5e8c5]/30 p-6 sm:p-8 shadow-2xl text-left animate-app-screen">
-            <button onClick={() => setShowRsvpModal(false)} className="absolute top-5 right-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-[#8ab89c] hover:text-white transition-colors">
-              <RiCloseLine size={18} />
-            </button>
-            <div className="mb-6">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-[#d4af37]">Guest Response</span>
-              <h3 className="text-2xl text-white font-light" style={{ fontFamily: 'Cormorant Garamond, serif' }}>RSVP for Zayd &amp; Maryam</h3>
-            </div>
-            {rsvpSubmitted ? (
-              <div className="p-6 rounded-2xl bg-[#020b17] border border-[#b5e8c5]/30 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-[#b5e8c5]/20 text-[#b5e8c5] flex items-center justify-center mx-auto"><RiCheckLine size={24} /></div>
-                <h4 className="text-lg text-white font-serif">JazakAllahu Khairan!</h4>
-                <p className="text-xs text-[#8ab89c]">Your RSVP details have been recorded.</p>
-                <button onClick={() => { setShowRsvpModal(false); setRsvpSubmitted(false); }} className="px-6 py-2 rounded-xl bg-[#b5e8c5] text-[#020b17] text-xs font-bold uppercase tracking-wider mt-4">Close Window</button>
-              </div>
-            ) : (
-              <form onSubmit={handleRsvpSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#8ab89c] mb-1 font-semibold">Your Full Name *</label>
-                  <input type="text" required value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="e.g. Farhan & Family" className="w-full px-4 py-2.5 rounded-xl bg-[#020b17] border border-[#b5e8c5]/20 text-sm text-white placeholder-[#8ab89c]/40 focus:outline-none focus:border-[#b5e8c5]/60 transition-all" />
-                </div>
-                <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#8ab89c] mb-1 font-semibold">Will You Be Attending?</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button type="button" onClick={() => setAttendance('attending')} className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all border ${attendance === 'attending' ? 'bg-[#b5e8c5] text-[#020b17] border-[#b5e8c5]' : 'bg-[#020b17] text-[#8ab89c] border-[#b5e8c5]/20 hover:text-white'}`}>Joyfully Attending</button>
-                    <button type="button" onClick={() => setAttendance('declining')} className={`py-2 px-3 rounded-xl text-xs font-semibold transition-all border ${attendance === 'declining' ? 'bg-[#d4af37] text-[#020b17] border-[#d4af37]' : 'bg-[#020b17] text-[#8ab89c] border-[#b5e8c5]/20 hover:text-white'}`}>Regretfully Declining</button>
-                  </div>
-                </div>
-                {attendance === 'attending' && (
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] uppercase tracking-wider text-[#8ab89c] mb-1 font-semibold">Total Guests</label>
-                      <select value={guestCount} onChange={(e) => setGuestCount(e.target.value)} className="w-full px-3 py-2.5 rounded-xl bg-[#020b17] border border-[#b5e8c5]/20 text-xs text-white focus:outline-none focus:border-[#b5e8c5]/60">
-                        <option value="1">1 Guest</option>
-                        <option value="2">2 Guests</option>
-                        <option value="3">3 Guests</option>
-                        <option value="4">4 Guests</option>
-                        <option value="5+">5+ Family Members</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[11px] uppercase tracking-wider text-[#8ab89c] mb-1 font-semibold">Ceremonies</label>
-                      <select value={ceremonies} onChange={(e) => setCeremonies(e.target.value)} className="w-full px-3 py-2.5 rounded-xl bg-[#020b17] border border-[#b5e8c5]/20 text-xs text-white focus:outline-none focus:border-[#b5e8c5]/60">
-                        <option value="both">Both Nikah &amp; Walima</option>
-                        <option value="nikah">Nikah Only</option>
-                        <option value="walima">Walima Only</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-                <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#8ab89c] mb-1 font-semibold">Dua / Blessing for Newlyweds (Optional)</label>
-                  <textarea rows={2} value={duaMessage} onChange={(e) => setDuaMessage(e.target.value)} placeholder="BarakAllahu feekum..." className="w-full px-4 py-2 rounded-xl bg-[#020b17] border border-[#b5e8c5]/20 text-xs text-white placeholder-[#8ab89c]/40 focus:outline-none focus:border-[#b5e8c5]/60 resize-none" />
-                </div>
-                <button type="submit" className="w-full py-3 rounded-xl bg-[#25d366] hover:bg-[#20bd5a] text-[#020b17] font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-2">
-                  <RiWhatsappLine size={17} /><span>Send RSVP via WhatsApp</span>
-                </button>
-              </form>
-            )}
-          </div>
+      {/* Dynamic Party Bomb Confetti from RSVP Button */}
+      {partyParticles.length > 0 && (
+        <div className="fixed inset-0 pointer-events-none z-[250] overflow-hidden">
+          {partyParticles.map((p) => (
+            <div
+              key={p.id}
+              className="absolute animate-party-bomb"
+              style={{
+                left: `${p.x}px`,
+                top: `${p.y}px`,
+                width: p.shape === 'ribbon' ? `${p.size * 0.45}px` : `${p.size}px`,
+                height: p.shape === 'ribbon' ? `${p.size * 2.2}px` : `${p.size}px`,
+                backgroundColor: p.color,
+                borderRadius: p.shape === 'circle' ? '50%' : p.shape === 'ribbon' ? '2px' : '3px',
+                transform: p.shape === 'diamond' ? 'rotate(45deg)' : 'none',
+                boxShadow: `0 0 10px ${p.color}80`,
+                '--dx': `${p.dx}px`,
+                '--dy': `${p.dy}px`,
+                '--rot': `${p.rotation}deg`,
+                '--duration': `${p.duration}s`,
+              }}
+            />
+          ))}
         </div>
       )}
     </div>
