@@ -5,6 +5,7 @@ import TemplatePreviewBar from '../templates/common/TemplatePreviewBar';
 import MizaanRoyal from '../templates/mizaan-royal/MizaanRoyal';
 import { RiArrowLeftLine, RiSparklingLine } from 'react-icons/ri';
 import RoyalMajesty from '../templates/mizaan-royal/RoyalMajesty';
+import RawdahLuxe from '../templates/mizaan-royal/RawdahLuxe';
 
 export default function TemplateViewerPage() {
   const { templateSlug } = useParams();
@@ -42,6 +43,8 @@ export default function TemplateViewerPage() {
         return <MizaanRoyal isPreview={true} />;
       case 'royal-majesty':
         return <RoyalMajesty isPreview={true} />;
+      case 'rawdah-luxe':
+        return <RawdahLuxe isPreview={true} />;
       default:
         return <MizaanRoyal isPreview={true} />;
     }

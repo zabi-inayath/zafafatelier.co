@@ -21,6 +21,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Toaster } from 'react-hot-toast';
 import RoyalMajesty from './templates/mizaan-royal/RoyalMajesty';
+import RawdahLuxe from './templates/mizaan-royal/RawdahLuxe';
 
 export default function App() {
   return (
@@ -45,6 +46,8 @@ export default function App() {
             <Route path="/templates/:templateSlug" element={<TemplateViewerPage />} />
             <Route path="/mizaan-royal" element={<MizaanRoyal isPreview={false} />} />
             <Route path="/royal-majesty" element={<RoyalMajesty isPreview={false} />} />
+            <Route path="/rawdah-luxe" element={<RawdahLuxe isPreview={false} />} />
+
 
             {/* Protected Routes */}
             <Route
