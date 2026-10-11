@@ -23,6 +23,8 @@ import {
 } from 'react-icons/ri';
 import toast from 'react-hot-toast';
 import DotMatrixLoader from '../../components/common/DotMatrixLoader';
+import { FaCalendarDays } from 'react-icons/fa6';
+import { PiClockCountdownBold } from "react-icons/pi";
 
 // --- STYLES ---
 const MizaStyle = () => (
@@ -471,43 +473,101 @@ const ScratchCard = ({ children, onReveal }) => {
 // --- VIDEO HERO COMPONENT ---
 const VideoHero = ({ onUnlock }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const videoRef = useRef(null);
+  const hasUnlockedRef = useRef(false);
+
+  const unlockInvitation = useCallback(() => {
+    if (hasUnlockedRef.current) return;
+    hasUnlockedRef.current = true;
+    setIsUnlocked(true);
+    onUnlock();
+  }, [onUnlock]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (video.readyState >= 3) {
+    // Strict audio bypass for mobile Safari / Android WebKit
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    const handleReady = () => {
       setIsVideoLoaded(true);
-      return;
+      // Pre-warm the video pipeline and force tablet/mobile to render frame 0 instead of black
+      if (video.currentTime === 0) {
+        try {
+          video.currentTime = 0.001;
+        } catch (e) { }
+      }
+    };
+
+    if (video.readyState >= 2) {
+      handleReady();
     }
 
-    const handleReady = () => setIsVideoLoaded(true);
-    video.addEventListener('canplaythrough', handleReady);
     video.addEventListener('loadeddata', handleReady);
+    video.addEventListener('canplay', handleReady);
+    video.addEventListener('canplaythrough', handleReady);
+
+    // Only mark as actively playing once moving frames are genuinely rendering on screen
+    const handlePlaying = () => {
+      setIsPlaying(true);
+      setIsOpening(false);
+    };
+    video.addEventListener('playing', handlePlaying);
+
+    // Synchronize the card popup exactly with the video's parchment opening moment (~2.8s)
+    const handleTimeUpdate = () => {
+      if (video.currentTime >= 2.8) {
+        unlockInvitation();
+      }
+    };
+    video.addEventListener('timeupdate', handleTimeUpdate);
 
     return () => {
-      video.removeEventListener('canplaythrough', handleReady);
       video.removeEventListener('loadeddata', handleReady);
+      video.removeEventListener('canplay', handleReady);
+      video.removeEventListener('canplaythrough', handleReady);
+      video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('timeupdate', handleTimeUpdate);
     };
-  }, []);
+  }, [unlockInvitation]);
 
   const handleTap = () => {
-    if (!isVideoLoaded) return;
-    if (!isPlaying && videoRef.current) {
-      setIsPlaying(true);
-      videoRef.current.play().catch(e => {
-        console.error("Video play failed", e);
-      });
+    if (!isVideoLoaded || isPlaying || isOpening) return;
+    const video = videoRef.current;
+    if (!video) return;
 
-      // Unlock scroll and reveal details after 3 seconds
-      setTimeout(() => {
-        setIsUnlocked(true);
-        onUnlock();
-      }, 3000);
+    setIsOpening(true);
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          // Playback initiated successfully
+        })
+        .catch(e => {
+          console.warn("Video playback deferred/blocked", e);
+          setTimeout(() => {
+            unlockInvitation();
+          }, 2000);
+        });
     }
+
+    // Safety fallback in case playback stalls or timeupdate doesn't reach 2.8s
+    setTimeout(() => {
+      unlockInvitation();
+    }, 6000);
   };
 
   const handleScrollDown = (e) => {
@@ -539,11 +599,21 @@ const VideoHero = ({ onUnlock }) => {
         </div>
       )}
 
-      {/* Tap to Open overlay */}
-      {isVideoLoaded && !isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-700">
-          <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase animate-pulse border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/40 shadow-[0_0_25px_rgba(212,175,55,0.25)] flex items-center space-x-3">
-            <span>Tap to Open</span>
+      {/* Tap to Open / Opening overlay */}
+      {isVideoLoaded && (
+        <div
+          className={`absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-700 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}
+        >
+          <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)] flex items-center space-x-3 transition-all">
+            {isOpening ? (
+              <>
+                <div className="w-4 h-4 border-2 border-[#d4af37] border-t-transparent rounded-full animate-spin" />
+                <span>Opening...</span>
+              </>
+            ) : (
+              <span className="animate-pulse">Tap to Open</span>
+            )}
           </div>
         </div>
       )}
@@ -855,17 +925,13 @@ export default function MizaanRoyal({ isPreview = false }) {
         {/* ITINERARY */}
         <section className="max-w-5xl mx-auto px-4 sm:px-6 py-20 reveal-on-scroll">
           {/* Section Header */}
-          <div className="text-center mb-14">
+          <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#123F36]/5 border border-[#B9A17A]/30 text-[#A67B2E] text-[10px] uppercase font-bold tracking-[0.25em] mb-3 shadow-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C49A45]" />
-              Order of Celebrations
+              Occasion Details
             </div>
-            <h2 className="text-3xl sm:text-5xl hagrid text-[#123F36] tracking-tight">
-              Wedding Itinerary
+            <h2 className="text-3xl sm:text-5xl dm-sans font-semibold text-[#123F36] tracking-tight">
+              Venue & Timings
             </h2>
-            <p className="text-sm text-[#5B6F63] mt-2.5 font-light max-w-lg mx-auto dm-sans">
-              Two blessed occasions honoring sacred tradition, family companionship, and joyous festivities.
-            </p>
             <div className="flex items-center justify-center gap-3 mt-4">
               <span className="h-px w-12 bg-gradient-to-r from-transparent to-[#B9A17A]/60" />
               <span className="w-1.5 h-1.5 rotate-45 border border-[#B9A17A] bg-[#C49A45]" />
@@ -875,96 +941,114 @@ export default function MizaanRoyal({ isPreview = false }) {
 
           {/* Celebration Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-            {/* PART I: NIKAH CEREMONY */}
-            <div className="relative rounded-3xl bg-[#123F36] border border-[#B9A17A]/35 shadow-[0_4px_30px_-5px_rgba(18,63,54,0.06)] hover:shadow-[0_12px_40px_-8px_rgba(18,63,54,0.12)] hover:border-[#C49A45]/50 transition-all duration-500 flex flex-col justify-between overflow-hidden group">
 
-              <div className="p-7 sm:p-9 space-y-7">
-                {/* Header & Badges */}
-                <div className="flex items-start justify-between gap-4">
+            {/* PART I: NIKAH CEREMONY */}
+            <div className="group relative w-full overflow-hidden rounded-[28px] border border-[#B9A17A]/30 bg-[#123F36] p-6 shadow-[0_12px_40px_-16px_rgba(18,63,54,0.3)] transition-all duration-500 hover:border-[#C49A45]/60">
+
+              <div className="relative space-y-4">
+
+                {/* Header */}
+                <div className="flex items-center justify-between gap-4 px-1 pb-1">
                   <div>
-                    <h3 className="text-2xl sm:text-3xl text-[#FAF8F5] font-normal tracking-tight font-serif mt-2.5">
+                    <h3 className="font-poppins text-xl font-medium tracking-tight text-[#FAF8F5] sm:text-2xl">
                       The Nikah Ceremony
                     </h3>
-                    {/* <p className="text-base text-[#C49A45] font-light mt-0.5" style={{ fontFamily: 'Amiri, serif' }}>
-                      عَقْدُ النِّكَاحِ الْمُبَارَك
-                    </p> */}
                   </div>
 
-                  {/* Bespoke Emblem */}
-                  <div className="w-12 h-12 flex items-center justify-center text-[#FAF8F5]">
-                    <RiQuillPenLine size={72} className="text-[#FAF8F5]" />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-[#C49A45]">
+                    <RiQuillPenLine size={40} />
                   </div>
                 </div>
 
-                {/* Key Metadata Rows */}
-                <div className="space-y-3 pt-1">
-                  {/* Date */}
-                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70">
-                    <div className="w-9 h-9 rounded-xl bg-[#FAF8F5]/5 text-[#C49A45] flex items-center justify-center shrink-0">
-                      <RiCalendarEventLine size={38} />
+                {/* Date & Time */}
+                <div className="grid grid-cols-2 gap-3">
+
+                  {/* Date Card */}
+                  <div className="flex min-h-[145px] flex-col items-center justify-center rounded-[22px] border border-white/50 bg-[#FAF8F5] p-2">
+
+                    <div className="flex h-9 w-9 text-[#123F36]">
+                      <FaCalendarDays size={40} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-[#193b2b] tracking-tight">
-                        Saturday, 28th November 2026
+
+                    <div className="mt-4 text-center">
+
+                      <p className="text-sm font-semibold leading-5 text-[#193B2B] sm:text-base">
+                        28 November 2026
                       </p>
-                      <p className="text-[14px] text-[#8A795C] font-medium">
-                        18 Jumada al-Awwal 1448 AH
+
+                      <p className="mt-1 text-xs text-[#7B8278]">
+                        18 Jumada I 1448 AH
                       </p>
                     </div>
                   </div>
 
-                  {/* Time */}
-                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70">
-                    <div className="w-9 h-9 rounded-xl bg-[#FAF8F5]/5 text-[#C49A45] flex items-center justify-center shrink-0">
-                      <RiTimeLine size={38} />
+                  {/* Time Card */}
+                  <div className="flex min-h-[145px] flex-col items-center justify-center rounded-[22px] border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
+
+                    <div className="flex text-[#123F36]">
+                      <PiClockCountdownBold size={40} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-[#193b2b] tracking-tight">
-                        11:30 AM IST (Morning)
+
+                    <div className="mt-4 text-center">
+
+                      <p className="text-lg font-semibold leading-5 text-[#193B2B] sm:text-xl">
+                        11:30 AM
                       </p>
-                      <p className="text-[14px] text-[#6B7F73]">
-                        Arrival &amp; Baraat welcome from 11:00 AM
+
+                      <p className="mt-1 text-xs leading-5 text-[#7B8278]">
+                        Nikah Time
                       </p>
                     </div>
                   </div>
+                </div>
 
-                  {/* Venue */}
-                  <div className="flex items-center gap-3.5 p-3 rounded-2xl bg-white/70">
-                    <div className="w-9 h-9 rounded-xl bg-[#FAF8F5]/5 text-[#C49A45] flex items-center justify-center shrink-0">
-                      <RiMapPinLine size={38} />
+                {/* Venue Card */}
+                <div className="rounded-[22px] border border-white/50 bg-[#FAF8F5]  p-4 sm:p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex text-[#123F36]">
+                      <i class="fa-solid fa-hotel text-4xl"></i>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-[#193b2b] tracking-tight truncate">
+
+                    <div className="min-w-0 flex-1">
+                      <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8A795C]">
+                        VENUE
+                      </p>
+
+                      <h4 className="text-lg font-semibold leading-5 text-[#193B2B]">
                         The Grand Royal Ballroom
-                      </p>
-                      <p className="text-[14px] text-[#6B7F73] truncate">
+                      </h4>
+
+                      <p className="mt-1 text-sm leading-5 text-[#6B7F73]">
                         Taj Falaknuma Palace, Falaknuma, Hyderabad
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Action Buttons */}
-              <div className="p-6 pt-4 bg-[#C49A45] border-t border-[#B9A17A]/25 flex flex-wrap sm:flex-nowrap gap-3">
-                <a
-                  href={nikahCalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#123F36] text-[#123F36] hover:text-[#FAF8F5] border border-[#B9A17A]/40 text-xs font-semibold transition-all duration-300 shadow-xs group/btn"
-                >
-                  <RiCalendarEventLine size={15} className="text-[#C49A45] group-hover/btn:text-[#FAF8F5]" />
-                  <span>Add to Calendar</span>
-                </a>
-                <a
-                  href="https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#123F36] hover:bg-[#1B5246] text-[#F8F5ED] text-xs font-semibold transition-all duration-300 shadow-sm"
-                >
-                  <RiDirectionLine size={15} className="text-[#C49A45]" />
-                  <span>Get Directions</span>
-                </a>
+                {/* Actions */}
+                <div className="space-y-2.5 pt-1">
+
+                  <a
+                    href={nikahCalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
+                  >
+                    <RiCalendarEventLine size={17} />
+                    <span>Add to Calendar</span>
+                  </a>
+
+                  <a
+                    href="https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
+                  >
+                    <RiDirectionLine size={17} className="text-[#C49A45]" />
+                    <span>Get Directions</span>
+                  </a>
+
+                </div>
               </div>
             </div>
 
