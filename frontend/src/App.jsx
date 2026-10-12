@@ -13,15 +13,16 @@ import WebInvitation from './pages/WebInvitation';
 import VideoInvitation from './pages/VideoInvitation';
 import PdfInvitation from './pages/PdfInvitation';
 import PhotoInvitation from './pages/PhotoInvitation';
-import MizaanRoyal from './templates/mizaan-royal/MizaanRoyal';
+import MizaanRoyal from './templates/website/MizaanRoyal';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import ScrollToTop from './components/common/ScrollToTop';
 import FloatingWhatsApp from './components/common/FloatingWhatsApp';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Toaster } from 'react-hot-toast';
-import RoyalMajesty from './templates/mizaan-royal/RoyalMajesty';
-import RawdahLuxe from './templates/mizaan-royal/RawdahLuxe';
+import RoyalMajesty from './templates/website/RoyalMajesty';
+import RawdahLuxe from './templates/website/RawdahLuxe';
+import ZafafRegal from './templates/website/ZafafRegal';
 
 export default function App() {
   return (
@@ -47,6 +48,9 @@ export default function App() {
             <Route path="/mizaan-royal" element={<MizaanRoyal isPreview={false} />} />
             <Route path="/royal-majesty" element={<RoyalMajesty isPreview={false} />} />
             <Route path="/rawdah-luxe" element={<RawdahLuxe isPreview={false} />} />
+            {/* ZafafRegal */}
+            <Route path="/zafaf-regal" element={<ZafafRegal isPreview={false} />} />
+            
 
 
             {/* Protected Routes */}

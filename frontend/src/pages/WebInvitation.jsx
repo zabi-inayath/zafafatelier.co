@@ -57,7 +57,11 @@ export default function WebInvitation() {
                 <h2 className="text-2xl SpaceGrotesk sm:text-3xl md:text-4xl text-[#d4af37] font-light tracking-wide">
                   {category.name}
                 </h2>
-                <div className="mt-2 w-10 h-0.5 bg-[#d4af37]/35 mx-auto rounded-full" />
+                <div className="mx-auto mt-4 flex items-center justify-center gap-1.5">
+                  <span className="h-px w-28 bg-gradient-to-r from-transparent to-[#d4af37]/60" />
+                  <span className="h-1.5 w-1.5 rotate-45 border border-[#d4af37]/70" />
+                  <span className="h-px w-28 bg-gradient-to-l from-transparent to-[#d4af37]/60" />
+                </div>
               </div>
 
               {/* 2 Templates Per Row Grid */}
@@ -86,6 +90,7 @@ export default function WebInvitation() {
                           alt={tpl.name}
                           className="w-full h-full object-cover object-top transition-transform duration-700"
                         />
+
                         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20 pointer-events-none" />
 
                         {/* Top-left Pill Badge */}
@@ -112,13 +117,19 @@ export default function WebInvitation() {
                       {/* Details Area */}
                       <div className="p-3 sm:p-4 md:p-5 bg-gradient-to-b from-[#182132] to-[#111827] flex flex-col justify-between flex-1 border-t border-white/5">
                         <div className="space-y-1">
-                          <h3
-                            className="text-sm sm:text-base md:text-lg font-semibold text-white tracking-wide truncate"
-                          >
+                          <h3 className="text-sm sm:text-base md:text-lg font-semibold text-white tracking-wide truncate">
                             {tpl.name}
                           </h3>
-                          {/* price */}
-                          <p className="text-md md:text-base font-semibold text-[#b5e8c5]">₹{tpl.price}</p>
+
+                          {/* Price */}
+                          <p className="text-md md:text-base font-semibold text-[#b5e8c5]">
+                            ₹{tpl.price}
+                          </p>
+
+                          {/* One-time payment label */}
+                          <p className="text-[10px] sm:text-xs font-medium tracking-wide text-white/60">
+                            One-time payment · No subscription
+                          </p>
                         </div>
 
                         {/* USE THIS DESIGN Button */}

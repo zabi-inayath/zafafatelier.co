@@ -2,10 +2,11 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getTemplateBySlug } from '../templates/registry';
 import TemplatePreviewBar from '../templates/common/TemplatePreviewBar';
-import MizaanRoyal from '../templates/mizaan-royal/MizaanRoyal';
+import MizaanRoyal from '../templates/website/MizaanRoyal';
 import { RiArrowLeftLine, RiSparklingLine } from 'react-icons/ri';
-import RoyalMajesty from '../templates/mizaan-royal/RoyalMajesty';
-import RawdahLuxe from '../templates/mizaan-royal/RawdahLuxe';
+import RoyalMajesty from '../templates/website/RoyalMajesty';
+import RawdahLuxe from '../templates/website/RawdahLuxe';
+import ZafafRegal from '../templates/website/ZafafRegal';
 
 export default function TemplateViewerPage() {
   const { templateSlug } = useParams();
@@ -45,6 +46,10 @@ export default function TemplateViewerPage() {
         return <RoyalMajesty isPreview={true} />;
       case 'rawdah-luxe':
         return <RawdahLuxe isPreview={true} />;
+      // ZafafRegal
+      case 'zafaf-regal':
+        return <ZafafRegal isPreview={true} />;
+
       default:
         return <MizaanRoyal isPreview={true} />;
     }
