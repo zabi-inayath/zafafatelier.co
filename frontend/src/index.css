@@ -806,3 +806,17 @@ html {
   font-weight: 400;
   font-style: normal;
 }
+
+.send-flowers-regular {
+  font-family: "Send Flowers", cursive;
+  font-weight: 600;
+  font-style: normal;
+}
+
+
+.comfortaa{
+  font-family: "Comfortaa", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
