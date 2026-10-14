@@ -1232,7 +1232,7 @@ export default function ZafafRegal({ isPreview = false }) {
                             </h3>
 
                             {/* 4 Countdown Boxes */}
-                            <div className="grid grid-cols-4 gap-2.5 sm:gap-4 w-full">
+                            <div className="grid grid-cols-4 gap-2.5 sm:gap-4 w-full dm-sans">
                                 {[
                                     { label: 'Days', value: timeLeft.days, delay: '0.1s' },
                                     { label: 'Hours', value: timeLeft.hours, delay: '0.2s' },
@@ -1245,7 +1245,7 @@ export default function ZafafRegal({ isPreview = false }) {
                                             }`}
                                         style={{ animationDelay: item.delay }}
                                     >
-                                        <p className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold text-[#3b0b0b] tracking-tight tabular-nums">
+                                        <p className="text-2xl sm:text-3xl md:text-4xl font-semibold text-[#3b0b0b] tracking-tight tabular-nums">
                                             {String(item.value).padStart(2, '0')}
                                         </p>
 
