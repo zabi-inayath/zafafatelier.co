@@ -16,7 +16,7 @@ export const TEMPLATES_REGISTRY = [
     occasion: 'Nikah & Walima',
     aesthetic: 'Royal Emerald, Warm Gold & Pearl Cream',
     image: '/templates/template1/template1thum.png',
-    price: 999,
+    price: 799,
     shortDescription: 'Cinematic rose-gold opening with luxurious royal floral gate...',
     description: 'An opulent, regal Islamic web invitation suite featuring majestic Arabic Bismillah calligraphy, sacred Quranic marriage verses, live countdown, dual ceremony itinerary, interactive Google Maps, and one-tap WhatsApp RSVP.',
     features: [
@@ -63,7 +63,7 @@ export const TEMPLATES_REGISTRY = [
     occasion: 'Nikah & Walima',
     aesthetic: 'Deep Ink, Warm Gold & Geometric Arches',
     image: '/templates/template1/template1thum2.png',
-    price: 999,
+    price: 799,
     shortDescription: 'Porcelain blue ballroom romance with painterly envelope opening...',
     description: 'Inspired by the Alhambra Palace in Granada, featuring intricate geometric mashrabiya lattice work and illuminated floral borders.',
     features: [
@@ -91,7 +91,7 @@ export const TEMPLATES_REGISTRY = [
     category: 'Web Invitation',
     occasion: 'Nikah Ceremony',
     aesthetic: 'Monochrome Ivory, Warm Onyx & Fine Line Typography',
-    image: '/templates/template1/template1thum.png',
+    image: '/templates/zafaf-regal/template1thum.png',
     price: 999,
     shortDescription: 'Architectural royal grand foyer with theatrical crimson velvet drapery...',
     description: 'High-contrast luxury editorial typography with clean architectural whitespace and ultra-modern interactive guest experience.',
