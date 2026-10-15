@@ -650,22 +650,32 @@ const VideoHero = ({ onUnlock }) => {
                     </div>
 
                     {/* 3. Groom & Bride Names (pops up third) */}
-                    <div className="pop-item-3 my-3 space-y-0.5 mt-8">
-                        <h2
-                            className="text-2xl sm:text-3xl DXRigraf font-serif text-[#082215] tracking-wide"
-                        >
-                            Sadullah Khan
-                        </h2>
-                        <div className="flex items-center justify-center gap-3 py-0.5">
+                    <div className="pop-item-3 my-2 space-y-1 mt-6">
+                        <div>
+                            <h2
+                                className="text-2xl sm:text-3xl DXRigraf font-serif text-[#082215] tracking-wide"
+                            >
+                                Sadullah Khan
+                            </h2>
+                            <p className="text-xs text-[#7a5e28] font-sans font-medium tracking-wide mt-0.5">
+                                Son of Mr. &amp; Mrs. Hakikullah Khan
+                            </p>
+                        </div>
+                        <div className="flex items-center justify-center gap-3 py-1">
                             <span className="h-px w-8 bg-[#9e7d3b]/50" />
-                            <span className="text-lg sm:text-xl text-[#9e7d3b] font-serif italic">&amp;</span>
+                            <span className="text-base sm:text-lg text-[#9e7d3b] font-serif italic">&amp;</span>
                             <span className="h-px w-8 bg-[#9e7d3b]/50" />
                         </div>
-                        <h2
-                            className="text-2xl sm:text-3xl DXRigraf text-[#082215] tracking-wide"
-                        >
-                            Safiya Khan
-                        </h2>
+                        <div>
+                            <h2
+                                className="text-2xl sm:text-3xl DXRigraf text-[#082215] tracking-wide"
+                            >
+                                Safiya Khan
+                            </h2>
+                            <p className="text-xs text-[#7a5e28] font-sans font-medium tracking-wide mt-0.5">
+                                Daughter of Mr. &amp; Mrs. Abul Qasim Khan
+                            </p>
+                        </div>
                         <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
                     </div>
                 </div>
@@ -980,26 +990,46 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                     </div>
 
                     <div className="py-3 reveal-on-scroll stagger-2">
-                        <div className="space-y-2">
-                            <h1 className="text-3xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
-                                Sadullah Hakikullah Khan
-                            </h1>
-                            <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>
-                                سَعْدُ اللّٰه حَقِيقُ اللّٰه خَان
-                            </p>
+                        <div className="space-y-3">
+                            <div>
+                                <h1 className="text-3xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
+                                    Sadullah Hakikullah Khan
+                                </h1>
+                                <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-2" style={{ fontFamily: 'Amiri, serif' }}>
+                                    سَعْدُ اللّٰه حَقِيقُ اللّٰه خَان
+                                </p>
+                                <div className="pt-2">
+                                    <p className="text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#C49A45] font-semibold">
+                                        Son of
+                                    </p>
+                                    <p className="text-base sm:text-lg text-[#123F36] font-medium mt-0.5">
+                                        Mr. &amp; Mrs. Hakikullah Khan
+                                    </p>
+                                </div>
+                            </div>
 
-                            <div className="flex items-center justify-center gap-4 pt-2">
+                            <div className="flex items-center justify-center gap-4 py-3">
                                 <span className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-[#C49A45]/60" />
                                 <span className="text-2xl sm:text-3xl text-[#C49A45] font-serif italic">&amp;</span>
                                 <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-[#C49A45]/60" />
                             </div>
 
-                            <h1 className="text-3xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
-                                Safiya Abul Qasim Khan
-                            </h1>
-                            <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>
-                                صَفِيَّة أَبُو القَاسِم خَان
-                            </p>
+                            <div>
+                                <h1 className="text-3xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
+                                    Safiya Abul Qasim Khan
+                                </h1>
+                                <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-2" style={{ fontFamily: 'Amiri, serif' }}>
+                                    صَفِيَّة أَبُو القَاسِم خَان
+                                </p>
+                                <div className="pt-2">
+                                    <p className="text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#C49A45] font-semibold">
+                                        Daughter of
+                                    </p>
+                                    <p className="text-base sm:text-lg text-[#123F36] font-medium mt-0.5">
+                                        Mr. &amp; Mrs. Abul Qasim Khan
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </header>
