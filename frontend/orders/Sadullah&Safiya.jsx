@@ -135,6 +135,34 @@ const MizaStyle = () => (
       animation: textPopUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
       animation-delay: 1.6s;
     }
+
+    /* Keep entire invitation text unselectable by default */
+    .invitation-root,
+    .invitation-root *:not(.scratch-card-area):not(.scratch-card-area *):not(.btn):not(.btn *):not(button):not(button *):not(.footer-link):not(.footer-link *):not(.allow-select):not(.allow-select *) {
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      -webkit-touch-callout: none !important;
+    }
+
+    /* Exceptions: Scratch Card, Buttons, and Footer Link remain selectable and interactive */
+    .invitation-root .scratch-card-area,
+    .invitation-root .scratch-card-area *,
+    .invitation-root button,
+    .invitation-root button *,
+    .invitation-root .btn,
+    .invitation-root .btn *,
+    .invitation-root .footer-link,
+    .invitation-root .footer-link *,
+    .invitation-root .allow-select,
+    .invitation-root .allow-select * {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+      -webkit-touch-callout: default !important;
+    }
   `}</style>
 );
 
@@ -461,10 +489,10 @@ const ScratchCard = ({ children, onReveal }) => {
     return (
         <div
             ref={containerRef}
-            className="relative w-full min-h-[220px] select-none rounded-3xl overflow-hidden shadow-sm border border-[#B9A17A]/40"
+            className="scratch-card-area allow-select relative w-full min-h-[220px] select-text rounded-3xl overflow-hidden shadow-sm border border-[#B9A17A]/40"
         >
             {/* Revealed content (rendered live in the background behind the scratch canvas) */}
-            <div className="w-full h-full flex flex-col justify-center items-center p-6 bg-[#F8F5ED] rounded-3xl">
+            <div className="scratch-card-area allow-select w-full h-full flex flex-col justify-center items-center p-6 bg-[#F8F5ED] rounded-3xl select-text">
                 {children}
             </div>
 
@@ -595,16 +623,25 @@ const VideoHero = ({ onUnlock }) => {
 
     return (
         <div
-            className="relative w-full h-screen bg-[#010610] cursor-pointer z-[50] flex flex-col items-center overflow-hidden"
+            className="relative w-full h-screen bg-[#010610] cursor-pointer z-[50] flex flex-col items-center overflow-hidden select-none"
             onClick={handleTap}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                return false;
+            }}
         >
             <video
                 ref={videoRef}
                 src="/templates/template1/openingdemo2.mp4"
                 preload="auto"
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 playsInline
                 muted
+                onContextMenu={(e) => {
+                    e.preventDefault();
+                    return false;
+                }}
+                controlsList="nodownload nofullscreen noremoteplayback"
             />
 
             {/* Loading Animation until template video is fully loaded */}
@@ -917,7 +954,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
     };
 
     return (
-        <div className={`min-h-screen bg-white text-[#193b2b] relative overflow-x-clip selection:bg-[#d4af37]/30 selection:text-[#C49A45] ${!hasOpenedEnvelope ? 'h-screen overflow-hidden' : ''}`}>
+        <div className={`min-h-screen bg-white text-[#193b2b] relative overflow-x-clip select-none invitation-root selection:bg-transparent ${!hasOpenedEnvelope ? 'h-screen overflow-hidden' : ''}`}>
             <Helmet>
                 {/* Primary Meta Tags */}
                 <title>{pageTitle}</title>
@@ -1035,7 +1072,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                 </header>
 
                 {/* SCRATCH REVEAL SECTION */}
-                <section className="max-w-xl mx-auto px-6 py-5 text-center reveal-on-scroll stagger-1 relative z-20">
+                <section className="scratch-card-area allow-select max-w-xl mx-auto px-6 py-5 text-center reveal-on-scroll stagger-1 relative z-20 select-text">
                     <ScratchCard onReveal={handleDateReveal}>
                         <div
                             onClick={() => {
@@ -1188,7 +1225,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                                         href="https://maps.app.goo.gl/npG3zEcKU23xPqj56"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
+                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
                                     >
                                         <FaDirections size={17} />
                                         <span>View on Google Map</span>
@@ -1197,7 +1234,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                                         href={nikahCalUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
+                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
                                     >
                                         <FaGoogle size={17} />
                                         <span>Save our date</span>
@@ -1291,7 +1328,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                                         href="https://maps.app.goo.gl/RkNLyAuouLNX349w9"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
+                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
                                     >
                                         <FaDirections size={17} />
                                         <span>View on Google Map</span>
@@ -1300,7 +1337,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                                         href={walimaCalUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
+                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
                                     >
                                         <FaGoogle size={17} />
                                         <span>Save our date</span>
@@ -1379,14 +1416,14 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Visit Zafaf Atelier"
-                            className="inline-flex items-center justify-center gap-2 flex-col transition-opacity duration-300 hover:opacity-80"
+                            className="footer-link allow-select select-text inline-flex items-center justify-center gap-2 flex-col transition-opacity duration-300 hover:opacity-80"
                         >
                             <img
                                 src="/zafaf-white-trans.png"
                                 alt="Zafaf Atelier"
-                                className="h-9 w-auto object-contain"
+                                className="h-9 w-auto object-contain pointer-events-none"
                             />
-                            <p className="text-[9px] tracking-wide text-[#FAF8F5]/40">
+                            <p className="text-[9px] tracking-wide text-[#FAF8F5]/40 select-text">
                                 Designed with care by Zafaf Atelier
                             </p>
                         </a>
