@@ -32,18 +32,18 @@ orders.forEach(order => {
   html = html.replace(/<title>.*?<\/title>/gi, `<title>${order.title}</title>`);
 
   // Replace Meta Description
-  html = html.replace(/<meta name="description" content=".*?" \/>/gi, `<meta name="description" content="${order.description}" />`);
+  html = html.replace(/<meta\s+name=["']description["'][\s\S]*?\/>/gi, `<meta name="description" content="${order.description}" />`);
 
   // Replace or inject og:title
-  if (/<meta property="og:title".*?>/i.test(html)) {
-    html = html.replace(/<meta property="og:title" content=".*?" \/>/gi, `<meta property="og:title" content="${order.title}" />`);
+  if (/<meta\s+property=["']og:title["'][\s\S]*?\/>/i.test(html)) {
+    html = html.replace(/<meta\s+property=["']og:title["'][\s\S]*?\/>/gi, `<meta property="og:title" content="${order.title}" />`);
   } else {
     html = html.replace('</head>', `  <meta property="og:title" content="${order.title}" />\n</head>`);
   }
 
   // Replace or inject og:description
-  if (/<meta property="og:description".*?>/i.test(html)) {
-    html = html.replace(/<meta property="og:description" content=".*?" \/>/gi, `<meta property="og:description" content="${order.description}" />`);
+  if (/<meta\s+property=["']og:description["'][\s\S]*?\/>/i.test(html)) {
+    html = html.replace(/<meta\s+property=["']og:description["'][\s\S]*?\/>/gi, `<meta property="og:description" content="${order.description}" />`);
   } else {
     html = html.replace('</head>', `  <meta property="og:description" content="${order.description}" />\n</head>`);
   }
