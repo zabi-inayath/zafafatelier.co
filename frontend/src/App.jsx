@@ -23,6 +23,7 @@ import { Toaster } from 'react-hot-toast';
 import RoyalMajesty from './templates/website/RoyalMajesty';
 import RawdahLuxe from './templates/website/RawdahLuxe';
 import ZafafRegal from './templates/website/ZafafRegal';
+import SadullahWedsSafiya from '../orders/Sadullah&Safiya';
 
 export default function App() {
   return (
@@ -50,9 +51,11 @@ export default function App() {
             <Route path="/rawdah-luxe" element={<RawdahLuxe isPreview={false} />} />
             {/* ZafafRegal */}
             <Route path="/zafaf-regal" element={<ZafafRegal isPreview={false} />} />
+
+            {/* Orders routes */}
+            <Route path="/invite/sadullah-weds-safiya" element={<SadullahWedsSafiya />} />
             
-
-
+            
             {/* Protected Routes */}
             <Route
               path="/dashboard"
