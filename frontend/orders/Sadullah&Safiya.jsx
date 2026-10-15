@@ -691,7 +691,7 @@ const VideoHero = ({ onUnlock }) => {
 export default function SadullahWedsSafiya({ isPreview = false }) {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://zafaf.mizaantech.co.in';
     const shareUrl = typeof window !== 'undefined' ? window.location.href : `${origin}/invite/sadullah-weds-safiya`;
-    const shareImage = `${origin}/images/sadullah-safiya-preview.png`;
+    const shareImage = `${origin}/images/sadullah-safiya-preview.jpg`;
     const pageTitle = 'Wedding Invitation | Sadullah & Safiya';
     const pageDesc = "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the sacred Nikah & Walima celebration of Sadullah Hakikullah Khan & Safiya Abul Qasim Khan.";
 
@@ -712,7 +712,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
         updateMeta('property', 'og:description', pageDesc);
         updateMeta('property', 'og:image', shareImage);
         updateMeta('property', 'og:image:secure_url', shareImage);
-        updateMeta('property', 'og:image:type', 'image/png');
+        updateMeta('property', 'og:image:type', 'image/jpeg');
         updateMeta('property', 'og:image:width', '1200');
         updateMeta('property', 'og:image:height', '630');
         updateMeta('property', 'og:url', shareUrl);
@@ -921,7 +921,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                 <meta property="og:description" content={pageDesc} />
                 <meta property="og:image" content={shareImage} />
                 <meta property="og:image:secure_url" content={shareImage} />
-                <meta property="og:image:type" content="image/png" />
+                <meta property="og:image:type" content="image/jpeg" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
                 <meta property="og:image:alt" content="Wedding Invitation — Sadullah & Safiya" />
