@@ -27,6 +27,7 @@ import { FaCalendarDays, FaGoogle } from 'react-icons/fa6';
 import { PiClockCountdownBold } from "react-icons/pi";
 import { FaDirections } from "react-icons/fa";
 import { HiGiftTop } from "react-icons/hi2";
+import { Helmet } from 'react-helmet-async';
 
 // --- STYLES ---
 const MizaStyle = () => (
@@ -653,7 +654,7 @@ const VideoHero = ({ onUnlock }) => {
                         <h2
                             className="text-2xl sm:text-3xl DXRigraf font-serif text-[#082215] tracking-wide"
                         >
-                            Sadullah Hakikullah Khan
+                            Sadullah Khan
                         </h2>
                         <div className="flex items-center justify-center gap-3 py-0.5">
                             <span className="h-px w-8 bg-[#9e7d3b]/50" />
@@ -663,7 +664,7 @@ const VideoHero = ({ onUnlock }) => {
                         <h2
                             className="text-2xl sm:text-3xl DXRigraf text-[#082215] tracking-wide"
                         >
-                            Safiya Abul Qasim Khan
+                            Safiya Khan
                         </h2>
                         <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
                     </div>
@@ -688,9 +689,41 @@ const VideoHero = ({ onUnlock }) => {
 
 // --- MAIN INVITATION COMPONENT FOR SADULLAH & SAFIYA ---
 export default function SadullahWedsSafiya({ isPreview = false }) {
+    const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://zafaf.mizaantech.co.in';
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : `${origin}/invite/sadullah-weds-safiya`;
+    const shareImage = `${origin}/images/sadullah-safiya-preview.png`;
+    const pageTitle = 'Wedding Invitation | Sadullah & Safiya';
+    const pageDesc = "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the sacred Nikah & Walima celebration of Sadullah Hakikullah Khan & Safiya Abul Qasim Khan.";
+
     useEffect(() => {
-        document.title = 'Wedding Invitation | Sadullah & Safiya';
-    }, []);
+        document.title = pageTitle;
+
+        const updateMeta = (attr, key, content) => {
+            let el = document.querySelector(`meta[${attr}="${key}"]`);
+            if (!el) {
+                el = document.createElement('meta');
+                el.setAttribute(attr, key);
+                document.head.appendChild(el);
+            }
+            el.setAttribute('content', content);
+        };
+
+        updateMeta('property', 'og:title', pageTitle);
+        updateMeta('property', 'og:description', pageDesc);
+        updateMeta('property', 'og:image', shareImage);
+        updateMeta('property', 'og:image:secure_url', shareImage);
+        updateMeta('property', 'og:image:type', 'image/png');
+        updateMeta('property', 'og:image:width', '1200');
+        updateMeta('property', 'og:image:height', '630');
+        updateMeta('property', 'og:url', shareUrl);
+        updateMeta('property', 'og:type', 'website');
+        updateMeta('property', 'og:site_name', 'Sadullah & Safiya Wedding Invitation');
+        updateMeta('name', 'description', pageDesc);
+        updateMeta('name', 'twitter:card', 'summary_large_image');
+        updateMeta('name', 'twitter:title', pageTitle);
+        updateMeta('name', 'twitter:description', pageDesc);
+        updateMeta('name', 'twitter:image', shareImage);
+    }, [shareImage, shareUrl]);
 
     // Wedding details
     const weddingDate = new Date('2026-11-18T16:30:00');
@@ -875,6 +908,33 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
 
     return (
         <div className={`min-h-screen bg-white text-[#193b2b] relative overflow-x-clip selection:bg-[#d4af37]/30 selection:text-[#C49A45] ${!hasOpenedEnvelope ? 'h-screen overflow-hidden' : ''}`}>
+            <Helmet>
+                {/* Primary Meta Tags */}
+                <title>{pageTitle}</title>
+                <meta name="title" content={pageTitle} />
+                <meta name="description" content={pageDesc} />
+
+                {/* Open Graph / Facebook / WhatsApp */}
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={shareUrl} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={pageDesc} />
+                <meta property="og:image" content={shareImage} />
+                <meta property="og:image:secure_url" content={shareImage} />
+                <meta property="og:image:type" content="image/png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta property="og:image:alt" content="Wedding Invitation — Sadullah & Safiya" />
+                <meta property="og:site_name" content="Sadullah & Safiya Wedding Invitation" />
+
+                {/* Twitter */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:url" content={shareUrl} />
+                <meta name="twitter:title" content={pageTitle} />
+                <meta name="twitter:description" content={pageDesc} />
+                <meta name="twitter:image" content={shareImage} />
+            </Helmet>
+
             <MizaStyle />
 
             {/* Permanent Video Hero Layer */}
