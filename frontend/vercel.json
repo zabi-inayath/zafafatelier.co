@@ -5,8 +5,12 @@
             "destination": "/invite/sadullah-weds-safiya/index.html"
         },
         {
+            "source": "/invite/sadullah-weds-safiya/",
+            "destination": "/invite/sadullah-weds-safiya/index.html"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }
     ]
-}4
+}
