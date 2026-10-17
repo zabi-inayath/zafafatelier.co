@@ -651,13 +651,29 @@ const VideoHero = ({ onUnlock }) => {
             }
         };
 
-        if (video.readyState >= 2) {
+        if (video.readyState >= 1) {
             handleReady();
         }
 
+        try {
+            video.load();
+        } catch (e) { }
+
+        video.addEventListener('loadedmetadata', handleReady);
         video.addEventListener('loadeddata', handleReady);
         video.addEventListener('canplay', handleReady);
         video.addEventListener('canplaythrough', handleReady);
+
+        const handleError = () => {
+            console.warn("Video failed to load, bypassing loader");
+            setIsVideoLoaded(true);
+        };
+        video.addEventListener('error', handleError);
+
+        // Safety fallback timer: Never keep user stuck on loading screen longer than 1.8s
+        const safetyTimer = setTimeout(() => {
+            setIsVideoLoaded(true);
+        }, 1800);
 
         const handlePlaying = () => {
             setIsPlaying(true);
@@ -671,42 +687,49 @@ const VideoHero = ({ onUnlock }) => {
             }
         };
         video.addEventListener('timeupdate', handleTimeUpdate);
+        video.addEventListener('ended', unlockInvitation);
 
         return () => {
+            clearTimeout(safetyTimer);
+            video.removeEventListener('loadedmetadata', handleReady);
             video.removeEventListener('loadeddata', handleReady);
             video.removeEventListener('canplay', handleReady);
             video.removeEventListener('canplaythrough', handleReady);
+            video.removeEventListener('error', handleError);
             video.removeEventListener('playing', handlePlaying);
             video.removeEventListener('timeupdate', handleTimeUpdate);
+            video.removeEventListener('ended', unlockInvitation);
         };
     }, [unlockInvitation]);
 
     const handleTap = () => {
-        if (!isVideoLoaded || isPlaying || isOpening) return;
-        const video = videoRef.current;
-        if (!video) return;
-
+        if (isPlaying || isOpening || hasUnlockedRef.current) return;
+        setIsVideoLoaded(true);
         setIsOpening(true);
 
-        video.muted = true;
-        video.defaultMuted = true;
-        video.playsInline = true;
+        const video = videoRef.current;
+        if (video) {
+            video.muted = true;
+            video.defaultMuted = true;
+            video.playsInline = true;
 
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-            playPromise
-                .then(() => {})
-                .catch(e => {
-                    console.warn("Video playback deferred/blocked", e);
-                    setTimeout(() => {
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {})
+                    .catch(e => {
+                        console.warn("Video playback deferred/blocked", e);
                         unlockInvitation();
-                    }, 2000);
-                });
+                    });
+            }
+        } else {
+            unlockInvitation();
         }
 
+        // Safety fallback in case timeupdate doesn't trigger or video stalls
         setTimeout(() => {
             unlockInvitation();
-        }, 6000);
+        }, 3500);
     };
 
     const handleScrollDown = (e) => {
@@ -742,8 +765,14 @@ const VideoHero = ({ onUnlock }) => {
 
             {/* Loading Animation */}
             {!isVideoLoaded && (
-                <div className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6 transition-opacity duration-700">
+                <div 
+                    onClick={handleTap}
+                    className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6 transition-opacity duration-700 cursor-pointer"
+                >
                     <DotMatrixLoader text="PREPARING YOUR INVITATION" />
+                    <span className="text-white/40 text-[11px] uppercase tracking-widest mt-6 animate-pulse">
+                        Tap anywhere to open
+                    </span>
                 </div>
             )}
 
