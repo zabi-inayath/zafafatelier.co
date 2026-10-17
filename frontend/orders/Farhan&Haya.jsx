@@ -833,7 +833,7 @@ const VideoHero = ({ onUnlock }) => {
 export default function FarhanWedsHaya({ isPreview = false }) {
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://zafaf.mizaantech.co.in';
     const shareUrl = typeof window !== 'undefined' ? window.location.href : `${origin}/invite/farhan-weds-haya`;
-    const shareImage = `${origin}/images/farhan-haya-preview.jpg`;
+    const shareImage = `${origin}/images/farhan-haya-preview1.png`;
     const pageTitle = 'Wedding Invitation | Farhan & Haya';
     const pageDesc = "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we cordially invite you to celebrate the sacred Nikah union of Farhan Ahmad Khan & Haya Ali on Thursday, 11th March 2027 in Al Khobar, Saudi Arabia.";
 

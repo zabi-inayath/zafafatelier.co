@@ -27,7 +27,7 @@ const orders = [
     slug: 'farhan-weds-haya',
     title: 'Wedding Invitation | Farhan & Haya',
     description: "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the sacred Nikah celebration of Farhan Ahmad Khan & Haya Ali on Thursday, 11th March 2027 in Al Khobar, Saudi Arabia.",
-    image: 'https://zafaf.mizaantech.co.in/images/farhan-haya-preview.jpg',
+    image: 'https://zafaf.mizaantech.co.in/images/farhan-haya-preview1.png',
     url: 'https://zafaf.mizaantech.co.in/invite/farhan-weds-haya',
   }
 ];
