@@ -203,142 +203,210 @@ const ScratchCard = ({ children, onReveal }) => {
     const containerRef = useRef(null);
     const isDrawingRef = useRef(false);
     const lastPointRef = useRef(null);
-    const [isRevealed, setIsRevealed] = useState(false);
     const revealedRef = useRef(false);
     const hasScratchedRef = useRef(false);
+    const lastCheckRef = useRef(0);
 
-    const BRUSH_RADIUS = 28;
-    const REVEAL_THRESHOLD = 45;
+    const [isRevealed, setIsRevealed] = useState(false);
+
+    const REVEAL_THRESHOLD = 38;
+    const BRUSH_RADIUS = 18;
+    const CHECK_INTERVAL = 180;
+
+    // Heart path in normalized coordinates.
+    const createHeartPath = (context, width, height) => {
+        const path = new Path2D();
+
+        path.moveTo(width * 0.5, height * 0.88);
+
+        path.bezierCurveTo(
+            width * 0.42, height * 0.81,
+            width * 0.04, height * 0.55,
+            width * 0.04, height * 0.31
+        );
+
+        path.bezierCurveTo(
+            width * 0.04, height * 0.08,
+            width * 0.32, height * 0.02,
+            width * 0.5, height * 0.22
+        );
+
+        path.bezierCurveTo(
+            width * 0.68, height * 0.02,
+            width * 0.96, height * 0.08,
+            width * 0.96, height * 0.31
+        );
+
+        path.bezierCurveTo(
+            width * 0.96, height * 0.55,
+            width * 0.58, height * 0.81,
+            width * 0.5, height * 0.88
+        );
+
+        path.closePath();
+        return path;
+    };
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const container = containerRef.current;
+
         if (!canvas || !container || isRevealed) return;
 
-        let animationFrame = 0;
+        const ctx = canvas.getContext("2d", {
+            willReadFrequently: true,
+        });
 
-        const drawHeartCover = () => {
-            const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            if (!ctx) return;
+        if (!ctx) return;
+
+        let animationFrame;
+
+        const drawCover = () => {
+            if (hasScratchedRef.current || revealedRef.current) return;
 
             const rect = container.getBoundingClientRect();
             const width = rect.width;
             const height = rect.height;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
             if (!width || !height) return;
 
-            const dpr = window.devicePixelRatio || 1;
             canvas.width = Math.round(width * dpr);
             canvas.height = Math.round(height * dpr);
             canvas.style.width = `${width}px`;
             canvas.style.height = `${height}px`;
 
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.globalCompositeOperation = 'source-over';
             ctx.clearRect(0, 0, width, height);
 
-            const heartPath = new Path2D();
-            const topCurveHeight = height * 0.3;
-            heartPath.moveTo(width / 2, height * 0.88);
-            heartPath.bezierCurveTo(
-                width * 0.42, height * 0.81,
-                width * 0.04, height * 0.55,
-                width * 0.04, height * 0.31
-            );
-            heartPath.bezierCurveTo(
-                width * 0.04, height * 0.08,
-                width * 0.32, height * 0.02,
-                width / 2, topCurveHeight * 0.73
-            );
-            heartPath.bezierCurveTo(
-                width * 0.68, height * 0.02,
-                width * 0.96, height * 0.08,
-                width * 0.96, height * 0.31
-            );
-            heartPath.bezierCurveTo(
-                width * 0.96, height * 0.55,
-                width * 0.58, height * 0.81,
-                width / 2, height * 0.88
-            );
-            heartPath.closePath();
+            const heart = createHeartPath(ctx, width, height);
 
+            // Draw only inside the heart silhouette.
             ctx.save();
-            ctx.clip(heartPath);
+            ctx.clip(heart);
 
-            // Rich Burgundy cover background
-            const grad = ctx.createRadialGradient(
-                width / 2, height / 2, 10,
-                width / 2, height / 2, width * 0.6
-            );
-            grad.addColorStop(0, '#5a1212');
-            grad.addColorStop(1, '#320606');
-            ctx.fillStyle = grad;
+            // Signature Zafaf burgundy.
+            ctx.fillStyle = "#3b0b0b";
             ctx.fillRect(0, 0, width, height);
 
-            // Subtle gold grain texture
-            for (let i = 0; i < width * height * 0.015; i++) {
+            // Subtle champagne parchment grain.
+            for (let i = 0; i < width * height * 0.012; i++) {
                 const x = Math.random() * width;
                 const y = Math.random() * height;
-                ctx.fillStyle = `rgba(212, 175, 55, ${Math.random() * 0.12})`;
+
+                ctx.fillStyle = `rgba(212, 201, 165, ${Math.random() * 0.09})`;
                 ctx.fillRect(x, y, 1, 1);
             }
 
-            ctx.restore();
+            // Elegant double heart borders.
+            ctx.strokeStyle = "rgba(212, 201, 165, 0.72)";
+            ctx.lineWidth = 1.2;
 
-            // Heart double border outline
-            ctx.save();
-            ctx.strokeStyle = 'rgba(212, 175, 55, 0.75)';
-            ctx.lineWidth = 2;
-            ctx.stroke(heartPath);
-            ctx.restore();
+            const drawInsetHeart = (insetX, insetY) => {
+                const inner = new Path2D();
 
-            // Centered text inside the heart
+                inner.moveTo(width * 0.5, height * 0.88 - insetY);
+
+                inner.bezierCurveTo(
+                    width * 0.42, height * 0.81 - insetY,
+                    width * 0.04 + insetX, height * 0.55 - insetY,
+                    width * 0.04 + insetX, height * 0.31 + insetY
+                );
+
+                inner.bezierCurveTo(
+                    width * 0.04 + insetX, height * 0.08 + insetY,
+                    width * 0.32, height * 0.02 + insetY,
+                    width * 0.5, height * 0.22 + insetY
+                );
+
+                inner.bezierCurveTo(
+                    width * 0.68, height * 0.02 + insetY,
+                    width * 0.96 - insetX, height * 0.08 + insetY,
+                    width * 0.96 - insetX, height * 0.31 + insetY
+                );
+
+                inner.bezierCurveTo(
+                    width * 0.96 - insetX, height * 0.55 - insetY,
+                    width * 0.58, height * 0.81 - insetY,
+                    width * 0.5, height * 0.88 - insetY
+                );
+
+                inner.closePath();
+                return inner;
+            };
+
+            ctx.stroke(drawInsetHeart(12, 12));
+
+            ctx.strokeStyle = "rgba(212, 201, 165, 0.35)";
+            ctx.stroke(drawInsetHeart(19, 19));
+
+            // Centered luxury typography.
             const centerX = width / 2;
-            const centerY = height * 0.46;
+            const centerY = height * 0.43;
 
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#E8D5A3';
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "#D4C9A5";
 
-            const headingSize = Math.min(26, width * 0.065);
-            ctx.font = `italic 600 ${headingSize}px "Cormorant Garamond", serif`;
-            ctx.fillText('Scratch to Reveal', centerX, centerY - 15);
+            const headingSize = Math.min(25, width * 0.075);
 
-            // Gold divider
-            const dividerWidth = Math.min(60, width * 0.16);
-            ctx.strokeStyle = 'rgba(212, 175, 55, 0.6)';
-            ctx.lineWidth = 1;
+            ctx.font = `italic ${headingSize}px "Cormorant Garamond", serif`;
+
+            ctx.fillText(
+                "Scratch to Reveal",
+                centerX,
+                centerY,
+                width * 0.68
+            );
+
+            // Delicate gold divider.
+            const dividerY = centerY + height * 0.105;
+            const dividerWidth = width * 0.19;
+
+            ctx.strokeStyle = "rgba(212, 201, 165, 0.65)";
+            ctx.lineWidth = 0.8;
             ctx.beginPath();
-            ctx.moveTo(centerX - dividerWidth, centerY + 10);
-            ctx.lineTo(centerX + dividerWidth, centerY + 10);
+
+            ctx.moveTo(centerX - dividerWidth, dividerY);
+            ctx.lineTo(centerX - 7, dividerY);
+            ctx.moveTo(centerX + 7, dividerY);
+            ctx.lineTo(centerX + dividerWidth, dividerY);
+
             ctx.stroke();
 
-            // Diamond emblem
             ctx.save();
-            ctx.translate(centerX, centerY + 10);
+            ctx.translate(centerX, dividerY);
             ctx.rotate(Math.PI / 4);
-            ctx.fillStyle = '#D4AF37';
+            ctx.fillStyle = "#D4C9A5";
             ctx.fillRect(-3, -3, 6, 6);
             ctx.restore();
 
-            ctx.fillStyle = '#D4AF37';
-            ctx.font = '500 11px "Plus Jakarta Sans", sans-serif';
-            ctx.fillText('Uncover wedding date', centerX, centerY + 32);
+            ctx.fillStyle = "#C5BFA7";
+            ctx.font = `italic ${Math.min(13, width * 0.038)}px "Cormorant Garamond", serif`;
 
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
+            ctx.fillText(
+                "Uncover your special date",
+                centerX,
+                centerY + height * 0.17,
+                width * 0.65
+            );
+
+            ctx.restore();
+
+            // Subsequent scratch strokes erase the cover.
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
         };
 
         const resizeObserver = new ResizeObserver(() => {
             cancelAnimationFrame(animationFrame);
-            animationFrame = requestAnimationFrame(() => {
-                if (hasScratchedRef.current || revealedRef.current) return;
-                drawHeartCover();
-            });
+
+            animationFrame = requestAnimationFrame(drawCover);
         });
 
         resizeObserver.observe(container);
+        drawCover();
 
         return () => {
             resizeObserver.disconnect();
@@ -346,94 +414,154 @@ const ScratchCard = ({ children, onReveal }) => {
         };
     }, [isRevealed]);
 
-    const checkReveal = useCallback(() => {
-        const canvas = canvasRef.current;
-        if (!canvas || revealedRef.current) return;
+    const checkReveal = useCallback(
+        (force = false) => {
+            const canvas = canvasRef.current;
 
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        if (!ctx) return;
+            if (!canvas || revealedRef.current) return;
 
-        const w = canvas.width;
-        const h = canvas.height;
-        const step = 8;
-        const imgData = ctx.getImageData(0, 0, w, h).data;
+            const now = performance.now();
 
-        let total = 0;
-        let transparent = 0;
-
-        for (let y = 0; y < h; y += step) {
-            for (let x = 0; x < w; x += step) {
-                const alpha = imgData[(y * w + x) * 4 + 3];
-                total++;
-                if (alpha < 32) transparent++;
+            if (!force && now - lastCheckRef.current < CHECK_INTERVAL) {
+                return;
             }
-        }
 
-        const percentage = total > 0 ? (transparent / total) * 100 : 0;
-        if (percentage >= REVEAL_THRESHOLD) {
-            revealedRef.current = true;
-            setIsRevealed(true);
-            onReveal?.();
-        }
-    }, [onReveal]);
+            lastCheckRef.current = now;
 
-    const scratch = useCallback((event) => {
-        const canvas = canvasRef.current;
-        if (!canvas || revealedRef.current) return;
+            const sampleWidth = 100;
+            const sampleHeight = 100;
 
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+            const sampleCanvas = document.createElement("canvas");
+            sampleCanvas.width = sampleWidth;
+            sampleCanvas.height = sampleHeight;
 
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+            const sampleCtx = sampleCanvas.getContext("2d", {
+                willReadFrequently: true,
+            });
 
-        hasScratchedRef.current = true;
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.lineWidth = BRUSH_RADIUS * 2;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
+            if (!sampleCtx) return;
 
-        const lastPoint = lastPointRef.current;
-        if (lastPoint) {
-            ctx.beginPath();
-            ctx.moveTo(lastPoint.x, lastPoint.y);
-            ctx.lineTo(x, y);
-            ctx.stroke();
-        } else {
-            ctx.beginPath();
-            ctx.arc(x, y, BRUSH_RADIUS, 0, Math.PI * 2);
-            ctx.fill();
-        }
+            sampleCtx.drawImage(canvas, 0, 0, sampleWidth, sampleHeight);
 
-        lastPointRef.current = { x, y };
-        checkReveal();
-    }, [checkReveal]);
+            const imgData = sampleCtx.getImageData(0, 0, sampleWidth, sampleHeight);
+            const pixels = imgData.data;
 
-    const handlePointerDown = (e) => {
+            const heart = createHeartPath(
+                sampleCtx,
+                sampleWidth,
+                sampleHeight
+            );
+
+            let heartPixels = 0;
+            let transparentPixels = 0;
+
+            for (let y = 0; y < sampleHeight; y++) {
+                for (let x = 0; x < sampleWidth; x++) {
+                    if (!sampleCtx.isPointInPath(heart, x + 0.5, y + 0.5)) {
+                        continue;
+                    }
+
+                    heartPixels++;
+
+                    const alpha = pixels[(y * sampleWidth + x) * 4 + 3];
+
+                    if (alpha < 128) {
+                        transparentPixels++;
+                    }
+                }
+            }
+
+            const scratchedPercentage =
+                heartPixels > 0
+                    ? (transparentPixels / heartPixels) * 100
+                    : 0;
+
+            if (scratchedPercentage >= REVEAL_THRESHOLD) {
+                revealedRef.current = true;
+                isDrawingRef.current = false;
+                lastPointRef.current = null;
+
+                setIsRevealed(true);
+                onReveal?.();
+            }
+        },
+        [onReveal]
+    );
+
+    const scratch = useCallback(
+        (event) => {
+            const canvas = canvasRef.current;
+
+            if (!canvas || revealedRef.current) return;
+
+            const rect = canvas.getBoundingClientRect();
+
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+
+            hasScratchedRef.current = true;
+
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.lineWidth = BRUSH_RADIUS * 2;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
+
+            const lastPoint = lastPointRef.current;
+
+            if (lastPoint) {
+                ctx.beginPath();
+                ctx.moveTo(lastPoint.x, lastPoint.y);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            } else {
+                ctx.beginPath();
+                ctx.arc(x, y, BRUSH_RADIUS, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            lastPointRef.current = { x, y };
+
+            checkReveal();
+        },
+        [checkReveal]
+    );
+
+    const handlePointerDown = (event) => {
         if (revealedRef.current) return;
-        e.preventDefault();
-        e.currentTarget.setPointerCapture(e.pointerId);
+
+        event.preventDefault();
+        event.currentTarget.setPointerCapture(event.pointerId);
+
         isDrawingRef.current = true;
         lastPointRef.current = null;
-        scratch(e);
+
+        scratch(event);
     };
 
-    const handlePointerMove = (e) => {
+    const handlePointerMove = (event) => {
         if (!isDrawingRef.current) return;
-        e.preventDefault();
-        scratch(e);
+
+        event.preventDefault();
+        scratch(event);
     };
 
     const handlePointerUp = () => {
         isDrawingRef.current = false;
         lastPointRef.current = null;
-        checkReveal();
+
+        checkReveal(true);
     };
 
     return (
         <div className="relative mx-auto w-full max-w-[440px]">
-            <svg aria-hidden="true" className="pointer-events-none absolute h-0 w-0">
+            {/* SVG clip makes the revealed content heart-shaped too. */}
+            <svg
+                aria-hidden="true"
+                className="pointer-events-none absolute h-0 w-0"
+            >
                 <defs>
                     <clipPath id="farhan-heart-clip" clipPathUnits="objectBoundingBox">
                         <path d="M .5 .88 C .42 .81 .04 .55 .04 .31 C .04 .08 .32 .02 .5 .22 C .68 .02 .96 .08 .96 .31 C .96 .55 .58 .81 .5 .88 Z" />
@@ -447,34 +575,40 @@ const ScratchCard = ({ children, onReveal }) => {
             >
                 {/* Revealed content */}
                 <div
-                    className="scratch-card-area allow-select absolute inset-0 flex items-center justify-center overflow-hidden bg-[#FAF8F5] p-8 shadow-inner select-text border border-[#B9A17A]/30 rounded-full"
+                    className="scratch-card-area allow-select absolute inset-0 flex items-center justify-center overflow-hidden bg-[#FAF8F5] p-8 shadow-inner select-text"
                     style={{ clipPath: "url(#farhan-heart-clip)" }}
                 >
                     {children}
                 </div>
 
-                {/* Decorative border */}
+                {/* Decorative Burgundy Border overlay for revealed heart */}
                 <svg
                     aria-hidden="true"
-                    className={`pointer-events-none absolute inset-0 h-full w-full z-[5] transition-opacity duration-700 ${isRevealed ? "opacity-100" : "opacity-0"}`}
+                    className={`pointer-events-none absolute inset-0 h-full w-full z-[5] transition-opacity duration-700 ${isRevealed ? "opacity-100" : "opacity-0"
+                        }`}
                     viewBox="0 0 100 100"
+                    preserveAspectRatio="none"
                 >
                     <path
                         d="M 50 88 C 42 81 4 55 4 31 C 4 8 32 2 50 22 C 68 2 96 8 96 31 C 96 55 58 81 50 88 Z"
                         fill="none"
-                        stroke="#C49A45"
-                        strokeWidth="1.5"
+                        stroke="#3b0b0b"
+                        strokeWidth="1.3"
+                        strokeOpacity="0.85"
                     />
                 </svg>
 
-                {/* Scratchable cover */}
+                {/* Scratchable heart */}
                 <canvas
                     ref={canvasRef}
                     onPointerDown={handlePointerDown}
                     onPointerMove={handlePointerMove}
                     onPointerUp={handlePointerUp}
                     onPointerCancel={handlePointerUp}
-                    className={`absolute inset-0 z-10 block w-full h-full cursor-crosshair transition-opacity duration-700 ${isRevealed ? "pointer-events-none opacity-0" : "opacity-100"}`}
+                    className={`absolute inset-0 z-10 block h-full w-full cursor-crosshair transition-opacity duration-700 ${isRevealed
+                        ? "pointer-events-none opacity-0"
+                        : "opacity-100"
+                        }`}
                     style={{ touchAction: "none" }}
                 />
             </div>
