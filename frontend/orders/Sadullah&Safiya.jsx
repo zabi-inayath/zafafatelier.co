@@ -533,17 +533,16 @@ const VideoHero = ({ onUnlock }) => {
         const video = videoRef.current;
         if (!video) return;
 
-        // Strict audio bypass for mobile Safari / Android WebKit
         video.muted = true;
         video.defaultMuted = true;
         video.playsInline = true;
         video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', '');
+        video.setAttribute('webkit-playsinline', 'true');
+        video.setAttribute('x5-playsinline', 'true');
 
         const handleReady = () => {
             setIsVideoLoaded(true);
-            // Pre-warm the video pipeline and force tablet/mobile to render frame 0 instead of black
-            if (video.currentTime === 0) {
+            if (video.readyState >= 2 && video.currentTime === 0) {
                 try {
                     video.currentTime = 0.001;
                 } catch (e) { }
@@ -603,7 +602,10 @@ const VideoHero = ({ onUnlock }) => {
         };
     }, [unlockInvitation]);
 
-    const handleTap = () => {
+    const handleTap = (e) => {
+        if (e && e.type === 'touchend') {
+            try { e.preventDefault(); } catch (err) { }
+        }
         if (isPlaying || isOpening || hasUnlockedRef.current) return;
         setIsVideoLoaded(true);
         setIsOpening(true);
@@ -621,7 +623,7 @@ const VideoHero = ({ onUnlock }) => {
                         // Playback initiated successfully
                     })
                     .catch(e => {
-                        console.warn("Video playback deferred/blocked", e);
+                        console.warn("Video playback deferred/blocked on iOS", e);
                         unlockInvitation();
                     });
             }
@@ -647,6 +649,7 @@ const VideoHero = ({ onUnlock }) => {
         <div
             className="relative w-full h-screen bg-[#010610] cursor-pointer z-[50] flex flex-col items-center overflow-hidden select-none"
             onClick={handleTap}
+            onTouchEnd={handleTap}
             onContextMenu={(e) => {
                 e.preventDefault();
                 return false;
@@ -658,7 +661,12 @@ const VideoHero = ({ onUnlock }) => {
                 preload="auto"
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 playsInline
+                webkit-playsinline="true"
+                x5-playsinline="true"
                 muted
+                autoPlay={false}
+                disablePictureInPicture
+                disableRemotePlayback
                 onContextMenu={(e) => {
                     e.preventDefault();
                     return false;
@@ -670,6 +678,7 @@ const VideoHero = ({ onUnlock }) => {
             {!isVideoLoaded && (
                 <div 
                     onClick={handleTap}
+                    onTouchEnd={handleTap}
                     className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6 transition-opacity duration-700 cursor-pointer"
                 >
                     <DotMatrixLoader text="PREPARING YOUR INVITATION" />
@@ -686,7 +695,11 @@ const VideoHero = ({ onUnlock }) => {
                         }`}
                 >
                     {!isOpening && (
-                        <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)] animate-pulse">
+                        <div 
+                            onClick={handleTap}
+                            onTouchEnd={handleTap}
+                            className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)] animate-pulse cursor-pointer"
+                        >
                             Tap to Open
                         </div>
                     )}
