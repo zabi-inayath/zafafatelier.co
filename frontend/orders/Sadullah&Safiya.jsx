@@ -533,45 +533,30 @@ const VideoHero = ({ onUnlock }) => {
         const video = videoRef.current;
         if (!video) return;
 
+        // Strict audio bypass for mobile Safari / Android WebKit
         video.muted = true;
         video.defaultMuted = true;
         video.playsInline = true;
         video.setAttribute('playsinline', '');
-        video.setAttribute('webkit-playsinline', 'true');
-        video.setAttribute('x5-playsinline', 'true');
+        video.setAttribute('webkit-playsinline', '');
 
         const handleReady = () => {
             setIsVideoLoaded(true);
-            if (video.readyState >= 2 && video.currentTime === 0) {
+            // Pre-warm the video pipeline and force tablet/mobile to render frame 0 instead of black
+            if (video.currentTime === 0) {
                 try {
                     video.currentTime = 0.001;
                 } catch (e) { }
             }
         };
 
-        if (video.readyState >= 1) {
+        if (video.readyState >= 2) {
             handleReady();
         }
 
-        try {
-            video.load();
-        } catch (e) { }
-
-        video.addEventListener('loadedmetadata', handleReady);
         video.addEventListener('loadeddata', handleReady);
         video.addEventListener('canplay', handleReady);
         video.addEventListener('canplaythrough', handleReady);
-
-        const handleError = () => {
-            console.warn("Video failed to load, bypassing loader");
-            setIsVideoLoaded(true);
-        };
-        video.addEventListener('error', handleError);
-
-        // Safety fallback timer: Never keep user stuck on loading screen longer than 1.8s
-        const safetyTimer = setTimeout(() => {
-            setIsVideoLoaded(true);
-        }, 1800);
 
         // Only mark as actively playing once moving frames are genuinely rendering on screen
         const handlePlaying = () => {
@@ -587,54 +572,45 @@ const VideoHero = ({ onUnlock }) => {
             }
         };
         video.addEventListener('timeupdate', handleTimeUpdate);
-        video.addEventListener('ended', unlockInvitation);
 
         return () => {
-            clearTimeout(safetyTimer);
-            video.removeEventListener('loadedmetadata', handleReady);
             video.removeEventListener('loadeddata', handleReady);
             video.removeEventListener('canplay', handleReady);
             video.removeEventListener('canplaythrough', handleReady);
-            video.removeEventListener('error', handleError);
             video.removeEventListener('playing', handlePlaying);
             video.removeEventListener('timeupdate', handleTimeUpdate);
-            video.removeEventListener('ended', unlockInvitation);
         };
     }, [unlockInvitation]);
 
-    const handleTap = (e) => {
-        if (e && e.type === 'touchend') {
-            try { e.preventDefault(); } catch (err) { }
-        }
-        if (isPlaying || isOpening || hasUnlockedRef.current) return;
-        setIsVideoLoaded(true);
+    const handleTap = () => {
+        if (!isVideoLoaded || isPlaying || isOpening) return;
+        const video = videoRef.current;
+        if (!video) return;
+
         setIsOpening(true);
 
-        const video = videoRef.current;
-        if (video) {
-            video.muted = true;
-            video.defaultMuted = true;
-            video.playsInline = true;
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
 
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        // Playback initiated successfully
-                    })
-                    .catch(e => {
-                        console.warn("Video playback deferred/blocked on iOS", e);
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    // Playback initiated successfully
+                })
+                .catch(e => {
+                    console.warn("Video playback deferred/blocked", e);
+                    setTimeout(() => {
                         unlockInvitation();
-                    });
-            }
-        } else {
-            unlockInvitation();
+                    }, 2000);
+                });
         }
 
         // Safety fallback in case playback stalls or timeupdate doesn't reach 2.8s
         setTimeout(() => {
             unlockInvitation();
-        }, 3500);
+        }, 6000);
     };
 
     const handleScrollDown = (e) => {
@@ -649,7 +625,6 @@ const VideoHero = ({ onUnlock }) => {
         <div
             className="relative w-full h-screen bg-[#010610] cursor-pointer z-[50] flex flex-col items-center overflow-hidden select-none"
             onClick={handleTap}
-            onTouchEnd={handleTap}
             onContextMenu={(e) => {
                 e.preventDefault();
                 return false;
@@ -661,12 +636,7 @@ const VideoHero = ({ onUnlock }) => {
                 preload="auto"
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 playsInline
-                webkit-playsinline="true"
-                x5-playsinline="true"
                 muted
-                autoPlay={false}
-                disablePictureInPicture
-                disableRemotePlayback
                 onContextMenu={(e) => {
                     e.preventDefault();
                     return false;
@@ -676,15 +646,8 @@ const VideoHero = ({ onUnlock }) => {
 
             {/* Loading Animation until template video is fully loaded */}
             {!isVideoLoaded && (
-                <div 
-                    onClick={handleTap}
-                    onTouchEnd={handleTap}
-                    className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6 transition-opacity duration-700 cursor-pointer"
-                >
+                <div className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6 transition-opacity duration-700">
                     <DotMatrixLoader text="PREPARING YOUR INVITATION" />
-                    <span className="text-white/40 text-[11px] uppercase tracking-widest mt-6 animate-pulse">
-                        Tap anywhere to open
-                    </span>
                 </div>
             )}
 
@@ -695,11 +658,7 @@ const VideoHero = ({ onUnlock }) => {
                         }`}
                 >
                     {!isOpening && (
-                        <div 
-                            onClick={handleTap}
-                            onTouchEnd={handleTap}
-                            className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)] animate-pulse cursor-pointer"
-                        >
+                        <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)] animate-pulse">
                             Tap to Open
                         </div>
                     )}
