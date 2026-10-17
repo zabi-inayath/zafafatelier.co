@@ -785,7 +785,7 @@ const VideoHero = ({ onUnlock }) => {
                     <div className="pop-item-3 my-2 space-y-1.5 mt-4">
                         <div>
                             <h2 className="text-3xl sm:text-4xl send-flowers-regular font-bold text-[#3b0b0b] tracking-wide">
-                                Farhan Ahmad Khan
+                                Farhan
                             </h2>
                             <p className="text-xs text-[#7a5e28] font-sans font-medium tracking-wide mt-0.5">
                                 Son of Mr. Mehtab Ahmed Khan
@@ -800,7 +800,7 @@ const VideoHero = ({ onUnlock }) => {
 
                         <div>
                             <h2 className="text-3xl sm:text-4xl send-flowers-regular font-bold text-[#3b0b0b] tracking-wide">
-                                Haya Ali
+                                Haya
                             </h2>
                             <p className="text-xs text-[#7a5e28] font-sans font-medium tracking-wide mt-0.5">
                                 Daughter of Mr. Muzaffar Ali
@@ -809,9 +809,6 @@ const VideoHero = ({ onUnlock }) => {
 
                         <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
                         
-                        <p className="text-[11px] sm:text-xs text-[#8a795c] font-medium tracking-wider uppercase">
-                            Thursday, 11th March 2027 • Al Khobar
-                        </p>
                     </div>
                 </div>
             )}
@@ -1079,17 +1076,17 @@ export default function FarhanWedsHaya({ isPreview = false }) {
                             Under the grace and blessings of Almighty Allah
                         </p>
                         
-                        <div className="text-sm sm:text-base text-[#3b0b0b] font-light max-w-lg mx-auto poppins pt-4 space-y-1">
+                        <div className="text-lg text-[#3b0b0b] max-w-lg mx-auto poppins pt-4 space-y-1">
                             <p className="font-medium text-[#4a1212]">
-                                Mr. Mehtab Ahmed Khan <span className="text-xs text-[#8a6a3b] font-normal">(Moradabad, India)</span>
+                                Mr. Mehtab Ahmed Khan <br/> <span className="text-xs text-[#8a6a3b] font-normal">(Moradabad, India)</span>
                             </p>
-                            <p className="text-xs text-[#8a6a3b] italic">&amp;</p>
+                            <p className="text-sm text-[#8a6a3b] italic">&amp;</p>
                             <p className="font-medium text-[#4a1212]">
-                                Mr. Muzaffar Ali <span className="text-xs text-[#8a6a3b] font-normal">(Al Khobar, Saudi Arabia)</span>
+                                Mr. Muzaffar Ali <br/> <span className="text-xs text-[#8a6a3b] font-normal">(Al Khobar, Saudi Arabia)</span>
                             </p>
                         </div>
 
-                        <p className="text-sm sm:text-base text-[#3b0b0b] font-light max-w-md mx-auto poppins pt-4">
+                        <p className="text-sm text-[#3b0b0b] font-light max-w-md mx-auto poppins pt-4">
                             Together with their families, cordially invite you to celebrate the blessed Nikah union of
                         </p>
                     </div>
@@ -1306,7 +1303,7 @@ export default function FarhanWedsHaya({ isPreview = false }) {
                                         <RiQuillPenLine size={26} />
                                     </div>
 
-                                    <h3 className={`${serif} mt-5 text-[38px] sm:text-[44px] font-medium leading-none tracking-wide text-[#FAF8F5]`}>
+                                    <h3 className={`mt-5 text-[35px] sm:text-[44px] font-medium leading-none tracking-wide text-[#FAF8F5]`}>
                                         Nikah Ceremony
                                     </h3>
 
@@ -1323,17 +1320,17 @@ export default function FarhanWedsHaya({ isPreview = false }) {
                                             Thursday
                                         </p>
                                         <div className="mt-1 flex items-center justify-center gap-4">
-                                            <span className={`${serif} bg-gradient-to-b from-[#F0DBA6] to-[#B8892F] bg-clip-text text-[92px] font-semibold leading-[0.85] text-transparent`}>
+                                            <span className={`bg-gradient-to-b from-[#F0DBA6] to-[#B8892F] bg-clip-text text-[92px] font-semibold leading-[0.85] text-transparent`}>
                                                 11
                                             </span>
                                             <span className="h-16 w-px bg-[#C49A45]/40" />
-                                            <span className={`${serif} text-left text-[28px] font-medium leading-[1.05] text-[#FAF8F5]`}>
+                                            <span className={`text-left text-[28px] font-medium leading-[1.05] text-[#FAF8F5]`}>
                                                 March
                                                 <br />
                                                 2027
                                             </span>
                                         </div>
-                                        <p className="mt-3 text-xs tracking-wider text-[#D4B36D] font-medium" style={{ fontFamily: 'Amiri, serif' }}>
+                                        <p className="mt-3 text-lg tracking-wider text-[#D4B36D] font-medium" style={{ fontFamily: 'Amiri, serif' }}>
                                             3 Shawwal 1448 AH
                                         </p>
                                     </div>
@@ -1343,10 +1340,10 @@ export default function FarhanWedsHaya({ isPreview = false }) {
                                         <div className="flex items-center justify-center gap-3 px-5 py-4">
                                             <PiClockBold size={22} className="text-[#D4B36D]" />
                                             <p className="text-[#FAF8F5]">
-                                                <span className={`${serif} text-2xl font-semibold`}>
+                                                <span className={`text-2xl font-semibold`}>
                                                     7:00 PM
                                                 </span>
-                                                <span className="ml-2 text-xs text-[#FAF8F5]/70">
+                                                <span className="ml-2 text-sm text-[#FAF8F5]/70">
                                                     (AST)
                                                 </span>
                                             </p>
@@ -1371,7 +1368,7 @@ export default function FarhanWedsHaya({ isPreview = false }) {
 
                                     {/* Actions */}
                                     <div className="mt-6 flex w-full flex-col gap-2.5">
-                                        <a
+                                        {/* <a
                                             href={mapsUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
@@ -1379,7 +1376,7 @@ export default function FarhanWedsHaya({ isPreview = false }) {
                                         >
                                             <FaDirections size={15} />
                                             <span>View on Google Maps</span>
-                                        </a>
+                                        </a> */}
 
                                         <a
                                             href={nikahCalUrl}
@@ -1598,7 +1595,7 @@ export default function FarhanWedsHaya({ isPreview = false }) {
 
                 {/* THANK YOU CARD */}
                 <section className="reveal-on-scroll w-full py-6">
-                    <div className="relative h-[340px] sm:h-[400px] w-full flex items-center justify-center overflow-hidden">
+                    <div className="relative h-[440px]w-full flex items-center justify-center overflow-hidden">
                         <img
                             src="/templates/zafaf-regal/Thankyoucard.png"
                             alt="Thank You Card"
@@ -1638,13 +1635,7 @@ export default function FarhanWedsHaya({ isPreview = false }) {
                 </section>
 
                 {/* FOOTER */}
-                <footer className="relative z-10 w-full overflow-hidden border-t border-[#B9A17A]/25 bg-[#3b0b0b] px-6 pb-10 pt-8 text-center reveal-on-scroll">
-                    <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 flex items-center justify-center select-none font-poppins text-5xl sm:text-7xl font-semibold tracking-[0.2em] text-white/[0.025]"
-                    >
-                        ZAFAF
-                    </span>
+                <footer className="relative z-10 w-full overflow-hidden border-t border-[#B9A17A]/25 bg-[#3b0b0b] px-6 pb-6 pt-6 text-center reveal-on-scroll">
 
                     <div className="relative z-10 mx-auto flex max-w-md flex-col items-center gap-4">
                         <a
@@ -1652,34 +1643,18 @@ export default function FarhanWedsHaya({ isPreview = false }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Visit Zafaf Atelier"
-                            className="footer-link allow-select inline-flex items-center justify-center transition-opacity duration-300 hover:opacity-80"
+                            className="footer-link allow-select select-text inline-flex items-center justify-center gap-2 flex-col transition-opacity duration-300 hover:opacity-80"
                         >
                             <img
                                 src="/zafaf-white-trans.png"
                                 alt="Zafaf Atelier"
                                 className="h-9 w-auto object-contain pointer-events-none"
                             />
+                            <p className="text-[9px] tracking-wide text-[#FAF8F5]/40 select-text">
+                                Designed with care by Zafaf Atelier
+                            </p>
                         </a>
 
-                        <div className="space-y-1.5">
-                            <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#C49A45]">
-                                Thoughtfully Crafted for Farhan &amp; Haya
-                            </p>
-                            <p className="text-xs leading-relaxed text-[#FAF8F5]/75">
-                                A bespoke digital wedding invitation, designed with royal elegance,
-                                sacred prayers, and timeless simplicity.
-                            </p>
-                        </div>
-
-                        <div className="flex items-center gap-3 py-1">
-                            <span className="h-px w-8 bg-[#C49A45]/40" />
-                            <span className="h-1.5 w-1.5 rotate-45 border border-[#C49A45]/70" />
-                            <span className="h-px w-8 bg-[#C49A45]/40" />
-                        </div>
-
-                        <p className="footer-link allow-select select-text pt-1 text-[9px] tracking-wide text-[#FAF8F5]/40">
-                            Designed with care by Zafaf Atelier
-                        </p>
                     </div>
                 </footer>
             </div>
