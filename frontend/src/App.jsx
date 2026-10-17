@@ -24,6 +24,7 @@ import RoyalMajesty from './templates/website/RoyalMajesty';
 import RawdahLuxe from './templates/website/RawdahLuxe';
 import ZafafRegal from './templates/website/ZafafRegal';
 import SadullahWedsSafiya from '../orders/Sadullah&Safiya';
+import FarhanWedsHaya from '../orders/Farhan&Haya';
 
 export default function App() {
   return (
@@ -54,6 +55,7 @@ export default function App() {
 
             {/* Orders routes */}
             <Route path="/invite/sadullah-weds-safiya" element={<SadullahWedsSafiya />} />
+            <Route path="/invite/farhan-weds-haya" element={<FarhanWedsHaya />} />
             
             
             {/* Protected Routes */}

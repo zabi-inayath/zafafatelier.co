@@ -9,6 +9,14 @@
             "destination": "/invite/sadullah-weds-safiya/index.html"
         },
         {
+            "source": "/invite/farhan-weds-haya",
+            "destination": "/invite/farhan-weds-haya/index.html"
+        },
+        {
+            "source": "/invite/farhan-weds-haya/",
+            "destination": "/invite/farhan-weds-haya/index.html"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }

@@ -22,6 +22,13 @@ const orders = [
     description: "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the sacred Nikah & Walima celebration of Sadullah Hakikullah Khan & Safiya Abul Qasim Khan.",
     image: 'https://zafaf.mizaantech.co.in/images/sadullah-safiya-preview.jpg',
     url: 'https://zafaf.mizaantech.co.in/invite/sadullah-weds-safiya',
+  },
+  {
+    slug: 'farhan-weds-haya',
+    title: 'Wedding Invitation | Farhan & Haya',
+    description: "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the sacred Nikah celebration of Farhan Ahmad Khan & Haya Ali on Thursday, 11th March 2027 in Al Khobar, Saudi Arabia.",
+    image: 'https://zafaf.mizaantech.co.in/images/farhan-haya-preview.jpg',
+    url: 'https://zafaf.mizaantech.co.in/invite/farhan-weds-haya',
   }
 ];
 
