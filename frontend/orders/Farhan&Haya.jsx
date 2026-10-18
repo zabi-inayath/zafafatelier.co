@@ -625,13 +625,20 @@ const VideoHero = ({ onUnlock }) => {
     const [videoFailed, setVideoFailed] = useState(false);
     const videoRef = useRef(null);
     const hasUnlockedRef = useRef(false);
+    const onUnlockRef = useRef(onUnlock);
+    const loadTimerRef = useRef(null);
+
+    // Keep the callback current without re-registering video listeners on every parent render.
+    useEffect(() => {
+        onUnlockRef.current = onUnlock;
+    }, [onUnlock]);
 
     const unlockInvitation = useCallback(() => {
         if (hasUnlockedRef.current) return;
         hasUnlockedRef.current = true;
         setIsUnlocked(true);
-        onUnlock();
-    }, [onUnlock]);
+        onUnlockRef.current?.();
+    }, []);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -640,101 +647,116 @@ const VideoHero = ({ onUnlock }) => {
         video.muted = true;
         video.defaultMuted = true;
         video.playsInline = true;
+        video.setAttribute('muted', '');
         video.setAttribute('playsinline', '');
         video.setAttribute('webkit-playsinline', '');
 
-        let fallbackTimer;
+        const clearLoadTimer = () => {
+            if (loadTimerRef.current) {
+                window.clearTimeout(loadTimerRef.current);
+                loadTimerRef.current = null;
+            }
+        };
 
         const handleReady = () => {
-            setIsVideoLoaded(true);
-            if (fallbackTimer) clearTimeout(fallbackTimer);
+            if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+                clearLoadTimer();
+                setVideoFailed(false);
+                setIsVideoLoaded(true);
+            }
         };
 
         const handleError = () => {
-            console.error(
-                'Opening video failed to load:',
-                video.error?.code,
-                video.error?.message
-            );
+            clearLoadTimer();
+            console.error('Opening video failed:', {
+                src: video.currentSrc || video.src,
+                code: video.error?.code,
+                message: video.error?.message
+            });
             setVideoFailed(true);
             setIsVideoLoaded(true);
-            if (fallbackTimer) clearTimeout(fallbackTimer);
+            setIsOpening(false);
         };
-
-        if (video.readyState >= 2) {
-            handleReady();
-        } else if (video.error) {
-            handleError();
-        }
-
-        // Do not let a failed/slow video trap the visitor on the loading screen.
-        fallbackTimer = setTimeout(() => {
-            setIsVideoLoaded(true);
-        }, 8000);
-
-        video.addEventListener('loadeddata', handleReady);
-        video.addEventListener('canplay', handleReady);
-        video.addEventListener('error', handleError);
 
         const handlePlaying = () => {
             setIsPlaying(true);
             setIsOpening(false);
         };
-        video.addEventListener('playing', handlePlaying);
+
+        const handlePause = () => {
+            if (!video.ended && video.currentTime < 2.8) setIsPlaying(false);
+        };
 
         const handleTimeUpdate = () => {
-            if (video.currentTime >= 2.8) {
-                unlockInvitation();
-            }
+            // Preserve the original reveal timing; don't reveal early via a fixed timer.
+            if (video.currentTime >= 2.8) unlockInvitation();
         };
+
+        const handleEnded = () => unlockInvitation();
+
+        video.addEventListener('loadeddata', handleReady);
+        video.addEventListener('canplay', handleReady);
+        video.addEventListener('error', handleError);
+        video.addEventListener('playing', handlePlaying);
+        video.addEventListener('pause', handlePause);
         video.addEventListener('timeupdate', handleTimeUpdate);
+        video.addEventListener('ended', handleEnded);
+
+        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+            handleReady();
+        } else {
+            // If the file never becomes playable, show a clear fallback CTA instead of
+            // falsely marking the video as loaded or leaving an endless spinner.
+            loadTimerRef.current = window.setTimeout(() => {
+                if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+                    setVideoFailed(true);
+                    setIsVideoLoaded(true);
+                }
+            }, 12000);
+            video.load();
+        }
 
         return () => {
-            if (fallbackTimer) clearTimeout(fallbackTimer);
+            clearLoadTimer();
             video.removeEventListener('loadeddata', handleReady);
             video.removeEventListener('canplay', handleReady);
             video.removeEventListener('error', handleError);
             video.removeEventListener('playing', handlePlaying);
+            video.removeEventListener('pause', handlePause);
             video.removeEventListener('timeupdate', handleTimeUpdate);
+            video.removeEventListener('ended', handleEnded);
         };
     }, [unlockInvitation]);
 
-    const handleTap = () => {
-        if (!isVideoLoaded || isPlaying || isOpening || isUnlocked) return;
-        const video = videoRef.current;
+    const handleTap = async () => {
+        if (isUnlocked || isPlaying || isOpening) return;
 
-        // If the MP4 is missing/unsupported, open the invitation without the animation.
-        if (!video || videoFailed || video.error) {
-            setVideoFailed(true);
+        const video = videoRef.current;
+        if (videoFailed || !video || video.error) {
             unlockInvitation();
             return;
         }
 
-        setIsOpening(true);
+        // Don't call play until the browser has decoded the first frame.
+        if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return;
 
+        setIsOpening(true);
         video.muted = true;
         video.defaultMuted = true;
         video.playsInline = true;
 
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-            playPromise
-                .then(() => {})
-                .catch(e => {
-                    console.warn("Video playback unavailable; opening invitation:", e);
-                    setVideoFailed(true);
-                    setIsOpening(false);
-                    unlockInvitation();
-                });
+        try {
+            // Called directly from the user's tap, as required by iOS Safari.
+            await video.play();
+        } catch (error) {
+            console.warn('iOS could not play the opening video:', error);
+            setIsOpening(false);
+            setVideoFailed(true);
         }
-
-        setTimeout(() => {
-            unlockInvitation();
-        }, 6000);
     };
 
     const handleScrollDown = (e) => {
-        e.stopPropagation();
+        if (e && e.stopPropagation) e.stopPropagation();
         window.scrollTo({
             top: window.innerHeight,
             behavior: 'smooth'
@@ -753,14 +775,10 @@ const VideoHero = ({ onUnlock }) => {
             <video
                 ref={videoRef}
                 src="/templates/zafaf-regal/openingvideo.mp4"
-                preload="metadata"
+                preload="auto"
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 playsInline
                 muted
-                onError={() => {
-                    setVideoFailed(true);
-                    setIsVideoLoaded(true);
-                }}
                 onContextMenu={(e) => {
                     e.preventDefault();
                     return false;
@@ -768,20 +786,20 @@ const VideoHero = ({ onUnlock }) => {
                 controlsList="nodownload nofullscreen noremoteplayback"
             />
 
-            {/* Loading Animation */}
+            {/* Keep the loading layer stable until a frame is decoded or an error occurs. */}
             {!isVideoLoaded && (
-                <div className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6 transition-opacity duration-700">
+                <div className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6">
                     <DotMatrixLoader text="PREPARING YOUR INVITATION" />
                 </div>
             )}
 
-            {/* Tap to Open Overlay */}
-            {isVideoLoaded && (
+            {/* Tap overlay is static to avoid a pulsing/blinking screen. */}
+            {isVideoLoaded && !isUnlocked && (
                 <div
-                    className={`absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-700 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                    className={`absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-300 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                 >
                     {!isOpening && (
-                        <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)] animate-pulse">
+                        <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)]">
                             {videoFailed ? 'Tap to Open Invitation' : 'Tap to Open'}
                         </div>
                     )}
