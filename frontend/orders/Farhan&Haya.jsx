@@ -800,7 +800,7 @@ const VideoHero = ({ onUnlock }) => {
                 >
                     {!isOpening && (
                         <div className="DXRigraf text-[#d4af37] font-serif text-lg sm:text-xl tracking-widest uppercase border border-[#d4af37]/50 px-8 py-3.5 rounded-full backdrop-blur-md bg-black/50 shadow-[0_0_25px_rgba(212,175,55,0.25)]">
-                            {videoFailed ? 'Tap to Open Invitation' : 'Tap to Open'}
+                            {videoFailed ? 'Tap to Open' : 'Tap to Open'}
                         </div>
                     )}
                 </div>
