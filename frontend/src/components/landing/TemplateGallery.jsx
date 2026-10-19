@@ -126,7 +126,7 @@ export default function TemplateGallery({ onOrderTemplate }) {
               <p className="dm-sans text-xs text-mint-dim/70 font-light mb-5 leading-relaxed">{preview.desc}</p>
               <button
                 onClick={() => { setPreview(null); onOrderTemplate(preview); }}
-                className="btn-mint w-full justify-center"
+                className="btn-mint w-full justify-center touch-manipulation cursor-pointer"
               >
                 Order This Design <RiArrowRightLine size={16} />
               </button>

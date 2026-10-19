@@ -350,10 +350,10 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="space-y-2 mt-3 sm:mt-4">
+                  <div className="space-y-2 mt-3 sm:mt-4 relative z-20 pointer-events-auto">
                     <Link
                       to={tpl.templateRoute || `/templates/webpage/${tpl.slug}`}
-                      className="w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer"
+                      className="w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer touch-manipulation select-none"
                     >
                       VIEW DEMO
                     </Link>
@@ -361,7 +361,8 @@ export default function Hero({ onOpenOrderModal, onOpenInteractiveDemo }) {
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-full py-2 sm:py-2.5 px-2 rounded-xl border border-[#d4af37]/35 bg-[#172030] hover:bg-[#d4af37]/20 text-[#d4af37] hover:text-[#faebd0] text-[10px] sm:text-xs font-bold uppercase tracking-wider text-center transition-all duration-200 block shadow-sm active:scale-95 cursor-pointer touch-manipulation select-none"
                     >
                       ORDER NOW
                     </a>
