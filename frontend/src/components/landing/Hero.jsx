@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { RiVolumeMuteLine, RiSafeLine, RiLeafLine, RiArrowRightLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { getAllTemplates } from '../../templates/registry';
@@ -28,23 +28,40 @@ const VALUES = [
    Sub-component: iPhone frame
 ───────────────────────────────────────────── */
 function PhoneFrame() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', 'true');
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+  }, []);
+
   return (
     <div className="relative flex justify-center items-center">
-
       {/* Decorative rings — desktop only */}
       <div className="absolute hidden lg:block w-[520px] h-[520px] rounded-full border border-dashed border-mint/[0.08] animate-hero-spin pointer-events-none" />
       <div className="absolute hidden lg:block w-[400px] h-[400px] rounded-full border border-mint/[0.04] pointer-events-none" />
 
-      {/* Phone + shadow */}
+      {/* Phone container with drop-shadow */}
       <div
-        className="relative animate-hero-breathe"
+        className="relative animate-hero-breathe w-[220px] sm:w-[240px] lg:w-[260px] xl:w-[260px] aspect-[290/608] select-none"
         style={{
           filter:
             'drop-shadow(0 40px 90px rgba(0,0,0,0.9)) drop-shadow(0 0 70px rgba(181,232,197,0.07))',
         }}
       >
+        {/* Layer 1: Titanium Body & Inner Bezel */}
         <svg
-          className="block w-[220px] sm:w-[240px] lg:w-[260px] xl:w-[260px] h-auto"
+          className="absolute inset-0 w-full h-full block"
           viewBox="0 0 290 608"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -61,17 +78,6 @@ function PhoneFrame() {
               <stop offset="0%" stopColor="#1a1b1e" />
               <stop offset="100%" stopColor="#111215" />
             </linearGradient>
-            <clipPath id="screenClip">
-              <rect x="13" y="18" width="264" height="572" rx="44" ry="44" />
-            </clipPath>
-            <linearGradient id="sheen" x1="0" y1="0" x2="0.4" y2="1">
-              <stop offset="0%" stopColor="white" stopOpacity="0.06" />
-              <stop offset="40%" stopColor="white" stopOpacity="0.01" />
-              <stop offset="100%" stopColor="white" stopOpacity="0" />
-            </linearGradient>
-            <filter id="diBlur">
-              <feGaussianBlur stdDeviation="0.5" />
-            </filter>
           </defs>
 
           {/* Titanium body */}
@@ -81,24 +87,56 @@ function PhoneFrame() {
           {/* Inner bezel */}
           <rect x="6" y="6" width="278" height="596" rx="48" ry="48" fill="url(#innerBezel)" />
 
-          {/* Screen */}
+          {/* Screen background */}
           <rect x="13" y="18" width="264" height="572" rx="44" ry="44" fill="#020b17" />
+        </svg>
 
-          {/* Video */}
-          <foreignObject x="13" y="18" width="264" height="572" clipPath="url(#screenClip)">
-            <div
-              xmlns="http://www.w3.org/1999/xhtml"
-              style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '44px', background: '#020b17' }}
-            >
-              <video
-                id="hero-invitation-video"
-                autoPlay loop muted playsInline
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              >
-                <source src="/videos/zafaf-demo.mp4" type="video/mp4" />
-              </video>
-            </div>
-          </foreignObject>
+        {/* Layer 2: Video (Native HTML5 container - completely fixes iOS Safari foreignObject bug) */}
+        <div
+          className="absolute z-10 overflow-hidden rounded-[33px] sm:rounded-[36px] lg:rounded-[39px]"
+          style={{
+            left: '4.4827%',
+            top: '2.9605%',
+            width: '91.0345%',
+            height: '94.0789%',
+            WebkitMaskImage: '-webkit-radial-gradient(white, black)',
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)',
+            background: '#020b17',
+          }}
+        >
+          <video
+            ref={videoRef}
+            id="hero-invitation-video"
+            autoPlay
+            loop
+            muted
+            playsInline
+            webkit-playsinline="true"
+            className="w-full h-full object-cover block pointer-events-none"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          >
+            <source src="/videos/zafaf-demo.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        {/* Layer 3: Glass Sheen, Dynamic Island, Home Bar & Hardware Buttons */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none z-20 block"
+          viewBox="0 0 290 608"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="sheen" x1="0" y1="0" x2="0.4" y2="1">
+              <stop offset="0%" stopColor="white" stopOpacity="0.06" />
+              <stop offset="40%" stopColor="white" stopOpacity="0.01" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
+            <filter id="diBlur">
+              <feGaussianBlur stdDeviation="0.5" />
+            </filter>
+          </defs>
 
           {/* Dynamic Island */}
           <rect x="101" y="28" width="88" height="28" rx="14" ry="14" fill="#090a0d" filter="url(#diBlur)" />
@@ -132,11 +170,6 @@ function PhoneFrame() {
           {/* Outer bevel */}
           <rect x="0" y="0" width="290" height="608" rx="52" ry="52" fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="2.5" />
         </svg>
-
-        {/* Floating badge — halal */}
-        {/* <div className="absolute -bottom-4 md:left-12 flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy border border-gold/30 shadow-xl text-[11px] font-semibold text-gold whitespace-nowrap">
-          🤍 Halal &amp; Sunnah Aligned
-        </div> */}
       </div>
     </div>
   );
