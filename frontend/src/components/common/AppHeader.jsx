@@ -1,13 +1,9 @@
 import React from 'react';
-// import ThemeToggle from './ThemeToggle';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  RiArrowLeftLine,
-  RiShoppingBagLine,
   RiUserLine,
   RiAddLine,
-  RiLogoutBoxRLine,
   RiHome6Fill,
   RiSparklingLine
 } from 'react-icons/ri';
@@ -35,7 +31,6 @@ export default function AppHeader({ current = '' }) {
           </Link>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* <ThemeToggle /> */}
           {isAuthenticated ? (
             <>
               {current !== 'templates' && (

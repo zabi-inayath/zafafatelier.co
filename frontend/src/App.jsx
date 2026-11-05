@@ -23,8 +23,18 @@ import { Toaster } from 'react-hot-toast';
 import RoyalMajesty from './templates/website/RoyalMajesty';
 import RawdahLuxe from './templates/website/RawdahLuxe';
 import ZafafRegal from './templates/website/ZafafRegal';
-import SadullahWedsSafiya from '../orders/Sadullah&Safiya';
-import FarhanWedsHaya from '../orders/Farhan&Haya';
+import SadullahWedsSafiya from './invites/SadullahAndSafiya';
+import FarhanWedsHaya from './invites/FarhanAndHaya';
+import ShibluWedsRena from './invites/ShibluAndRena';
+import InvitationPage from './pages/InvitationPage';
+import AdminRoute from './components/common/AdminRoute';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage';
+import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage';
+import AdminInvitationsPage from './pages/admin/AdminInvitationsPage';
+import AdminInvitationEditor from './pages/admin/AdminInvitationEditor';
+import AdminTemplatesPage from './pages/admin/AdminTemplatesPage';
 
 export default function App() {
   return (
@@ -53,12 +63,15 @@ export default function App() {
             {/* ZafafRegal */}
             <Route path="/zafaf-regal" element={<ZafafRegal isPreview={false} />} />
 
-            {/* Orders routes */}
+            {/* Customer Invites: Preserved live invite */}
             <Route path="/invite/sadullah-weds-safiya" element={<SadullahWedsSafiya />} />
-            <Route path="/invite/farhan-weds-haya" element={<FarhanWedsHaya />} />
-            
-            
-            {/* Protected Routes */}
+            <Route path="/shiblu-weds-rena" element={<ShibluWedsRena />} />
+            <Route path="/invite/shiblu-weds-rena" element={<ShibluWedsRena />} />
+
+            {/* Dynamic Customer Invitations (Loaded from API by slug) */}
+            <Route path="/invite/:slug" element={<InvitationPage />} />
+
+            {/* Client Protected Routes */}
             <Route
               path="/dashboard"
               element={
@@ -75,6 +88,24 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Artisan Admin Portal (Protected: role === 'admin') */}
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="orders" element={<AdminOrdersPage />} />
+              <Route path="orders/:id" element={<AdminOrderDetailPage />} />
+              <Route path="invitations" element={<AdminInvitationsPage />} />
+              <Route path="invitations/new" element={<AdminInvitationEditor />} />
+              <Route path="invitations/:id" element={<AdminInvitationEditor />} />
+              <Route path="templates" element={<AdminTemplatesPage />} />
+            </Route>
 
             {/* 404 Route */}
             <Route path="*" element={<NotFoundPage />} />

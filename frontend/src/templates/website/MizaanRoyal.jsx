@@ -27,6 +27,7 @@ import { FaCalendarDays, FaGoogle } from 'react-icons/fa6';
 import { PiClockCountdownBold } from "react-icons/pi";
 import { FaDirections } from "react-icons/fa";
 import { HiGiftTop } from "react-icons/hi2";
+import { normalizeInvitation } from '../data/sampleData';
 
 // --- STYLES ---
 const MizaStyle = () => (
@@ -490,7 +491,7 @@ const ScratchCard = ({ children, onReveal }) => {
 };
 
 // --- VIDEO HERO COMPONENT ---
-const VideoHero = ({ onUnlock }) => {
+const VideoHero = ({ onUnlock, invitation }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -644,7 +645,7 @@ const VideoHero = ({ onUnlock }) => {
     >
       <video
         ref={videoRef}
-        src="/templates/template1/openingdemo2.mp4"
+        src={invitation?.images?.openingVideo || "/templates/template1/openingdemo2.mp4"}
         preload="auto"
         className="absolute inset-0 w-full h-full object-cover"
         playsInline
@@ -688,7 +689,7 @@ const VideoHero = ({ onUnlock }) => {
               className="text-2xl sm:text-3xl text-[#082115] font-normal leading-relaxed tracking-wide mb-1"
               style={{ fontFamily: 'Amiri, serif' }}
             >
-              بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+              {invitation?.content?.bismillah || 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ'}
             </p>
             <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
           </div>
@@ -705,7 +706,7 @@ const VideoHero = ({ onUnlock }) => {
             <h2
               className="text-3xl DXRigraf md:text-4xl font-serif text-[#082215] tracking-wide"
             >
-              Zayd Ibrahim
+              {invitation?.groomName || 'Zayd Ibrahim'}
             </h2>
             <div className="flex items-center justify-center gap-3 py-0.5">
               <span className="h-px w-8 bg-[#9e7d3b]/50" />
@@ -715,7 +716,7 @@ const VideoHero = ({ onUnlock }) => {
             <h2
               className="text-3xl DXRigraf md:text-4xl text-[#082215] tracking-wide"
             >
-              Maryam Al-Zahra
+              {invitation?.brideName || 'Maryam Al-Zahra'}
             </h2>
             <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
 
@@ -755,9 +756,15 @@ const VideoHero = ({ onUnlock }) => {
 };
 
 // --- MAIN INVITATION COMPONENT ---
-export default function MizaanRoyal({ isPreview = false }) {
-  // Wedding details
-  const weddingDate = new Date('2026-11-28T11:30:00');
+export default function MizaanRoyal({ isPreview = false, invitation = null }) {
+  const inv = normalizeInvitation(invitation);
+  const nikahEvent = inv.events?.find(e => e.type === 'nikah') || inv.events?.[0];
+  const walimaEvent = inv.events?.find(e => e.type === 'walima') || inv.events?.[1];
+
+  // Dynamic wedding date for live countdown
+  const weddingDate = nikahEvent?.date
+    ? new Date(`${nikahEvent.date}T${nikahEvent.time || '11:30:00'}`)
+    : new Date('2026-11-28T11:30:00');
 
   // Reveal States
   const [hasOpenedEnvelope, setHasOpenedEnvelope] = useState(false);
@@ -908,19 +915,19 @@ const handleConfirmRsvp = (e) => {
   };
 
   const nikahCalUrl = getGoogleCalendarUrl(
-    'Nikah Ceremony — Zayd & Maryam',
-    'Blessed Nikah union of Zayd Ibrahim and Maryam Al-Zahra. Join us for the sacred ceremony and lunch reception.',
-    'The Royal Grand Ballroom, Taj Falaknuma Palace, Hyderabad',
-    '20261128T060000Z',
-    '20261128T100000Z'
+    `Nikah Ceremony — ${inv.groomName} & ${inv.brideName}`,
+    `Blessed Nikah union of ${inv.groomName} and ${inv.brideName}. Join us for the sacred ceremony.`,
+    nikahEvent?.venue?.name ? `${nikahEvent.venue.name}, ${nikahEvent.venue.address || ''}` : 'The Royal Grand Ballroom, Taj Falaknuma Palace, Hyderabad',
+    nikahEvent?.date ? `${nikahEvent.date.replace(/-/g, '')}T060000Z` : '20261128T060000Z',
+    nikahEvent?.date ? `${nikahEvent.date.replace(/-/g, '')}T100000Z` : '20261128T100000Z'
   );
 
   const walimaCalUrl = getGoogleCalendarUrl(
-    'Walima Reception — Zayd & Maryam',
-    'Celebration banquet in honor of the newlyweds Zayd & Maryam.',
-    'The Crystal Lawns & Pavilion, Jubilee Hills, Hyderabad',
-    '20261129T140000Z',
-    '20261129T180000Z'
+    `Walima Reception — ${inv.groomName} & ${inv.brideName}`,
+    `Celebration banquet in honor of the newlyweds ${inv.groomName} & ${inv.brideName}.`,
+    walimaEvent?.venue?.name ? `${walimaEvent.venue.name}, ${walimaEvent.venue.address || ''}` : 'The Crystal Lawns & Pavilion, Jubilee Hills, Hyderabad',
+    walimaEvent?.date ? `${walimaEvent.date.replace(/-/g, '')}T140000Z` : '20261129T140000Z',
+    walimaEvent?.date ? `${walimaEvent.date.replace(/-/g, '')}T180000Z` : '20261129T180000Z'
   );
 
   const handleRsvpSubmit = (e) => {
@@ -931,14 +938,15 @@ const handleConfirmRsvp = (e) => {
     }
     const attendanceText = attendance === 'attending' ? 'Joyfully Attending' : 'Regretfully Unable to Attend';
     const ceremonyText = ceremonies === 'both' ? 'Both Nikah & Walima' : ceremonies === 'nikah' ? 'Nikah Ceremony Only' : 'Walima Reception Only';
-    const rsvpDetails = `*RSVP for Zayd & Maryam's Wedding*\n\n` +
+    const rsvpDetails = `*RSVP for ${inv.groomName} & ${inv.brideName}'s Wedding*\n\n` +
       `*Guest Name:* ${guestName}\n` +
       `*Attendance:* ${attendanceText}\n` +
       (attendance === 'attending' ? `*Number of Guests:* ${guestCount}\n*Ceremonies:* ${ceremonyText}\n` : '') +
       (duaMessage ? `*Dua / Blessing:* "${duaMessage}"\n\n` : '\n') +
       `_Sent via Zafaf Atelier Digital Invitation_`;
 
-    const whatsappUrl = `https://wa.me/917448552778?text=${encodeURIComponent(rsvpDetails)}`;
+    const rsvpPhone = inv.content?.rsvpWhatsapp || '917448552778';
+    const whatsappUrl = `https://wa.me/${rsvpPhone}?text=${encodeURIComponent(rsvpDetails)}`;
     setRsvpSubmitted(true);
     toast.success('Blessings received! Opening WhatsApp confirmation...');
     setTimeout(() => window.open(whatsappUrl, '_blank'), 600);
@@ -949,7 +957,7 @@ const handleConfirmRsvp = (e) => {
       <MizaStyle />
 
       {/* Permanent Video Hero Layer */}
-      <VideoHero onUnlock={() => setHasOpenedEnvelope(true)} />
+      <VideoHero onUnlock={() => setHasOpenedEnvelope(true)} invitation={inv} />
 
       {/* Experience Layers */}
       {hasRevealedDate && <Celebration key={celebrationKey} />}
@@ -979,12 +987,20 @@ const handleConfirmRsvp = (e) => {
           </div>
 
           <div className="space-y-3 my-4 reveal-on-scroll stagger-1">
-            <p className="text-lg dm-sans uppercase text-[#C49A45] mb-4 font-semibold">Under the grace and blessings of Almighty Allah</p>
-            <p className="text-xl text-[#123F36] font-light max-w-md mx-auto poppins">
-              Mr. &amp; Mrs. Ibrahim Khan <br />
-              <span className="text-md text-[#C49A45] italic">&amp;</span> <br />
-              Dr. &amp; Mrs. Tariq Al-Hashimi
-            </p>
+            <p className="text-lg dm-sans uppercase text-[#C49A45] mb-4 font-semibold">{inv.tagline || 'Under the grace and blessings of Almighty Allah'}</p>
+            {(inv.groomFather || inv.brideFather) ? (
+              <p className="text-xl text-[#123F36] font-light max-w-md mx-auto poppins">
+                {inv.groomFather ? `Mr. & Mrs. ${inv.groomFather}` : 'Mr. & Mrs. Ibrahim Khan'} <br />
+                <span className="text-md text-[#C49A45] italic">&amp;</span> <br />
+                {inv.brideFather ? `Mr. & Mrs. ${inv.brideFather}` : 'Dr. & Mrs. Tariq Al-Hashimi'}
+              </p>
+            ) : (
+              <p className="text-xl text-[#123F36] font-light max-w-md mx-auto poppins">
+                Mr. &amp; Mrs. Ibrahim Khan <br />
+                <span className="text-md text-[#C49A45] italic">&amp;</span> <br />
+                Dr. &amp; Mrs. Tariq Al-Hashimi
+              </p>
+            )}
             <p className="text-lg dm-sans uppercase text-[#C49A45] font-semibold pt-8">
               Joyfully invite you to the blessed wedding celebration of
             </p>
@@ -992,8 +1008,8 @@ const handleConfirmRsvp = (e) => {
 
           <div className="py-3 reveal-on-scroll stagger-2">
             <div className="space-y-2">
-              <h1 className="text-4xl sm:text-7xl arizonia-regular text-[#123F36] tracking-wide">Zayd Ibrahim</h1>
-              <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>زَيْد إِبْرَاهِيم</p>
+              <h1 className="text-4xl sm:text-7xl arizonia-regular text-[#123F36] tracking-wide">{inv.groomName}</h1>
+              <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>{inv.groomArabic}</p>
 
               <div className="flex items-center justify-center gap-4 pt-2">
                 <span className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-[#C49A45]/60" />
@@ -1001,8 +1017,8 @@ const handleConfirmRsvp = (e) => {
                 <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-[#C49A45]/60" />
               </div>
 
-              <h1 className="text-4xl sm:text-7xl arizonia-regular text-[#123F36] tracking-wide">Maryam Al-Zahra</h1>
-              <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>مَرْيَم الزَّهْرَاء</p>
+              <h1 className="text-4xl sm:text-7xl arizonia-regular text-[#123F36] tracking-wide">{inv.brideName}</h1>
+              <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-4" style={{ fontFamily: 'Amiri, serif' }}>{inv.brideArabic}</p>
             </div>
           </div>
         </header>
@@ -1158,11 +1174,11 @@ const handleConfirmRsvp = (e) => {
                       </p> */}
 
                       <h4 className="text-lg font-semibold leading-5 text-[#193B2B]">
-                        Masjid-e-Quba
+                        {nikahEvent?.venue?.name || 'Masjid-e-Quba'}
                       </h4>
 
                       <p className="mt-1 text-sm leading-5 text-[#6B7F73]">
-                        Banjara Hills, Hyderabad
+                        {nikahEvent?.venue?.address || 'Banjara Hills, Hyderabad'}
                       </p>
                     </div>
                   </div>
@@ -1183,7 +1199,7 @@ const handleConfirmRsvp = (e) => {
                   </a>
 
                   <a
-                    href="https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad"
+                    href={nikahEvent?.venue?.mapsUrl || "https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
@@ -1269,11 +1285,11 @@ const handleConfirmRsvp = (e) => {
                       </p>
 
                       <h4 className="text-lg font-semibold leading-5 text-[#193B2B]">
-                        The Crystal Pavilion &amp; Lawns
+                        {walimaEvent?.venue?.name || 'The Crystal Pavilion & Lawns'}
                       </h4>
 
                       <p className="mt-1 text-sm leading-5 text-[#6B7F73]">
-                        Road No. 36, Jubilee Hills, Hyderabad
+                        {walimaEvent?.venue?.address || 'Road No. 36, Jubilee Hills, Hyderabad'}
                       </p>
                     </div>
                   </div>
@@ -1293,7 +1309,7 @@ const handleConfirmRsvp = (e) => {
                   </a>
 
                   <a
-                    href="https://maps.google.com/?q=Jubilee+Hills+Hyderabad"
+                    href={walimaEvent?.venue?.mapsUrl || "https://maps.google.com/?q=Jubilee+Hills+Hyderabad"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"

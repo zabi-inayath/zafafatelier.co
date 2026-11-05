@@ -5,6 +5,7 @@ import {
     RiTimeLine,
     RiMapPinLine,
     RiWhatsappLine,
+    RiPhoneLine,
     RiHeartLine,
     RiSparklingLine,
     RiCheckLine,
@@ -22,7 +23,7 @@ import {
     RiDirectionLine
 } from 'react-icons/ri';
 import toast from 'react-hot-toast';
-import DotMatrixLoader from '../src/components/common/DotMatrixLoader';
+import DotMatrixLoader from '../components/common/DotMatrixLoader';
 import { FaCalendarDays, FaGoogle } from 'react-icons/fa6';
 import { PiClockCountdownBold } from "react-icons/pi";
 import { FaDirections } from "react-icons/fa";
@@ -138,7 +139,7 @@ const MizaStyle = () => (
 
     /* Keep entire invitation text unselectable by default */
     .invitation-root,
-    .invitation-root *:not(.scratch-card-area):not(.scratch-card-area *):not(.btn):not(.btn *):not(button):not(button *):not(.footer-link):not(.footer-link *):not(.allow-select):not(.allow-select *) {
+    .invitation-root *:not(.scratch-card-area):not(.scratch-card-area *):not(.btn):not(.btn *):not(button):not(button *):not(.footer-link):not(.footer-link *):not(.allow-select):not(.allow-select *):not(input):not(textarea):not(select) {
       -webkit-user-select: none !important;
       -moz-user-select: none !important;
       -ms-user-select: none !important;
@@ -146,7 +147,7 @@ const MizaStyle = () => (
       -webkit-touch-callout: none !important;
     }
 
-    /* Exceptions: Scratch Card, Buttons, and Footer Link remain selectable and interactive */
+    /* Exceptions: Scratch Card, Buttons, Inputs, Selects and Footer Link remain selectable and interactive */
     .invitation-root .scratch-card-area,
     .invitation-root .scratch-card-area *,
     .invitation-root button,
@@ -156,7 +157,10 @@ const MizaStyle = () => (
     .invitation-root .footer-link,
     .invitation-root .footer-link *,
     .invitation-root .allow-select,
-    .invitation-root .allow-select * {
+    .invitation-root .allow-select *,
+    .invitation-root input,
+    .invitation-root textarea,
+    .invitation-root select {
       -webkit-user-select: text !important;
       -moz-user-select: text !important;
       -ms-user-select: text !important;
@@ -383,7 +387,6 @@ const ScratchCard = ({ children, onReveal }) => {
 
         if (!ctx) return;
 
-        // Sample a smaller grid instead of scanning every pixel.
         const sampleWidth = 100;
         const sampleHeight = 100;
 
@@ -428,7 +431,6 @@ const ScratchCard = ({ children, onReveal }) => {
 
         const rect = canvas.getBoundingClientRect();
 
-        // Coordinates stay in CSS pixels, matching the drawing context.
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
@@ -482,7 +484,6 @@ const ScratchCard = ({ children, onReveal }) => {
         isDrawingRef.current = false;
         lastPointRef.current = null;
 
-        // Check once more at the end of the gesture.
         checkReveal(true);
     };
 
@@ -525,7 +526,6 @@ const VideoHero = ({ onUnlock }) => {
     const onUnlockRef = useRef(onUnlock);
     const loadTimerRef = useRef(null);
 
-    // Keep the callback current without re-registering video listeners on every parent render.
     useEffect(() => {
         onUnlockRef.current = onUnlock;
     }, [onUnlock]);
@@ -585,7 +585,6 @@ const VideoHero = ({ onUnlock }) => {
         };
 
         const handleTimeUpdate = () => {
-            // Preserve the original reveal timing; don't reveal early via a fixed timer.
             if (video.currentTime >= 2.8) unlockInvitation();
         };
 
@@ -602,8 +601,6 @@ const VideoHero = ({ onUnlock }) => {
         if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
             handleReady();
         } else {
-            // If the file never becomes playable, show a clear fallback CTA instead of
-            // falsely marking the video as loaded or leaving an endless spinner.
             loadTimerRef.current = window.setTimeout(() => {
                 if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
                     setVideoFailed(true);
@@ -634,7 +631,6 @@ const VideoHero = ({ onUnlock }) => {
             return;
         }
 
-        // Don't call play until the browser has decoded the first frame.
         if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return;
 
         setIsOpening(true);
@@ -643,7 +639,6 @@ const VideoHero = ({ onUnlock }) => {
         video.playsInline = true;
 
         try {
-            // Called directly from the user's tap, as required by iOS Safari.
             await video.play();
         } catch (error) {
             console.warn('iOS could not play the opening video:', error);
@@ -683,14 +678,12 @@ const VideoHero = ({ onUnlock }) => {
                 controlsList="nodownload nofullscreen noremoteplayback"
             />
 
-            {/* Keep the loading layer stable until a frame is decoded or an error occurs. */}
             {!isVideoLoaded && (
                 <div className="absolute poppins inset-0 z-40 bg-[#020b17] flex flex-col items-center justify-center p-6">
                     <DotMatrixLoader text="PREPARING YOUR INVITATION" />
                 </div>
             )}
 
-            {/* Tap overlay is static to avoid a pulsing/blinking screen. */}
             {isVideoLoaded && !isUnlocked && (
                 <div
                     className={`absolute inset-0 flex items-center justify-center bg-black/40 z-10 transition-opacity duration-300 ${isPlaying ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
@@ -703,7 +696,7 @@ const VideoHero = ({ onUnlock }) => {
                 </div>
             )}
 
-            {/* Invitation Card Revealed after 3 seconds with smooth scale up */}
+            {/* Invitation Card Revealed after video unlock */}
             {isUnlocked && (
                 <div className="relative mt-30 z-30 max-w-sm sm:max-w-md w-[88%] px-5 py-6 sm:px-8 sm:py-7 rounded-2xl text-center animate-scale-up select-none pointer-events-auto">
                     {/* 1. Top Bismillah (pops up first) */}
@@ -720,7 +713,7 @@ const VideoHero = ({ onUnlock }) => {
                     {/* 2. Invitation Lead Text (pops up second) */}
                     <div className="pop-item-2 my-2.5">
                         <p className="text-md font-sans text-[#1e3f2d] font-medium leading-relaxed max-w-xs mx-auto">
-                            With Allah&apos;s blessings, we joyfully invite you to the Nikah ceremony of
+                            With Allah&apos;s blessings, we joyfully invite you to the Walima reception celebrating the marriage of
                         </p>
                     </div>
 
@@ -730,11 +723,8 @@ const VideoHero = ({ onUnlock }) => {
                             <h2
                                 className="text-2xl sm:text-3xl DXRigraf font-serif text-[#082215] tracking-wide"
                             >
-                                Sadullah Khan
+                                Shiblu Rahman
                             </h2>
-                            <p className="text-xs text-[#7a5e28] font-sans font-medium tracking-wide mt-0.5">
-                                Son of Mr. &amp; Mrs. Hakikullah Khan
-                            </p>
                         </div>
                         <div className="flex items-center justify-center gap-3 py-1">
                             <span className="h-px w-8 bg-[#9e7d3b]/50" />
@@ -745,11 +735,8 @@ const VideoHero = ({ onUnlock }) => {
                             <h2
                                 className="text-2xl sm:text-3xl DXRigraf text-[#082215] tracking-wide"
                             >
-                                Safiya Khan
+                                Rena Begum
                             </h2>
-                            <p className="text-xs text-[#7a5e28] font-sans font-medium tracking-wide mt-0.5">
-                                Daughter of Mr. &amp; Mrs. Abul Qasim Khan
-                            </p>
                         </div>
                         <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
                     </div>
@@ -772,13 +759,13 @@ const VideoHero = ({ onUnlock }) => {
     );
 };
 
-// --- MAIN INVITATION COMPONENT FOR SADULLAH & SAFIYA ---
-export default function SadullahWedsSafiya({ isPreview = false }) {
-    const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://zafaf.mizaantech.co.in';
-    const shareUrl = typeof window !== 'undefined' ? window.location.href : `${origin}/invite/sadullah-weds-safiya`;
-    const shareImage = `${origin}/images/sadullah-safiya-preview.jpg`;
-    const pageTitle = 'Wedding Invitation | Sadullah & Safiya';
-    const pageDesc = "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the sacred Nikah & Walima celebration of Sadullah Hakikullah Khan & Safiya Abul Qasim Khan.";
+// --- MAIN INVITATION COMPONENT FOR SHIBLU & RENA ---
+export default function ShibluWedsRena({ isPreview = false }) {
+    const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://zafafatelier.co';
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : `${origin}/shiblu-weds-rena`;
+    const shareImage = `${origin}/templates/template1/background.png`;
+    const pageTitle = 'Walima Reception Invitation | Shiblu & Rena';
+    const pageDesc = "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the Walima reception celebrating the marriage of Shiblu Rahman & Rena Begum at The Jumeirah Restaurant - Beckton, London.";
 
     useEffect(() => {
         document.title = pageTitle;
@@ -802,7 +789,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
         updateMeta('property', 'og:image:height', '630');
         updateMeta('property', 'og:url', shareUrl);
         updateMeta('property', 'og:type', 'website');
-        updateMeta('property', 'og:site_name', 'Sadullah & Safiya Wedding Invitation');
+        updateMeta('property', 'og:site_name', 'Shiblu & Rena Walima Invitation');
         updateMeta('name', 'description', pageDesc);
         updateMeta('name', 'twitter:card', 'summary_large_image');
         updateMeta('name', 'twitter:title', pageTitle);
@@ -810,8 +797,8 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
         updateMeta('name', 'twitter:image', shareImage);
     }, [shareImage, shareUrl]);
 
-    // Wedding details
-    const weddingDate = new Date('2026-11-18T16:30:00');
+    // Walima details
+    const weddingDate = new Date('2026-12-21T18:00:00');
 
     // Reveal States
     const [hasOpenedEnvelope, setHasOpenedEnvelope] = useState(false);
@@ -866,7 +853,6 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
     const [guestName, setGuestName] = useState('');
     const [attendance, setAttendance] = useState('attending');
     const [guestCount, setGuestCount] = useState('2');
-    const [ceremonies, setCeremonies] = useState('both');
     const [duaMessage, setDuaMessage] = useState('');
     const [rsvpSubmitted, setRsvpSubmitted] = useState(false);
 
@@ -928,10 +914,8 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
             };
         });
 
-        // Append a fresh burst on EVERY click.
         setPartyParticles((prev) => [...prev, ...newBatch]);
 
-        // Remove only this click's particles.
         window.setTimeout(() => {
             setPartyParticles((prev) =>
                 prev.filter((particle) => particle.batchId !== batchId)
@@ -939,35 +923,16 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
         }, 3400);
     };
 
-    // Link copy
-    const [copied, setCopied] = useState(false);
-    const handleCopyLink = () => {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(window.location.href);
-            setCopied(true);
-            toast.success('Invitation link copied! Share with your loved ones.');
-            setTimeout(() => setCopied(false), 2200);
-        }
-    };
-
     const getGoogleCalendarUrl = (title, details, location, start, end) => {
         return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&dates=${start}/${end}`;
     };
 
-    const nikahCalUrl = getGoogleCalendarUrl(
-        'Nikah Ceremony — Sadullah & Safiya',
-        'Blessed Nikah union of Sadullah Hakikullah Khan and Safiya Abul Qasim Khan after Namaz e Asar.',
-        'Madrasa Mohammadia And Masjid E Umar, Mumbai',
-        '20261118T110000Z',
-        '20261118T133000Z'
-    );
-
     const walimaCalUrl = getGoogleCalendarUrl(
-        'Walima Reception — Sadullah & Safiya',
-        'Celebration banquet in honor of the newlyweds Sadullah & Safiya (8:00 PM to 11:00 PM).',
-        'Gazebo Marriage Hall, Mumbai',
-        '20261119T143000Z',
-        '20261119T173000Z'
+        'Walima Reception — Shiblu Rahman & Rena Begum',
+        'Celebration banquet in honor of the marriage of Shiblu Rahman & Rena Begum at The Jumeirah Restaurant - Beckton, London.',
+        'The Jumeirah Restaurant - Beckton, Unit A4A1, 9 Alpine Way, London, E6 6LA',
+        '20261221T180000Z',
+        '20261221T230000Z'
     );
 
     const handleRsvpSubmit = (e) => {
@@ -977,15 +942,14 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
             return;
         }
         const attendanceText = attendance === 'attending' ? 'Joyfully Attending' : 'Regretfully Unable to Attend';
-        const ceremonyText = ceremonies === 'both' ? 'Both Nikah & Walima' : ceremonies === 'nikah' ? 'Nikah Ceremony Only' : 'Walima Reception Only';
-        const rsvpDetails = `*RSVP for Sadullah & Safiya's Wedding*\n\n` +
+        const rsvpDetails = `*RSVP for Shiblu & Rena's Walima Reception*\n\n` +
             `*Guest Name:* ${guestName}\n` +
             `*Attendance:* ${attendanceText}\n` +
-            (attendance === 'attending' ? `*Number of Guests:* ${guestCount}\n*Ceremonies:* ${ceremonyText}\n` : '') +
+            (attendance === 'attending' ? `*Number of Guests:* ${guestCount}\n` : '') +
             (duaMessage ? `*Dua / Blessing:* "${duaMessage}"\n\n` : '\n') +
             `_Sent via Zafaf Atelier Digital Invitation_`;
 
-        const whatsappUrl = `https://wa.me/917448552778?text=${encodeURIComponent(rsvpDetails)}`;
+        const whatsappUrl = `https://wa.me/447965275623?text=${encodeURIComponent(rsvpDetails)}`;
         setRsvpSubmitted(true);
         toast.success('Blessings received! Opening WhatsApp confirmation...');
         setTimeout(() => window.open(whatsappUrl, '_blank'), 600);
@@ -1009,8 +973,8 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                 <meta property="og:image:type" content="image/jpeg" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
-                <meta property="og:image:alt" content="Wedding Invitation — Sadullah & Safiya" />
-                <meta property="og:site_name" content="Sadullah & Safiya Wedding Invitation" />
+                <meta property="og:image:alt" content="Walima Invitation — Shiblu & Rena" />
+                <meta property="og:site_name" content="Shiblu & Rena Walima Invitation" />
 
                 {/* Twitter */}
                 <meta name="twitter:card" content="summary_large_image" />
@@ -1053,34 +1017,23 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                     </div>
 
                     <div className="space-y-3 my-4 reveal-on-scroll stagger-1">
-                        <p className="text-lg dm-sans uppercase text-[#C49A45] mb-4 font-semibold">Under the grace and blessings of Almighty Allah</p>
-                        <p className="text-xl text-[#123F36] font-light max-w-md mx-auto poppins">
-                            Mr. &amp; Mrs. Hakikullah Khan <br />
-                            <span className="text-md text-[#C49A45] italic">&amp;</span> <br />
-                            Mr. &amp; Mrs. Abul Qasim Khan
+                        <p className="text-base sm:text-lg dm-sans uppercase text-[#C49A45] mb-2 font-semibold tracking-wider">
+                            Under the grace and blessings of Almighty Allah
                         </p>
-                        <p className="text-lg dm-sans uppercase text-[#C49A45] font-semibold pt-8">
-                            Joyfully invite you to the blessed wedding celebration of
+                        <p className="text-base sm:text-lg dm-sans uppercase text-[#C49A45] font-semibold pt-2 tracking-wide">
+                            Joyfully invite you to the blessed Walima reception celebrating the marriage of
                         </p>
                     </div>
 
                     <div className="py-3 reveal-on-scroll stagger-2">
                         <div className="space-y-3">
                             <div>
-                                <h1 className="text-3xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
-                                    Sadullah Hakikullah Khan
+                                <h1 className="text-4xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
+                                    Shiblu Rahman
                                 </h1>
                                 <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-2" style={{ fontFamily: 'Amiri, serif' }}>
-                                    سَعْدُ اللّٰه حَقِيقُ اللّٰه خَان
+                                    شِبْلُو الرَّحْمٰن
                                 </p>
-                                <div className="pt-2">
-                                    <p className="text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#C49A45] font-semibold">
-                                        Son of
-                                    </p>
-                                    <p className="text-base sm:text-lg text-[#123F36] font-medium mt-0.5">
-                                        Mr. &amp; Mrs. Hakikullah Khan
-                                    </p>
-                                </div>
                             </div>
 
                             <div className="flex items-center justify-center gap-4 py-3">
@@ -1090,20 +1043,12 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                             </div>
 
                             <div>
-                                <h1 className="text-3xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
-                                    Safiya Abul Qasim Khan
+                                <h1 className="text-4xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
+                                    Rena Begum
                                 </h1>
                                 <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-2" style={{ fontFamily: 'Amiri, serif' }}>
-                                    صَفِيَّة أَبُو القَاسِم خَان
+                                    رِينَا بَيْغُم
                                 </p>
-                                <div className="pt-2">
-                                    <p className="text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#C49A45] font-semibold">
-                                        Daughter of
-                                    </p>
-                                    <p className="text-base sm:text-lg text-[#123F36] font-medium mt-0.5">
-                                        Mr. &amp; Mrs. Abul Qasim Khan
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1127,7 +1072,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                                     className="text-[#C49A45]"
                                 />
                                 <span className="text-sm font-medium tracking-wide text-[#244333]">
-                                    Wednesday, 18 November 2026
+                                    Monday, 21 December 2026
                                 </span>
                             </div>
 
@@ -1164,8 +1109,8 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                     </ScratchCard>
                 </section>
 
-                {/* ITINERARY */}
-                <section className="max-w-5xl mx-auto px-4 sm:px-6 py-10 reveal-on-scroll">
+                {/* ITINERARY (VENUE & TIMINGS - WALIMA RECEPTION) */}
+                <section className="max-w-2xl mx-auto px-4 sm:px-6 py-10 reveal-on-scroll">
                     {/* Section Header */}
                     <div className="text-center mb-8">
                         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#123F36]/5 border border-[#B9A17A]/30 text-[#A67B2E] text-[10px] uppercase font-bold tracking-[0.25em] mb-3 shadow-xs">
@@ -1181,214 +1126,234 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                         </div>
                     </div>
 
-                    {/* Celebration Cards Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-                        {/* PART I: NIKAH CEREMONY */}
-                        <div className="group relative w-full overflow-hidden rounded-[28px] border border-[#B9A17A]/30 bg-[#123F36] p-6 shadow-[0_12px_40px_-16px_rgba(18,63,54,0.3)] transition-all duration-500 hover:border-[#C49A45]/60">
-                            <div className="relative space-y-4">
-                                {/* Header */}
-                                <div className="flex items-center justify-between gap-4 px-1 pb-1">
-                                    <div>
-                                        <h3 className="font-poppins text-2xl font-medium tracking-tight text-[#FAF8F5] sm:text-2xl">
-                                            Nikah - In Sha Allah
-                                        </h3>
-                                    </div>
-
-                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-[#C49A45]">
-                                        <RiQuillPenLine size={40} />
-                                    </div>
+                    {/* WALIMA RECEPTION CARD */}
+                    <div className="group relative w-full overflow-hidden rounded-[28px] border border-[#B9A17A]/30 bg-[#123F36] p-6 sm:p-8 shadow-[0_12px_40px_-16px_rgba(18,63,54,0.3)] transition-all duration-500 hover:border-[#C49A45]/60">
+                        <div className="relative space-y-5">
+                            {/* Header */}
+                            <div className="flex items-center justify-between gap-4 px-1 pb-1">
+                                <div>
+                                    <p className="text-xs uppercase tracking-[0.2em] text-[#C49A45] font-semibold">
+                                        Celebration Banquet
+                                    </p>
+                                    <h3 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-[#FAF8F5]">
+                                        Dawat-e-Walima
+                                    </h3>
                                 </div>
 
-                                {/* Date & Time */}
-                                <div className="grid grid-cols-2 gap-3">
-                                    {/* Date Card */}
-                                    <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-2">
-                                        <div className="flex mb-2 text-[#123F36]">
-                                            <FaCalendarDays size={30} />
-                                        </div>
-
-                                        <div className="text-center">
-                                            <p className="text-md font-semibold leading-5 text-[#193B2B] sm:text-base">
-                                                18 <br />November <br /> 2026
-                                            </p>
-
-                                            <p className="mt-2 text-xs text-[#7B8278]">
-                                                Wednesday
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {/* Time Card */}
-                                    <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
-                                        <div className="flex text-[#123F36]">
-                                            <PiClockCountdownBold size={40} />
-                                        </div>
-
-                                        <div className="mt-4 text-center">
-                                            <p className="text-base sm:text-lg font-semibold leading-5 text-[#193B2B]">
-                                                After Asar
-                                            </p>
-
-                                            <p className="mt-1 text-xs leading-5 text-[#7B8278]">
-                                                After Namaz e Asar
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Venue Card */}
-                                <div className="rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex text-[#123F36]">
-                                            <i className="fa-solid fa-mosque text-4xl"></i>
-                                        </div>
-
-                                        <div className="min-w-0 flex-1">
-                                            <h4 className="text-base sm:text-lg font-semibold leading-snug text-[#193B2B]">
-                                                Madrasa Mohammadia &amp; Masjid E Umar
-                                            </h4>
-
-                                            <p className="mt-1 text-sm leading-5 text-[#6B7F73]">
-                                                Kurla / Mumbai
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Actions */}
-                                <div className="space-y-2.5 pt-1">
-
-
-                                    <a
-                                        href="https://maps.app.goo.gl/npG3zEcKU23xPqj56"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
-                                    >
-                                        <FaDirections size={17} />
-                                        <span>View on Google Map</span>
-                                    </a>
-                                    <a
-                                        href={nikahCalUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
-                                    >
-                                        <FaGoogle size={17} />
-                                        <span>Save our date</span>
-                                    </a>
-
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-[#C49A45] bg-white/5 border border-[#C49A45]/20">
+                                    <HiGiftTop size={36} />
                                 </div>
                             </div>
-                        </div>
 
-                        {/* PART II: WALIMA RECEPTION */}
-                        <div className="group relative w-full overflow-hidden rounded-[28px] border border-[#B9A17A]/30 bg-[#123F36] p-6 shadow-[0_12px_40px_-16px_rgba(18,63,54,0.3)] transition-all duration-500 hover:border-[#C49A45]/60">
-                            <div className="relative space-y-4">
-                                {/* Header */}
-                                <div className="flex items-center justify-between gap-4 px-1 pb-1">
-                                    <div>
-                                        <h3 className="font-poppins text-2xl font-medium tracking-tight text-[#FAF8F5] sm:text-2xl">
-                                            Dawate-e-Walima
-                                        </h3>
+                            {/* Date & Time */}
+                            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                                {/* Date Card */}
+                                <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-3 text-center">
+                                    <div className="flex mb-2 text-[#123F36]">
+                                        <FaCalendarDays size={28} />
                                     </div>
 
-                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-[#C49A45]">
-                                        <HiGiftTop size={40} />
-                                    </div>
-                                </div>
+                                    <div className="text-center">
+                                        <p className="text-base sm:text-lg font-semibold leading-5 text-[#193B2B]">
+                                            21 <br />December <br /> 2026
+                                        </p>
 
-                                {/* Date & Time */}
-                                <div className="grid grid-cols-2 gap-3">
-                                    {/* Date Card */}
-                                    <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-2">
-                                        <div className="flex mb-2 text-[#123F36]">
-                                            <FaCalendarDays size={30} />
-                                        </div>
-
-                                        <div className="text-center">
-                                            <p className="text-md font-semibold leading-5 text-[#193B2B] sm:text-base">
-                                                19 <br />November <br /> 2026
-                                            </p>
-
-                                            <p className="mt-2 text-xs text-[#7B8278]">
-                                                Thursday
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {/* Time Card */}
-                                    <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
-                                        <div className="flex text-[#123F36]">
-                                            <PiClockCountdownBold size={40} />
-                                        </div>
-
-                                        <div className="mt-4 text-center">
-                                            <p className="text-lg font-semibold leading-5 text-[#193B2B] sm:text-xl">
-                                                08:00 PM
-                                            </p>
-
-                                            <p className="mt-1 text-xs leading-5 text-[#7B8278]">
-                                                8:00 PM to 11:00 PM
-                                            </p>
-                                        </div>
+                                        <p className="mt-2 text-xs font-medium text-[#7B8278]">
+                                            Monday
+                                        </p>
                                     </div>
                                 </div>
 
-                                {/* Venue Card */}
-                                <div className="rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex text-[#123F36]">
-                                            <i className="fa-solid fa-hotel text-4xl"></i>
-                                        </div>
+                                {/* Time Card */}
+                                <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-3 sm:p-4 text-center">
+                                    <div className="flex mb-2 text-[#123F36]">
+                                        <PiClockCountdownBold size={34} />
+                                    </div>
 
-                                        <div className="min-w-0 flex-1">
-                                            <p className="mb-1 text-[12px] font-semibold uppercase tracking-[0.18em] text-[#8A795C]">
-                                                VENUE
-                                            </p>
+                                    <div className="text-center">
+                                        <p className="text-lg sm:text-xl font-semibold leading-5 text-[#193B2B]">
+                                            06:00 PM
+                                        </p>
 
-                                            <h4 className="text-base sm:text-lg font-semibold leading-snug text-[#193B2B]">
-                                                Gazebo Marriage Hall
-                                            </h4>
-
-                                            <p className="mt-1 text-sm leading-5 text-[#6B7F73]">
-                                                Kurla / Mumbai
-                                            </p>
-                                        </div>
+                                        <p className="mt-2 text-xs font-medium leading-4 text-[#7B8278]">
+                                            Reception begins at 6:00 PM
+                                        </p>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Actions */}
-                                <div className="space-y-2.5 pt-1">
+                            {/* Venue Card */}
+                            <div className="rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
+                                <div className="flex items-start gap-3.5">
+                                    <div className="flex text-[#123F36] mt-1 shrink-0">
+                                        <RiRestaurantLine size={32} />
+                                    </div>
 
+                                    <div className="min-w-0 flex-1">
+                                        <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8A795C]">
+                                            VENUE &amp; FULL ADDRESS
+                                        </p>
 
-                                    <a
-                                        href="https://maps.app.goo.gl/RkNLyAuouLNX349w9"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/35 bg-white/[0.04] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.08] active:scale-[0.99]"
-                                    >
-                                        <FaDirections size={17} />
-                                        <span>View on Google Map</span>
-                                    </a>
-                                    <a
-                                        href={walimaCalUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99]"
-                                    >
-                                        <FaGoogle size={17} />
-                                        <span>Save our date</span>
-                                    </a>
+                                        <h4 className="text-base sm:text-lg font-bold leading-snug text-[#193B2B]">
+                                            The Jumeirah Restaurant - Beckton
+                                        </h4>
 
+                                        <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-[#4A5D52] font-medium">
+                                            Unit A4A1, 9 Alpine Way<br />
+                                            London, E6 6LA
+                                        </p>
+                                    </div>
                                 </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                                <a
+                                    href="https://maps.app.goo.gl/PZhGYdNPNUMC3dYV9?g_st=ic"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/40 bg-white/[0.06] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.12] active:scale-[0.99]"
+                                >
+                                    <FaDirections size={16} />
+                                    <span>View on Google Map</span>
+                                </a>
+                                <a
+                                    href={walimaCalUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99] shadow-md"
+                                >
+                                    <FaGoogle size={16} />
+                                    <span>Save to Calendar</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                {/* RSVP SECTION */}
+                <section className="max-w-2xl mx-auto px-4 sm:px-6 py-8 reveal-on-scroll">
+                    <div className="rounded-[28px] border border-[#B9A17A]/30 bg-[#FAF8F5]/90 p-6 sm:p-8 shadow-xl backdrop-blur-md">
+                        <div className="text-center mb-6">
+                            <span className="inline-block text-[10px] uppercase font-bold tracking-[0.25em] text-[#C49A45] bg-[#123F36]/5 border border-[#B9A17A]/25 px-3 py-1 rounded-full mb-2">
+                                Responses Requested
+                            </span>
+                            <h3 className="font-poppins text-2xl sm:text-3xl font-semibold text-[#123F36]">
+                                RSVP &amp; Confirm Attendance
+                            </h3>
+                            <p className="text-xs sm:text-sm text-[#5B6D62] mt-1.5 max-w-md mx-auto">
+                                Kindly let us know if you will be joining our celebration, or contact us directly.
+                            </p>
+                        </div>
+
+                        {/* Direct Contact Card */}
+                        <div className="p-4 rounded-2xl bg-white border border-[#B9A17A]/30 flex flex-col sm:flex-row items-center justify-between gap-3 mb-6 shadow-xs">
+                            <div className="text-center sm:text-left">
+                                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#8A795C]">
+                                    RSVP Direct Contact
+                                </p>
+                                <p className="text-base sm:text-lg font-bold text-[#123F36] mt-0.5">
+                                    07965275623
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <a
+                                    href="https://wa.me/447965275623"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn allow-select inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3.5 py-2 rounded-full transition-colors"
+                                >
+                                    <RiWhatsappLine size={16} className="text-emerald-600" />
+                                    <span>WhatsApp</span>
+                                </a>
+                                <a
+                                    href="tel:07965275623"
+                                    className="btn allow-select inline-flex items-center gap-1.5 text-xs font-semibold text-[#123F36] bg-[#F8F5ED] hover:bg-[#ede5d3] border border-[#B9A17A]/35 px-3.5 py-2 rounded-full transition-colors"
+                                >
+                                    <RiPhoneLine size={16} />
+                                    <span>Call</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* Interactive RSVP Form */}
+                        <form onSubmit={handleRsvpSubmit} className="space-y-4 text-left">
+                            <div>
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#123F36] mb-1.5">
+                                    Your Full Name
+                                </label>
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="e.g. Mohammed & Family"
+                                    value={guestName}
+                                    onChange={(e) => setGuestName(e.target.value)}
+                                    className="w-full px-4 py-3 rounded-xl bg-white border border-[#B9A17A]/40 text-sm text-[#123F36] placeholder:text-[#998877] focus:outline-none focus:border-[#C49A45] focus:ring-1 focus:ring-[#C49A45]"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#123F36] mb-1.5">
+                                        Attendance
+                                    </label>
+                                    <select
+                                        value={attendance}
+                                        onChange={(e) => setAttendance(e.target.value)}
+                                        className="w-full px-3 py-3 rounded-xl bg-white border border-[#B9A17A]/40 text-xs sm:text-sm text-[#123F36] focus:outline-none focus:border-[#C49A45]"
+                                    >
+                                        <option value="attending">Joyfully Attending</option>
+                                        <option value="regret">Regretfully Unable to Attend</option>
+                                    </select>
+                                </div>
+
+                                {attendance === 'attending' && (
+                                    <div>
+                                        <label className="block text-xs font-semibold uppercase tracking-wider text-[#123F36] mb-1.5">
+                                            Number of Guests
+                                        </label>
+                                        <select
+                                            value={guestCount}
+                                            onChange={(e) => setGuestCount(e.target.value)}
+                                            className="w-full px-3 py-3 rounded-xl bg-white border border-[#B9A17A]/40 text-xs sm:text-sm text-[#123F36] focus:outline-none focus:border-[#C49A45]"
+                                        >
+                                            <option value="1">1 Guest</option>
+                                            <option value="2">2 Guests</option>
+                                            <option value="3">3 Guests</option>
+                                            <option value="4">4 Guests</option>
+                                            <option value="5+">Family (5+)</option>
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#123F36] mb-1.5">
+                                    Personal Dua / Message (Optional)
+                                </label>
+                                <textarea
+                                    rows="2"
+                                    placeholder="Send your prayers and warm blessings to Shiblu & Rena..."
+                                    value={duaMessage}
+                                    onChange={(e) => setDuaMessage(e.target.value)}
+                                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-[#B9A17A]/40 text-sm text-[#123F36] placeholder:text-[#998877] focus:outline-none focus:border-[#C49A45]"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                onClick={handleConfirmRsvp}
+                                className="btn allow-select w-full mt-2 py-3.5 px-6 rounded-full bg-[#123F36] hover:bg-[#1a554a] text-[#FAF8F5] font-semibold text-xs uppercase tracking-widest transition-all duration-300 shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                            >
+                                <RiWhatsappLine size={18} className="text-[#25D366]" />
+                                <span>Confirm &amp; Send RSVP via WhatsApp</span>
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
                 {/* DUA */}
-                <section className="max-w-3xl mx-auto px-6 py-12 text-center reveal-on-scroll">
+                <section className="max-w-3xl mx-auto px-6 py-10 text-center reveal-on-scroll">
                     <div className="p-8 sm:p-10 rounded-3xl bg-[#FAF8F5]/70 border border-[#C49A45]/25 shadow-2xl backdrop-blur-xl">
                         <p className="text-[10px] uppercase tracking-[0.3em] text-[#C49A45] font-semibold mb-3">Prophetic Sunnah Dua for The Newlyweds</p>
                         <p className="text-2xl sm:text-3xl md:text-4xl text-[#123F36] font-normal my-4 leading-relaxed" style={{ fontFamily: 'Amiri, serif' }}>
@@ -1404,7 +1369,7 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                     </div>
                 </section>
 
-                {/* thankyou card image section */}
+                {/* THANK YOU CARD IMAGE SECTION */}
                 <section className="reveal-on-scroll w-full">
                     <div className="relative h-[400px] w-full flex items-center justify-center overflow-hidden">
                         <img
@@ -1415,42 +1380,11 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                     </div>
                 </section>
 
-                {/* ETIQUETTE */}
-                <section className="max-w-xl mx-auto px-6 py-8 reveal-on-scroll">
-                    <h3 className="mb-5 text-center font-semibold text-[#C49A45] uppercase tracking-[0.12em] text-[13px]">
-                        Event Etiquette &amp; Warm Requests
-                    </h3>
-
-                    <ul className="space-y-4 text-left text-[13px] sm:text-sm leading-relaxed text-[#123F36] px-5">
-                        <li className="flex items-start gap-3">
-                            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#C49A45]" />
-                            <p>
-                                Modest Islamic formal attire is kindly requested for both ceremonies.
-                            </p>
-                        </li>
-
-                        <li className="flex items-start gap-3">
-                            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#C49A45]" />
-                            <p>
-                                Please refrain from photography during private gatherings for ladies.
-                            </p>
-                        </li>
-
-                        <li className="flex items-start gap-3">
-                            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#C49A45]" />
-                            <p>
-                                In keeping with the Sunnah, our celebrations will be strictly music-free.
-                            </p>
-                        </li>
-                    </ul>
-                </section>
-
                 {/* FOOTER */}
                 <footer className="relative z-10 w-full overflow-hidden border-t border-[#B9A17A]/25 bg-[#123F36] px-6 pb-6 pt-6 text-center reveal-on-scroll">
-
                     <div className="relative z-10 mx-auto flex max-w-md flex-col items-center gap-4">
                         <a
-                            href="https://zafaf.mizaantech.co.in/"
+                            href="https://zafafatelier.co/"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="Visit Zafaf Atelier"
@@ -1465,7 +1399,6 @@ export default function SadullahWedsSafiya({ isPreview = false }) {
                                 Designed with care by Zafaf Atelier
                             </p>
                         </a>
-
                     </div>
                 </footer>
             </div>

@@ -20,7 +20,7 @@ const orders = [
     slug: 'sadullah-weds-safiya',
     title: 'Wedding Invitation | Sadullah & Safiya',
     description: "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the sacred Nikah & Walima celebration of Sadullah Hakikullah Khan & Safiya Abul Qasim Khan.",
-    image: 'https://zafaf.mizaantech.co.in/images/sadullah-safiya-preview.jpg',
+    image: 'https://zafaf.mizaantech.co.in/images/sadullah-safiya-preview.png',
     url: 'https://zafaf.mizaantech.co.in/invite/sadullah-weds-safiya',
   },
   {
@@ -29,6 +29,14 @@ const orders = [
     description: "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the sacred Nikah celebration of Farhan Ahmad Khan & Haya Ali on Thursday, 11th March 2027 in Al Khobar, Saudi Arabia.",
     image: 'https://zafaf.mizaantech.co.in/images/farhan-haya-preview1.png',
     url: 'https://zafaf.mizaantech.co.in/invite/farhan-weds-haya',
+  },
+  {
+    slug: 'shiblu-weds-rena',
+    title: 'Walima Reception Invitation | Shiblu & Rena',
+    description: "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the Walima reception celebrating the marriage of Shiblu Rahman & Rena Begum at The Jumeirah Restaurant - Beckton, London.",
+    image: 'https://zafafatelier.co/templates/template1/background.png',
+    url: 'https://zafafatelier.co/shiblu-weds-rena',
+    isRootSlug: true
   }
 ];
 
@@ -86,4 +94,16 @@ orders.forEach(order => {
   const flatPath = path.join(distDir, 'invite', `${order.slug}.html`);
   fs.writeFileSync(flatPath, html, 'utf-8');
   console.log(`Generated flat meta page: ${flatPath}`);
+
+  if (order.isRootSlug) {
+    const rootOutDir = path.join(distDir, order.slug);
+    fs.mkdirSync(rootOutDir, { recursive: true });
+    const rootOutPath = path.join(rootOutDir, 'index.html');
+    fs.writeFileSync(rootOutPath, html, 'utf-8');
+    console.log(`Generated prerendered root meta page: ${rootOutPath}`);
+
+    const rootFlatPath = path.join(distDir, `${order.slug}.html`);
+    fs.writeFileSync(rootFlatPath, html, 'utf-8');
+    console.log(`Generated root flat meta page: ${rootFlatPath}`);
+  }
 });

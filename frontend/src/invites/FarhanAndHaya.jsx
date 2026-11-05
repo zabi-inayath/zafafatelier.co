@@ -24,7 +24,7 @@ import {
     RiPhoneLine
 } from 'react-icons/ri';
 import toast from 'react-hot-toast';
-import DotMatrixLoader from '../src/components/common/DotMatrixLoader';
+import DotMatrixLoader from '../components/common/DotMatrixLoader';
 import { FaCalendarDays, FaGoogle } from 'react-icons/fa6';
 import { PiClockCountdownBold, PiClockBold } from "react-icons/pi";
 import { FaDirections, FaMosque } from "react-icons/fa";

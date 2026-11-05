@@ -6,6 +6,7 @@ import { getAllTemplates } from '../../templates/registry';
 /* ─────────────────────────────────────────────
    Data
 ───────────────────────────────────────────── */
+
 const VALUES = [
   {
     icon: <RiVolumeMuteLine size={32} />,

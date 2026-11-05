@@ -4,6 +4,8 @@
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-arabic: 'Amiri', serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-dmsans: 'DM Sans', sans-serif;
 
   --color-ink: #020b17;
   --color-navy: #031327;
@@ -814,7 +816,7 @@ html {
 }
 
 
-.comfortaa{
+.comfortaa {
   font-family: "Comfortaa", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;

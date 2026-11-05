@@ -27,8 +27,9 @@ import { FaCalendarDays, FaGoogle } from 'react-icons/fa6';
 import { PiClockCountdownBold } from "react-icons/pi";
 import { FaDirections } from "react-icons/fa";
 import { HiGiftTop } from "react-icons/hi2";
-import NikahCeremonyCard from './additional components/RegalNikah';
-import WalimaReceptionCard from './additional components/RegalWalima';
+import NikahCeremonyCard from './RegalNikah';
+import WalimaReceptionCard from './RegalWalima';
+import { normalizeInvitation } from '../data/sampleData';
 
 // --- STYLES ---
 const MizaStyle = () => (
@@ -628,7 +629,7 @@ const ScratchCard = ({ children, onReveal }) => {
 };
 
 // --- VIDEO HERO COMPONENT ---
-const VideoHero = ({ onUnlock }) => {
+const VideoHero = ({ onUnlock, invitation }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isOpening, setIsOpening] = useState(false);
     const [isUnlocked, setIsUnlocked] = useState(false);
@@ -782,7 +783,7 @@ const VideoHero = ({ onUnlock }) => {
         >
             <video
                 ref={videoRef}
-                src="/templates/zafaf-regal/openingvideo.mp4"
+                src={invitation?.images?.openingVideo || "/templates/zafaf-regal/openingvideo.mp4"}
                 preload="auto"
                 className="absolute inset-0 w-full h-full object-cover"
                 playsInline
@@ -826,24 +827,17 @@ const VideoHero = ({ onUnlock }) => {
                             className="text-2xl sm:text-3xl text-[#3b0b0b] font-normal leading-relaxed tracking-wide mb-1"
                             style={{ fontFamily: 'Amiri, serif' }}
                         >
-                            ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّٰهِ وَبَرَكَاتُ
+                            {invitation?.content?.bismillah || 'ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّٰهِ وَبَرَكَاتُ'}
                         </p>
                         <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
                     </div>
-
-                    {/* 2. Invitation Lead Text (pops up second) */}
-                    {/* <div className="pop-item-2 my-2.5">
-            <p className="text-md font-sans text-[#3b0b0b] font-medium leading-relaxed max-w-xs mx-auto">
-              With Allah&apos;s blessings, we joyfully invite you to the Nikah ceremony of
-            </p>
-          </div> */}
 
                     {/* 3. Groom & Bride Names (pops up third) */}
                     <div className="pop-item-3 my-3 space-y-0.5 mt-10">
                         <h2
                             className="text-4xl send-flowers-regular font-bold md:text-4xl font-serif text-[#3b0b0b] tracking-wide"
                         >
-                            Aaisha
+                            {invitation?.brideName || 'Aaisha'}
                         </h2>
                         <div className="flex items-center justify-center gap-3 py-0.5">
                             <span className="h-px w-8 bg-[#9e7d3b]/50" />
@@ -853,7 +847,7 @@ const VideoHero = ({ onUnlock }) => {
                         <h2
                             className="text-4xl send-flowers-regular md:text-4xl text-[#3b0b0b] tracking-wide"
                         >
-                            Abu Bakar
+                            {invitation?.groomName || 'Abu Bakar'}
                         </h2>
                         <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
 
@@ -893,9 +887,15 @@ const VideoHero = ({ onUnlock }) => {
 };
 
 // --- MAIN INVITATION COMPONENT ---
-export default function ZafafRegal({ isPreview = false }) {
+export default function ZafafRegal({ isPreview = false, invitation = null }) {
+    const inv = normalizeInvitation(invitation);
+    const nikahEvent = inv.events?.find(e => e.type === 'nikah') || inv.events?.[0];
+    const walimaEvent = inv.events?.find(e => e.type === 'walima') || inv.events?.[1];
+
     // Wedding details
-    const weddingDate = new Date('2026-11-28T11:30:00');
+    const weddingDate = nikahEvent?.date
+        ? new Date(`${nikahEvent.date}T${nikahEvent.time || '11:30:00'}`)
+        : new Date('2026-11-28T11:30:00');
 
     // Reveal States
     const [hasOpenedEnvelope, setHasOpenedEnvelope] = useState(false);
@@ -1046,19 +1046,19 @@ export default function ZafafRegal({ isPreview = false }) {
     };
 
     const nikahCalUrl = getGoogleCalendarUrl(
-        'Nikah Ceremony — Aaisha & Abu Bakar',
-        'Blessed Nikah union of Abu Bakar and Aaisha Mariyam. Join us for the sacred ceremony and lunch reception.',
-        'The Royal Grand Ballroom, Taj Falaknuma Palace, Hyderabad',
-        '20261128T060000Z',
-        '20261128T100000Z'
+        `Nikah Ceremony — ${inv.brideName} & ${inv.groomName}`,
+        `Blessed Nikah union of ${inv.groomName} and ${inv.brideName}. Join us for the sacred ceremony.`,
+        nikahEvent?.venue?.name ? `${nikahEvent.venue.name}, ${nikahEvent.venue.address || ''}` : 'The Royal Grand Ballroom, Taj Falaknuma Palace, Hyderabad',
+        nikahEvent?.date ? `${nikahEvent.date.replace(/-/g, '')}T060000Z` : '20261128T060000Z',
+        nikahEvent?.date ? `${nikahEvent.date.replace(/-/g, '')}T100000Z` : '20261128T100000Z'
     );
 
     const walimaCalUrl = getGoogleCalendarUrl(
-        'Walima Reception — Aaisha & Abu Bakar',
-        'Celebration banquet in honor of the newlyweds Abu Bakar & Aaisha.',
-        'The Crystal Lawns & Pavilion, Jubilee Hills, Hyderabad',
-        '20261129T140000Z',
-        '20261129T180000Z'
+        `Walima Reception — ${inv.brideName} & ${inv.groomName}`,
+        `Celebration banquet in honor of the newlyweds ${inv.groomName} & ${inv.brideName}.`,
+        walimaEvent?.venue?.name ? `${walimaEvent.venue.name}, ${walimaEvent.venue.address || ''}` : 'The Crystal Lawns & Pavilion, Jubilee Hills, Hyderabad',
+        walimaEvent?.date ? `${walimaEvent.date.replace(/-/g, '')}T140000Z` : '20261129T140000Z',
+        walimaEvent?.date ? `${walimaEvent.date.replace(/-/g, '')}T180000Z` : '20261129T180000Z'
     );
 
     const handleRsvpSubmit = (e) => {
@@ -1069,14 +1069,15 @@ export default function ZafafRegal({ isPreview = false }) {
         }
         const attendanceText = attendance === 'attending' ? 'Joyfully Attending' : 'Regretfully Unable to Attend';
         const ceremonyText = ceremonies === 'both' ? 'Both Nikah & Walima' : ceremonies === 'nikah' ? 'Nikah Ceremony Only' : 'Walima Reception Only';
-        const rsvpDetails = `*RSVP for Aaisha & Abu Bakar's Wedding*\n\n` +
+        const rsvpDetails = `*RSVP for ${inv.brideName} & ${inv.groomName}'s Wedding*\n\n` +
             `*Guest Name:* ${guestName}\n` +
             `*Attendance:* ${attendanceText}\n` +
             (attendance === 'attending' ? `*Number of Guests:* ${guestCount}\n*Ceremonies:* ${ceremonyText}\n` : '') +
             (duaMessage ? `*Dua / Blessing:* "${duaMessage}"\n\n` : '\n') +
             `_Sent via Zafaf Atelier Digital Invitation_`;
 
-        const whatsappUrl = `https://wa.me/917448552778?text=${encodeURIComponent(rsvpDetails)}`;
+        const rsvpPhone = inv.content?.rsvpWhatsapp || '917448552778';
+        const whatsappUrl = `https://wa.me/${rsvpPhone}?text=${encodeURIComponent(rsvpDetails)}`;
         setRsvpSubmitted(true);
         toast.success('Blessings received! Opening WhatsApp confirmation...');
         setTimeout(() => window.open(whatsappUrl, '_blank'), 600);
@@ -1087,7 +1088,7 @@ export default function ZafafRegal({ isPreview = false }) {
             <MizaStyle />
 
             {/* Permanent Video Hero Layer */}
-            <VideoHero onUnlock={() => setHasOpenedEnvelope(true)} />
+            <VideoHero onUnlock={() => setHasOpenedEnvelope(true)} invitation={inv} />
 
             {/* Experience Layers */}
             {hasRevealedDate && <Celebration key={celebrationKey} />}
@@ -1134,15 +1135,11 @@ export default function ZafafRegal({ isPreview = false }) {
                             </p>
 
                             <h1 className="text-4xl sm:text-5xl md:text-6xl send-flowers-regular text-[#3b0b0b] tracking-wide my-1">
-                                Aaisha Mariyam
+                                {inv.brideName || 'Aaisha Mariyam'}
                             </h1>
 
                             <p className="text-lg sm:text-xl text-[#C49A45] font-light mb-1" style={{ fontFamily: 'Amiri, serif' }}>
-                                عَائِشَة مَرْيَم
-                            </p>
-
-                            <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-[#3b0b0b]">
-                                M.A
+                                {inv.brideArabic || 'عَائِشَة مَرْيَم'}
                             </p>
 
                             <div className="w-12 h-px bg-[#f0bcc5] mx-auto my-3 sm:my-4" />
@@ -1152,12 +1149,8 @@ export default function ZafafRegal({ isPreview = false }) {
                             </p>
 
                             <h3 className="text-sm sm:text-base font-bold text-[#1a1415] mt-1">
-                                Mrs. &amp; Mr. Dr. Syed Shaker Arif
+                                {inv.brideFather ? `Mrs. & Mr. ${inv.brideFather}` : 'Mrs. & Mr. Syed Shakeel Sahab'}
                             </h3>
-
-                            <p className="text-xs text-[#3b0b0b] font-medium mt-0.5 tracking-wide">
-                                M.A., M.Ed., SET, Ph.D.
-                            </p>
                         </div>
 
                         {/* CONNECTOR DIVIDER */}
@@ -1186,15 +1179,11 @@ export default function ZafafRegal({ isPreview = false }) {
                             </p>
 
                             <h1 className="text-4xl sm:text-5xl md:text-6xl send-flowers-regular text-[#3b0b0b] tracking-wide my-1">
-                                Abu Bakar
+                                {inv.groomName || 'Abu Bakar'}
                             </h1>
 
                             <p className="text-lg sm:text-xl text-[#C49A45] font-light mb-1" style={{ fontFamily: 'Amiri, serif' }}>
-                                أَبُو بَكْر
-                            </p>
-
-                            <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-[#3b0b0b]">
-                                B.Com. (Computers), KSA
+                                {inv.groomArabic || 'أَبُو بَكْر'}
                             </p>
 
                             <div className="w-12 h-px bg-[#f0bcc5] mx-auto my-3 sm:my-4" />
@@ -1204,12 +1193,8 @@ export default function ZafafRegal({ isPreview = false }) {
                             </p>
 
                             <h3 className="text-sm sm:text-base font-bold text-[#1a1415] mt-1">
-                                Mrs. &amp; Mr. Syed Azam Sahab
+                                {inv.groomFather ? `Mrs. & Mr. ${inv.groomFather}` : 'Mrs. & Mr. Syed Azam Sahab'}
                             </h3>
-
-                            <p className="text-xs text-[#3b0b0b] font-medium mt-0.5 tracking-wide">
-                                M.Tech. (Structures)
-                            </p>
                         </div>
                     </div>
                 </header>

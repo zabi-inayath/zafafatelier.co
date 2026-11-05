@@ -72,7 +72,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#031327] text-[#e4f4ea] relative overflow-x-clip selection:bg-[#b5e8c5]/30 selection:text-[#b5e8c5]">
+    <div className="min-h-screen bg-[#031327] text-[#e4f4ea] relative overflow-x-clip selection:bg-[#b5e8c5]/30 selection:text-[#b5e8c5] font-dmsans">
       {/* Background glow */}
       <div className="fixed inset-0 ambient-glow pointer-events-none" />
       <div className="fixed inset-0 subtle-grid opacity-25 pointer-events-none" />
@@ -80,28 +80,24 @@ export default function OrdersPage() {
       {/* Global Navbar */}
       <AppHeader current="orders" />
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 py-10 anim-app-screen">
+      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 py-10 anim-app-screen font-dmsans">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-8 border-b border-[#b5e8c5]/15">
           <div>
-            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-[#b5e8c5] font-bold mb-2">
-            
+            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-[#b5e8c5] font-poppins font-bold mb-2">
               <span>Dashboard</span>
             </div>
-            <h1
-              className="text-4xl md:text-5xl text-white font-light"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
+            <h1 className="text-3xl md:text-4xl text-white font-poppins font-bold tracking-tight">
               My Wedding Invitations
             </h1>
-            <p className="text-sm text-[#8ab89c] mt-2 font-light max-w-xl">
-              Salam Alaikum, <strong className="text-white">{user?.name}</strong>. <br/> Track your bespoke invitation orders, revisions, and artisan correspondence.
+            <p className="text-sm font-dmsans text-[#8ab89c] mt-2 max-w-xl">
+              Salam Alaikum, <strong className="text-white font-poppins font-semibold">{user?.name}</strong>. <br/> Track your bespoke invitation orders, revisions, and artisan correspondence.
             </p>
           </div>
 
           <Link
             to="/order"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#b5e8c5] hover:bg-[#cbf4d8] text-[#020b17] font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#b5e8c5]/15 cursor-pointer shrink-0"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#b5e8c5] hover:bg-[#cbf4d8] text-[#020b17] font-poppins font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-[#b5e8c5]/15 cursor-pointer shrink-0"
           >
             <RiAddLine size={18} />
             <span>Order New Invitation</span>
@@ -109,28 +105,28 @@ export default function OrdersPage() {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8 ">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8 font-dmsans">
           <div className="p-5 rounded-2xl bg-[#031221] border border-[#b5e8c5]/15">
-            <p className="text-[10px] uppercase tracking-wider text-[#8ab89c] font-semibold">Total Orders</p>
-            <p className="text-2xl font-bold text-white mt-1 font-mono">{myOrders.length}</p>
+            <p className="text-[10px] uppercase tracking-wider text-[#8ab89c] font-poppins font-semibold">Total Orders</p>
+            <p className="text-2xl font-bold text-white mt-1 font-poppins">{myOrders.length}</p>
           </div>
           <div className="p-5 rounded-2xl bg-[#031221] border border-[#b5e8c5]/15">
-            <p className="text-[10px] uppercase tracking-wider text-[#8ab89c] font-semibold">In Progress</p>
-            <p className="text-2xl font-bold text-blue-300 mt-1 font-mono">
+            <p className="text-[10px] uppercase tracking-wider text-[#8ab89c] font-poppins font-semibold">In Progress</p>
+            <p className="text-2xl font-bold text-blue-300 mt-1 font-poppins">
               {myOrders.filter(o => o.status === 'in_progress' || o.status === 'confirmed').length}
             </p>
           </div>
           <div className="p-5 rounded-2xl bg-[#031221] border border-[#b5e8c5]/15 col-span-2 sm:col-span-1">
-            <p className="text-[10px] uppercase tracking-wider text-[#8ab89c] font-semibold">Completed</p>
-            <p className="text-2xl font-bold text-[#b5e8c5] mt-1 font-mono">
+            <p className="text-[10px] uppercase tracking-wider text-[#8ab89c] font-poppins font-semibold">Completed</p>
+            <p className="text-2xl font-bold text-[#b5e8c5] mt-1 font-poppins">
               {myOrders.filter(o => o.status === 'delivered').length}
             </p>
           </div>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar">
-          <span className="text-xs text-[#8ab89c] flex items-center gap-1 mr-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar font-poppins">
+          <span className="text-xs text-[#8ab89c] flex items-center gap-1 mr-2 font-dmsans">
             <RiFilter3Line size={14} /> Filter:
           </span>
           {[
@@ -142,7 +138,7 @@ export default function OrdersPage() {
             <button
               key={f.id}
               onClick={() => setFilter(f.id)}
-              className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-4 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all cursor-pointer whitespace-nowrap ${
                 filter === f.id
                   ? 'bg-[#b5e8c5] text-[#020b17] shadow-sm'
                   : 'bg-[#031221] border border-[#b5e8c5]/15 text-[#8ab89c] hover:text-[#b5e8c5]'
@@ -155,32 +151,29 @@ export default function OrdersPage() {
 
         {/* Order Cards / Skeletons */}
         {loadingOrders ? (
-          <div className="py-20 flex items-center justify-center">
+          <div className="py-20 flex items-center justify-center font-dmsans">
             <DotMatrixLoader text="Loading Your Orders..." />
           </div>
         ) : filteredOrders.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl bg-[#031221] border border-dashed border-[#b5e8c5]/20 space-y-4">
+          <div className="p-12 text-center rounded-3xl bg-[#031221] border border-dashed border-[#b5e8c5]/20 space-y-4 font-dmsans">
             <div className="w-16 h-16 rounded-full bg-[#b5e8c5]/10 text-[#b5e8c5] flex items-center justify-center mx-auto border border-[#b5e8c5]/25">
               <RiShoppingBagLine size={30} />
             </div>
-            <h3
-              className="text-2xl text-white font-light"
-              style={{ fontFamily: 'Cormorant Garamond, serif' }}
-            >
+            <h3 className="text-2xl text-white font-poppins font-semibold">
               {filter === 'all' ? 'No invitations ordered yet' : `No ${filter} orders`}
             </h3>
-            <p className="text-xs text-[#8ab89c] max-w-md mx-auto font-light">
+            <p className="text-xs text-[#8ab89c] max-w-md mx-auto font-dmsans">
               Begin crafting your bespoke Islamic wedding web invitation or digital card suite. Our artisans are ready to assist.
             </p>
             <Link
               to="/order"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#b5e8c5] text-[#020b17] font-semibold text-xs uppercase tracking-wider hover:bg-[#cbf4d8] transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#b5e8c5] text-[#020b17] font-poppins font-semibold text-xs uppercase tracking-wider hover:bg-[#cbf4d8] transition-all cursor-pointer"
             >
               Start Your First Invitation
             </Link>
           </div>
         ) : (
-          <div className="space-y-4 ">
+          <div className="space-y-4 font-dmsans">
             {filteredOrders.map((ord) => (
               <div
                 key={ord.id}
@@ -194,14 +187,11 @@ export default function OrdersPage() {
                       </span>
                       {getStatusBadge(ord.status)}
                     </div>
-                    <h3
-                      className="text-2xl text-white font-normal"
-                      style={{ fontFamily: 'Cormorant Garamond, serif' }}
-                    >
+                    <h3 className="text-xl text-white font-poppins font-semibold">
                       {ord.product_type} · {ord.occasion}
                     </h3>
                     {ord.couple_names && (
-                      <p className="text-sm text-[#b5e8c5] font-semibold mt-0.5">
+                      <p className="text-sm text-[#b5e8c5] font-poppins font-semibold mt-0.5">
                         Couple: {ord.couple_names}
                       </p>
                     )}
@@ -330,10 +320,10 @@ export default function OrdersPage() {
                 </div>
 
                 <div className="flex flex-wrap gap-2 text-[11px] text-[#c8e2d2]">
-                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">✨ Live Countdown</span>
-                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">💬 WhatsApp RSVP</span>
-                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">📍 Google Maps Directions</span>
-                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">🎵 100% Music-Free</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">Live Countdown</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">WhatsApp RSVP</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">Google Maps Directions</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10">100% Music-Free</span>
                 </div>
 
                 <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -369,9 +359,9 @@ export default function OrdersPage() {
                   <RiSparklingLine size={18} />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#d4af37]">Sample Couple</span>
-                  <h4 className="text-xl text-white font-serif mt-0.5">Zayd &amp; Maryam</h4>
-                  <p className="text-[11px] text-[#8ab89c] mt-1">Saturday, 28th November 2026</p>
+                  <span className="text-[10px] uppercase font-poppins font-bold tracking-widest text-[#d4af37]">Sample Couple</span>
+                  <h4 className="text-xl text-white font-poppins font-semibold mt-0.5">Zayd &amp; Maryam</h4>
+                  <p className="text-[11px] font-dmsans text-[#8ab89c] mt-1">Saturday, 28th November 2026</p>
                 </div>
                 <div className="pt-2 border-t border-white/10">
                   <span className="text-[10px] text-[#8ab89c] block">Dedicated Route</span>
