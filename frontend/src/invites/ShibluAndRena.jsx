@@ -514,8 +514,12 @@ const ScratchCard = ({ children, onReveal }) => {
     );
 };
 
+// --- AUDIO CONFIGURATION ---
+// Update this path to your audio file (e.g. '/nasheeds/your-nasheed.mp3')
+export const BACKGROUND_SONG_PATH = '/nasheeds/Wedding Nasheed _ Muhammad Al Muqit English Lyric_152641913.mp3';
+
 // --- VIDEO HERO COMPONENT ---
-const VideoHero = ({ onUnlock }) => {
+const VideoHero = ({ onUnlock, onStartMusic, onPrepareMusic }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isOpening, setIsOpening] = useState(false);
     const [isUnlocked, setIsUnlocked] = useState(false);
@@ -524,17 +528,23 @@ const VideoHero = ({ onUnlock }) => {
     const videoRef = useRef(null);
     const hasUnlockedRef = useRef(false);
     const onUnlockRef = useRef(onUnlock);
+    const onStartMusicRef = useRef(onStartMusic);
+    const onPrepareMusicRef = useRef(onPrepareMusic);
     const loadTimerRef = useRef(null);
 
     useEffect(() => {
         onUnlockRef.current = onUnlock;
-    }, [onUnlock]);
+        onStartMusicRef.current = onStartMusic;
+        onPrepareMusicRef.current = onPrepareMusic;
+    }, [onUnlock, onStartMusic, onPrepareMusic]);
 
     const unlockInvitation = useCallback(() => {
         if (hasUnlockedRef.current) return;
         hasUnlockedRef.current = true;
         setIsUnlocked(true);
         onUnlockRef.current?.();
+        // Fallback: Ensure music is active when invitation unlocks
+        onStartMusicRef.current?.();
     }, []);
 
     useEffect(() => {
@@ -578,6 +588,8 @@ const VideoHero = ({ onUnlock }) => {
         const handlePlaying = () => {
             setIsPlaying(true);
             setIsOpening(false);
+            // Start song playback precisely when video starts playing
+            onStartMusicRef.current?.();
         };
 
         const handlePause = () => {
@@ -624,6 +636,9 @@ const VideoHero = ({ onUnlock }) => {
 
     const handleTap = async () => {
         if (isUnlocked || isPlaying || isOpening) return;
+
+        // Prime/prepare audio on tap gesture for iOS & browser autoplay approval
+        onPrepareMusicRef.current?.();
 
         const video = videoRef.current;
         if (videoFailed || !video || video.error) {
@@ -772,6 +787,62 @@ const VideoHero = ({ onUnlock }) => {
 
 // --- MAIN INVITATION COMPONENT FOR SHIBLU & RENA ---
 export default function ShibluWedsRena({ isPreview = false }) {
+    // Background Song / Audio State
+    const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+    const audioRef = useRef(null);
+
+    const getAudio = useCallback(() => {
+        if (!audioRef.current) {
+            const audio = new Audio(BACKGROUND_SONG_PATH);
+            audio.loop = true;
+            audioRef.current = audio;
+        }
+        return audioRef.current;
+    }, []);
+
+    // Prime audio during user gesture to comply with mobile autoplay policies
+    const prepareMusic = useCallback(() => {
+        const audio = getAudio();
+        if (audio.readyState === 0) {
+            audio.load();
+        }
+    }, [getAudio]);
+
+    // Start playback when the video actually starts playing
+    const startMusic = useCallback(() => {
+        const audio = getAudio();
+        if (audio.paused) {
+            audio.play().then(() => {
+                setIsPlayingMusic(true);
+            }).catch((err) => {
+                console.warn('Audio play request failed (check audio file path):', err);
+            });
+        }
+    }, [getAudio]);
+
+    const toggleMusic = () => {
+        const audio = getAudio();
+        if (isPlayingMusic) {
+            audio.pause();
+            setIsPlayingMusic(false);
+        } else {
+            audio.play().then(() => {
+                setIsPlayingMusic(true);
+            }).catch((err) => {
+                console.warn('Audio play request failed (check audio file path):', err);
+            });
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+            }
+        };
+    }, []);
+
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://zafafatelier.co';
     const shareUrl = typeof window !== 'undefined' ? window.location.href : `${origin}/shiblu-weds-rena`;
     const shareImage = `${origin}/templates/template1/background.png`;
@@ -998,7 +1069,30 @@ export default function ShibluWedsRena({ isPreview = false }) {
             <MizaStyle />
 
             {/* Permanent Video Hero Layer */}
-            <VideoHero onUnlock={() => setHasOpenedEnvelope(true)} />
+            <VideoHero
+                onUnlock={() => setHasOpenedEnvelope(true)}
+                onPrepareMusic={prepareMusic}
+                onStartMusic={startMusic}
+            />
+
+            {/* Floating Music Toggle Button */}
+            {hasOpenedEnvelope && (
+                <button
+                    onClick={toggleMusic}
+                    type="button"
+                    aria-label={isPlayingMusic ? 'Mute Music' : 'Play Music'}
+                    className="fixed top-6 right-6 z-[120] btn allow-select flex items-center justify-center w-11 h-11 rounded-full bg-[#123F36]/90 hover:bg-[#123F36] text-[#D4AF37] border border-[#D4AF37]/50 shadow-lg backdrop-blur-md transition-all duration-300 active:scale-95 cursor-pointer"
+                >
+                    {isPlayingMusic ? (
+                        <div className="relative flex items-center justify-center">
+                            <span className="absolute -inset-1 rounded-full bg-[#D4AF37]/25 animate-ping pointer-events-none" />
+                            <RiVolumeUpLine size={20} />
+                        </div>
+                    ) : (
+                        <RiVolumeMuteLine size={20} className="text-[#D4AF37]/70" />
+                    )}
+                </button>
+            )}
 
             {/* Experience Layers */}
             {hasRevealedDate && <Celebration key={celebrationKey} />}
