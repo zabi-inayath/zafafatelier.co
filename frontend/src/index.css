@@ -775,6 +775,12 @@ html {
   font-family: 'DM Sans', sans-serif;
 }
 
+.cookie-regular {
+  font-family: "Cookie", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .league-spartan {
   font-family: 'LeagueSpartan', sans-serif;
 }
@@ -814,7 +820,6 @@ html {
   font-weight: 600;
   font-style: normal;
 }
-
 
 .comfortaa {
   font-family: "Comfortaa", sans-serif;

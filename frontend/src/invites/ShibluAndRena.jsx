@@ -698,7 +698,7 @@ const VideoHero = ({ onUnlock }) => {
 
             {/* Invitation Card Revealed after video unlock */}
             {isUnlocked && (
-                <div className="relative mt-30 z-30 max-w-sm sm:max-w-md w-[88%] px-5 py-6 sm:px-8 sm:py-7 rounded-2xl text-center animate-scale-up select-none pointer-events-auto">
+                <div className="relative mt-30 z-30 max-w-xs sm:max-w-md w-[88%] px-5 py-6 sm:px-8 sm:py-7 rounded-2xl text-center animate-scale-up select-none pointer-events-auto">
                     {/* 1. Top Bismillah (pops up first) */}
                     <div className="pop-item-1">
                         <p
@@ -718,10 +718,10 @@ const VideoHero = ({ onUnlock }) => {
                     </div>
 
                     {/* 3. Groom & Bride Names (pops up third) */}
-                    <div className="pop-item-3 my-2 space-y-1 mt-6">
+                    <div className="pop-item-3 my-2 space-y-1 mt-12">
                         <div>
                             <h2
-                                className="text-2xl sm:text-3xl DXRigraf font-serif text-[#082215] tracking-wide"
+                                className="text-3xl dm-sans font-serif text-[#082215]"
                             >
                                 Shiblu Rahman
                             </h2>
@@ -733,13 +733,24 @@ const VideoHero = ({ onUnlock }) => {
                         </div>
                         <div>
                             <h2
-                                className="text-2xl sm:text-3xl DXRigraf text-[#082215] tracking-wide"
+                                className="text-3xl dm-sans text-[#082215]"
                             >
                                 Rena Begum
                             </h2>
                         </div>
                         <div className="w-20 h-px bg-gradient-to-r from-transparent via-[#9b7835]/70 to-transparent mx-auto my-2" />
                     </div>
+                </div>
+            )}
+
+            {/* Ring Element */}
+            {isUnlocked && (
+                <div className="relative z-30 flex justify-center items-center my-3 pop-item-4 pointer-events-none">
+                    <img
+                        src="/images/others/ringelement.png"
+                        alt="Wedding Rings"
+                        className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain opacity-90 drop-shadow-sm"
+                    />
                 </div>
             )}
 
@@ -1008,7 +1019,7 @@ export default function ShibluWedsRena({ isPreview = false }) {
             <div className={`relative z-10 transition-opacity duration-1000 ${hasOpenedEnvelope ? 'opacity-100' : 'opacity-0'}`}>
                 {/* HERO SECTION */}
                 <header className="pt-5 pb-10 px-6 text-center max-w-4xl mx-auto">
-                    <div className="inline-flex flex-col items-center mb-4 reveal-on-scroll stagger-1">
+                    <div className="inline-flex flex-col items-center mb-2 reveal-on-scroll stagger-1">
                         <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#d4af37]/60 to-transparent mb-3" />
                         <p className="text-lg dm-sans text-[#123F36] font-semibold">
                             In The Name of Allah, The Most Gracious, <br /> The Most Merciful
@@ -1017,18 +1028,18 @@ export default function ShibluWedsRena({ isPreview = false }) {
                     </div>
 
                     <div className="space-y-3 my-4 reveal-on-scroll stagger-1">
-                        <p className="text-base sm:text-lg dm-sans uppercase text-[#C49A45] mb-2 font-semibold tracking-wider">
-                            Under the grace and blessings of Almighty Allah
+                        <p className="text-xl dm-sans text-[#C49A45] mb-2">
+                            By the Mercy and Blessings of Almighty Allah
                         </p>
-                        <p className="text-base sm:text-lg dm-sans uppercase text-[#C49A45] font-semibold pt-2 tracking-wide">
-                            Joyfully invite you to the blessed Walima reception celebrating the marriage of
+                        <p className="text-xl dm-sans text-[#C49A45] pt-2">
+                            Two families come together in joy and gratitude, requesting the pleasure of your company at the blessed Walima reception of
                         </p>
                     </div>
 
                     <div className="py-3 reveal-on-scroll stagger-2">
                         <div className="space-y-3">
                             <div>
-                                <h1 className="text-4xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
+                                <h1 className="text-5xl md:text-7xl cookie-regular text-[#123F36] tracking-wide leading-tight">
                                     Shiblu Rahman
                                 </h1>
                                 <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-2" style={{ fontFamily: 'Amiri, serif' }}>
@@ -1036,14 +1047,14 @@ export default function ShibluWedsRena({ isPreview = false }) {
                                 </p>
                             </div>
 
-                            <div className="flex items-center justify-center gap-4 py-3">
+                            <div className="flex items-center justify-center gap-4 py-2 mb-1">
                                 <span className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-[#C49A45]/60" />
                                 <span className="text-2xl sm:text-3xl text-[#C49A45] font-serif italic">&amp;</span>
                                 <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-[#C49A45]/60" />
                             </div>
 
                             <div>
-                                <h1 className="text-4xl sm:text-6xl md:text-7xl arizonia-regular text-[#123F36] tracking-wide leading-tight">
+                                <h1 className="text-5xl md:text-7xl cookie-regular text-[#123F36] tracking-wide leading-tight">
                                     Rena Begum
                                 </h1>
                                 <p className="text-2xl sm:text-2xl text-[#C49A45] font-light pt-2" style={{ fontFamily: 'Amiri, serif' }}>
@@ -1127,105 +1138,118 @@ export default function ShibluWedsRena({ isPreview = false }) {
                     </div>
 
                     {/* WALIMA RECEPTION CARD */}
-                    <div className="group relative w-full overflow-hidden rounded-[28px] border border-[#B9A17A]/30 bg-[#123F36] p-6 sm:p-8 shadow-[0_12px_40px_-16px_rgba(18,63,54,0.3)] transition-all duration-500 hover:border-[#C49A45]/60">
-                        <div className="relative space-y-5">
-                            {/* Header */}
-                            <div className="flex items-center justify-between gap-4 px-1 pb-1">
-                                <div>
-                                    <p className="text-xs uppercase tracking-[0.2em] text-[#C49A45] font-semibold">
-                                        Celebration Banquet
-                                    </p>
-                                    <h3 className="font-poppins text-2xl sm:text-3xl font-medium tracking-tight text-[#FAF8F5]">
-                                        Dawat-e-Walima
+                    <div className="relative w-full overflow-hidden rounded-3xl bg-[#0F352D] p-1.5 shadow-[0_24px_60px_-24px_rgba(8,32,27,0.55)] ring-1 ring-[#C49A45]/25">
+                        {/* Inner hairline frame */}
+                        <div className="relative rounded-[20px] border border-[#C49A45]/30 px-6 py-8 sm:px-9 sm:py-10">
+
+                            {/* Soft top glow */}
+                            <div
+                                aria-hidden="true"
+                                className="pointer-events-none absolute inset-x-0 top-0 h-32 rounded-t-[20px] bg-gradient-to-b from-[#C49A45]/10 to-transparent"
+                            />
+
+                            <div className="relative">
+                                {/* Header */}
+                                <div className="flex flex-col items-center text-center">
+                                    <HiGiftTop size={34} className="text-[#C49A45]" aria-hidden="true" />
+
+                                    <h3
+                                        className="mt-4 text-[2.5rem] font-medium leading-none tracking-wide text-[#E3C98A] sm:text-5xl"
+                                        style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                                    >
+                                        Walima
                                     </h3>
-                                </div>
 
-                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-[#C49A45] bg-white/5 border border-[#C49A45]/20">
-                                    <HiGiftTop size={36} />
-                                </div>
-                            </div>
+                                    <p className="mt-2 text-sm font-light tracking-wide text-[#FAF8F5]/60">
+                                        Wedding Reception
+                                    </p>
 
-                            {/* Date & Time */}
-                            <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                                {/* Date Card */}
-                                <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-3 text-center">
-                                    <div className="flex mb-2 text-[#123F36]">
-                                        <FaCalendarDays size={28} />
-                                    </div>
-
-                                    <div className="text-center">
-                                        <p className="text-base sm:text-lg font-semibold leading-5 text-[#193B2B]">
-                                            21 <br />December <br /> 2026
-                                        </p>
-
-                                        <p className="mt-2 text-xs font-medium text-[#7B8278]">
-                                            Monday
-                                        </p>
+                                    {/* Ornamental divider */}
+                                    <div className="mt-6 flex w-full max-w-[220px] items-center gap-3" aria-hidden="true">
+                                        <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#C49A45]/60" />
+                                        <span className="h-1.5 w-1.5 rotate-45 bg-[#C49A45]" />
+                                        <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C49A45]/60" />
                                     </div>
                                 </div>
 
-                                {/* Time Card */}
-                                <div className="flex min-h-[145px] flex-col items-center justify-center rounded-2xl border border-white/50 bg-[#FAF8F5] p-3 sm:p-4 text-center">
-                                    <div className="flex mb-2 text-[#123F36]">
-                                        <PiClockCountdownBold size={34} />
+                                {/* Date & Time */}
+                                <div className="mt-8 grid grid-cols-2 divide-x divide-[#C49A45]/25">
+                                    {/* Date */}
+                                    <div className="flex flex-col items-center px-3 text-center sm:px-6">
+                                        <FaCalendarDays size={20} className="text-[#C49A45]" aria-hidden="true" />
+
+                                        <p
+                                            className="mt-4 text-5xl font-medium leading-none text-[#FAF8F5] sm:text-6xl"
+                                            style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                                        >
+                                            21
+                                        </p>
+                                        <p className="mt-2 text-sm font-medium tracking-wide text-[#FAF8F5] sm:text-base">
+                                            December 2026
+                                        </p>
+                                        <p className="mt-1 text-xs font-light text-[#FAF8F5]/60">Monday</p>
                                     </div>
 
-                                    <div className="text-center">
-                                        <p className="text-lg sm:text-xl font-semibold leading-5 text-[#193B2B]">
-                                            06:00 PM
-                                        </p>
+                                    {/* Time */}
+                                    <div className="flex flex-col items-center px-3 text-center sm:px-6">
+                                        <PiClockCountdownBold size={22} className="text-[#C49A45]" aria-hidden="true" />
 
-                                        <p className="mt-2 text-xs font-medium leading-4 text-[#7B8278]">
-                                            Reception begins at 6:00 PM
+                                        <p
+                                            className="mt-4 text-4xl font-medium leading-none text-[#FAF8F5] sm:text-5xl"
+                                            style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                                        >
+                                            6:00
                                         </p>
+                                        <p className="mt-2 text-sm font-medium tracking-wide text-[#FAF8F5] sm:text-base">
+                                            PM
+                                        </p>
+                                        <p className="mt-1 text-xs font-light text-[#FAF8F5]/60">Reception begins</p>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Venue Card */}
-                            <div className="rounded-2xl border border-white/50 bg-[#FAF8F5] p-4 sm:p-5">
-                                <div className="flex items-start gap-3.5">
-                                    <div className="flex text-[#123F36] mt-1 shrink-0">
-                                        <RiRestaurantLine size={32} />
-                                    </div>
+                                {/* Venue */}
+                                <div className="mt-8 border-t border-[#C49A45]/25 pt-8">
+                                    <div className="flex flex-col items-center text-center">
+                                        <RiRestaurantLine size={22} className="text-[#C49A45]" aria-hidden="true" />
 
-                                    <div className="min-w-0 flex-1">
-                                        <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8A795C]">
-                                            VENUE &amp; FULL ADDRESS
+                                        <p className="mt-4 text-xs font-medium tracking-wide text-[#C49A45]">
+                                            Venue
                                         </p>
 
-                                        <h4 className="text-base sm:text-lg font-bold leading-snug text-[#193B2B]">
+                                        <h4 className="mt-2 text-lg font-semibold leading-snug text-[#FAF8F5] sm:text-xl">
                                             The Jumeirah Restaurant - Beckton
                                         </h4>
 
-                                        <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-[#4A5D52] font-medium">
-                                            Unit A4A1, 9 Alpine Way<br />
+                                        <address className="mt-2 text-sm font-light not-italic leading-relaxed text-[#FAF8F5]/70">
+                                            Unit A4A1, 9 Alpine Way
+                                            <br />
                                             London, E6 6LA
-                                        </p>
+                                        </address>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Actions */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                                <a
-                                    href="https://maps.app.goo.gl/PZhGYdNPNUMC3dYV9?g_st=ic"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-[#C49A45]/40 bg-white/[0.06] px-5 py-3 text-xs font-semibold tracking-wide text-[#FAF8F5] transition-all duration-300 hover:border-[#C49A45] hover:bg-white/[0.12] active:scale-[0.99]"
-                                >
-                                    <FaDirections size={16} />
-                                    <span>View on Google Map</span>
-                                </a>
-                                <a
-                                    href={walimaCalUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C49A45] px-5 py-3 text-xs font-semibold tracking-wide text-[#123F36] transition-all duration-300 hover:bg-[#D4B36D] active:scale-[0.99] shadow-md"
-                                >
-                                    <FaGoogle size={16} />
-                                    <span>Save to Calendar</span>
-                                </a>
+                                {/* Actions */}
+                                <div className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                    <a
+                                        href="https://maps.app.goo.gl/PZhGYdNPNUMC3dYV9?g_st=ic"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-xl border border-[#C49A45]/50 bg-transparent px-5 py-3 text-sm font-medium tracking-wide text-[#FAF8F5] transition-colors duration-200 hover:border-[#C49A45] hover:bg-[#C49A45]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C49A45] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F352D]"
+                                    >
+                                        <FaDirections size={16} aria-hidden="true" />
+                                        <span>View on Google Maps</span>
+                                    </a>
+
+                                    <a
+                                        href={walimaCalUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn allow-select flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-xl bg-[#C49A45] px-5 py-3 text-sm font-semibold tracking-wide text-[#0F352D] transition-colors duration-200 hover:bg-[#D4B36D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E3C98A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F352D]"
+                                    >
+                                        <FaGoogle size={15} aria-hidden="true" />
+                                        <span>Save to Calendar</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1381,7 +1405,7 @@ export default function ShibluWedsRena({ isPreview = false }) {
                 </section>
 
                 {/* FOOTER */}
-                <footer className="relative z-10 w-full overflow-hidden border-t border-[#B9A17A]/25 bg-[#123F36] px-6 pb-6 pt-6 text-center reveal-on-scroll">
+                <footer className="relative z-10 w-full overflow-hidden border-t border-[#B9A17A]/25 bg-[#123F36] px-6 pb-6 pt-6 text-center ">
                     <div className="relative z-10 mx-auto flex max-w-md flex-col items-center gap-4">
                         <a
                             href="https://zafafatelier.co/"
