@@ -543,8 +543,6 @@ const VideoHero = ({ onUnlock, onStartMusic, onPrepareMusic }) => {
         hasUnlockedRef.current = true;
         setIsUnlocked(true);
         onUnlockRef.current?.();
-        // Fallback: Ensure music is active when invitation unlocks
-        onStartMusicRef.current?.();
     }, []);
 
     useEffect(() => {
@@ -637,8 +635,8 @@ const VideoHero = ({ onUnlock, onStartMusic, onPrepareMusic }) => {
     const handleTap = async () => {
         if (isUnlocked || isPlaying || isOpening) return;
 
-        // Prime/prepare audio on tap gesture for iOS & browser autoplay approval
-        onPrepareMusicRef.current?.();
+        // Start the audio immediately on initial button tap!
+        onStartMusicRef.current?.();
 
         const video = videoRef.current;
         if (videoFailed || !video || video.error) {
