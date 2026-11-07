@@ -519,7 +519,7 @@ const ScratchCard = ({ children, onReveal }) => {
 export const BACKGROUND_SONG_PATH = '/nasheeds/Wedding Nasheed _ Muhammad Al Muqit English Lyric_152641913.mp3';
 
 // --- VIDEO HERO COMPONENT ---
-const VideoHero = ({ onUnlock, onStartMusic, onPrepareMusic }) => {
+const VideoHero = ({ onUnlock, onStartMusic }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isOpening, setIsOpening] = useState(false);
     const [isUnlocked, setIsUnlocked] = useState(false);
@@ -529,14 +529,12 @@ const VideoHero = ({ onUnlock, onStartMusic, onPrepareMusic }) => {
     const hasUnlockedRef = useRef(false);
     const onUnlockRef = useRef(onUnlock);
     const onStartMusicRef = useRef(onStartMusic);
-    const onPrepareMusicRef = useRef(onPrepareMusic);
     const loadTimerRef = useRef(null);
 
     useEffect(() => {
         onUnlockRef.current = onUnlock;
         onStartMusicRef.current = onStartMusic;
-        onPrepareMusicRef.current = onPrepareMusic;
-    }, [onUnlock, onStartMusic, onPrepareMusic]);
+    }, [onUnlock, onStartMusic]);
 
     const unlockInvitation = useCallback(() => {
         if (hasUnlockedRef.current) return;
@@ -734,7 +732,7 @@ const VideoHero = ({ onUnlock, onStartMusic, onPrepareMusic }) => {
                     <div className="pop-item-3 my-2 space-y-1 mt-12">
                         <div>
                             <h2
-                                className="text-3xl dm-sans font-serif text-[#082215]"
+                                className="text-4xl cookie-regular text-[#082215]"
                             >
                                 Shiblu Rahman
                             </h2>
@@ -746,7 +744,7 @@ const VideoHero = ({ onUnlock, onStartMusic, onPrepareMusic }) => {
                         </div>
                         <div>
                             <h2
-                                className="text-3xl dm-sans text-[#082215]"
+                                className="text-4xl cookie-regular text-[#082215]"
                             >
                                 Rena Begum
                             </h2>
@@ -798,15 +796,7 @@ export default function ShibluWedsRena({ isPreview = false }) {
         return audioRef.current;
     }, []);
 
-    // Prime audio during user gesture to comply with mobile autoplay policies
-    const prepareMusic = useCallback(() => {
-        const audio = getAudio();
-        if (audio.readyState === 0) {
-            audio.load();
-        }
-    }, [getAudio]);
-
-    // Start playback when the video actually starts playing
+    // Start playback immediately on tap & when video plays
     const startMusic = useCallback(() => {
         const audio = getAudio();
         if (audio.paused) {
@@ -1010,9 +1000,9 @@ export default function ShibluWedsRena({ isPreview = false }) {
     const walimaCalUrl = getGoogleCalendarUrl(
         'Walima Reception — Shiblu Rahman & Rena Begum',
         'Celebration banquet in honor of the marriage of Shiblu Rahman & Rena Begum at The Jumeirah Restaurant - Beckton, London.',
-        'The Jumeirah Restaurant - Beckton, Unit A4A1, 9 Alpine Way, London, E6 6LA',
-        '20261221T180000Z',
-        '20261221T230000Z'
+        'The Jumeirah Restaurant - Beckton, Unit 4A1, 9 Alpine Way, London, E6 6LA',
+        '20261221T183000Z',
+        '20261221T233000Z'
     );
 
     const handleRsvpSubmit = (e) => {
@@ -1069,7 +1059,6 @@ export default function ShibluWedsRena({ isPreview = false }) {
             {/* Permanent Video Hero Layer */}
             <VideoHero
                 onUnlock={() => setHasOpenedEnvelope(true)}
-                onPrepareMusic={prepareMusic}
                 onStartMusic={startMusic}
             />
 
@@ -1272,11 +1261,11 @@ export default function ShibluWedsRena({ isPreview = false }) {
 
                                     <div className="text-center">
                                         <p className="text-lg sm:text-xl font-semibold leading-5 text-[#193B2B]">
-                                            06:00 PM
+                                            06:30 PM
                                         </p>
 
                                         <p className="mt-2 text-xs font-medium leading-4 text-[#7B8278]">
-                                            Reception begins at 6:00 PM
+                                            Reception begins at 6:30 PM
                                         </p>
                                     </div>
                                 </div>
