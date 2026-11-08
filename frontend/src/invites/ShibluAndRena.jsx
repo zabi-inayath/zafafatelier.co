@@ -833,7 +833,7 @@ export default function ShibluWedsRena({ isPreview = false }) {
 
     const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://zafafatelier.co';
     const shareUrl = typeof window !== 'undefined' ? window.location.href : `${origin}/shiblu-weds-rena`;
-    const shareImage = `${origin}/templates/template1/background.png`;
+    const shareImage = `${origin}/images/shiblu-rena-preview.jpg`;
     const pageTitle = 'Walima Reception Invitation | Shiblu & Rena';
     const pageDesc = "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the Walima reception celebrating the marriage of Shiblu Rahman & Rena Begum at The Jumeirah Restaurant - Beckton, London.";
 

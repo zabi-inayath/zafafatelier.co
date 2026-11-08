@@ -17,6 +17,22 @@
             "destination": "/invite/farhan-weds-haya/index.html"
         },
         {
+            "source": "/shiblu-weds-rena",
+            "destination": "/shiblu-weds-rena/index.html"
+        },
+        {
+            "source": "/shiblu-weds-rena/",
+            "destination": "/shiblu-weds-rena/index.html"
+        },
+        {
+            "source": "/invite/shiblu-weds-rena",
+            "destination": "/invite/shiblu-weds-rena/index.html"
+        },
+        {
+            "source": "/invite/shiblu-weds-rena/",
+            "destination": "/invite/shiblu-weds-rena/index.html"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }

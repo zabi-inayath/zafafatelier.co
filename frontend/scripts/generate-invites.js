@@ -34,7 +34,7 @@ const orders = [
     slug: 'shiblu-weds-rena',
     title: 'Walima Reception Invitation | Shiblu & Rena',
     description: "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the Walima reception celebrating the marriage of Shiblu Rahman & Rena Begum at The Jumeirah Restaurant - Beckton, London.",
-    image: 'https://zafafatelier.co/templates/template1/background.png',
+    image: 'https://zafafatelier.co/images/shiblu-rena-preview.jpg',
     url: 'https://zafafatelier.co/shiblu-weds-rena',
     isRootSlug: true
   }
