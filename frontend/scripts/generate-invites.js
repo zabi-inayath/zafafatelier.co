@@ -34,13 +34,13 @@ const orders = [
     slug: 'shiblu-weds-rena',
     title: 'Walima Reception Invitation | Shiblu & Rena',
     description: "In The Name of Allah, The Most Gracious, The Most Merciful. With Allah's blessings, we joyfully invite you to the Walima reception celebrating the marriage of Shiblu Rahman & Rena Begum at The Jumeirah Restaurant - Beckton, London.",
-    image: 'https://zafafatelier.co/images/shiblu-rena-preview.jpg',
-    url: 'https://zafafatelier.co/shiblu-weds-rena',
+    image: 'https://zafaf.mizaantech.co.in/images/shiblu-rena-preview.jpg?v=2',
+    url: 'https://zafaf.mizaantech.co.in/shiblu-weds-rena',
     isRootSlug: true
   }
 ];
 
-orders.forEach(order => {
+function createHtmlWithMeta(baseHtml, order, pageUrl) {
   let html = baseHtml;
 
   // Replace Title
@@ -63,14 +63,16 @@ orders.forEach(order => {
     html = html.replace('</head>', `  <meta property="og:description" content="${order.description}" />\n</head>`);
   }
 
+  const imageType = order.image.includes('.png') ? 'image/png' : 'image/jpeg';
+
   // Inject open graph tags
   const ogTags = `
   <!-- Dedicated Order Meta Preview -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="${order.url}" />
+  <meta property="og:url" content="${pageUrl}" />
   <meta property="og:image" content="${order.image}" />
   <meta property="og:image:secure_url" content="${order.image}" />
-  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:type" content="${imageType}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="${order.title}" />
@@ -81,29 +83,37 @@ orders.forEach(order => {
   <meta name="twitter:image" content="${order.image}" />
 </head>`;
 
-  html = html.replace('</head>', ogTags);
+  return html.replace('</head>', ogTags);
+}
+
+orders.forEach(order => {
+  const inviteUrl = `https://zafaf.mizaantech.co.in/invite/${order.slug}`;
+  const inviteHtml = createHtmlWithMeta(baseHtml, order, inviteUrl);
 
   const outDir = path.join(distDir, 'invite', order.slug);
   fs.mkdirSync(outDir, { recursive: true });
 
   const outPath = path.join(outDir, 'index.html');
-  fs.writeFileSync(outPath, html, 'utf-8');
+  fs.writeFileSync(outPath, inviteHtml, 'utf-8');
   console.log(`Generated prerendered meta page: ${outPath}`);
 
   // Also write flat html invite/<slug>.html
   const flatPath = path.join(distDir, 'invite', `${order.slug}.html`);
-  fs.writeFileSync(flatPath, html, 'utf-8');
+  fs.writeFileSync(flatPath, inviteHtml, 'utf-8');
   console.log(`Generated flat meta page: ${flatPath}`);
 
   if (order.isRootSlug) {
+    const rootUrl = `https://zafaf.mizaantech.co.in/${order.slug}`;
+    const rootHtml = createHtmlWithMeta(baseHtml, order, rootUrl);
+
     const rootOutDir = path.join(distDir, order.slug);
     fs.mkdirSync(rootOutDir, { recursive: true });
     const rootOutPath = path.join(rootOutDir, 'index.html');
-    fs.writeFileSync(rootOutPath, html, 'utf-8');
+    fs.writeFileSync(rootOutPath, rootHtml, 'utf-8');
     console.log(`Generated prerendered root meta page: ${rootOutPath}`);
 
     const rootFlatPath = path.join(distDir, `${order.slug}.html`);
-    fs.writeFileSync(rootFlatPath, html, 'utf-8');
+    fs.writeFileSync(rootFlatPath, rootHtml, 'utf-8');
     console.log(`Generated root flat meta page: ${rootFlatPath}`);
   }
 });
